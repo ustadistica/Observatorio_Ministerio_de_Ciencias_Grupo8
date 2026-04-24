@@ -6,7 +6,17 @@ Observatorio de investigadores reconocidos por MinCiencias. Análisis longitudin
 
 ## Fuentes de Datos
 
-MinCiencias / datos.gov.co — Investigadores reconocidos por convocatoria (2017, 2019, 2021)
+MinCiencias / datos.gov.co — Investigadores reconocidos por convocatoria. El dataset consolidado (`datos/tarea_join/investigadores_consolidado.xlsx`) integra **6 convocatorias históricas**:
+
+| Convocatoria | Año | Registros |
+|---|---|---|
+| 640 | 2013 | 8.016 |
+| 693 | 2014 | 8.280 |
+| 737 | 2015 | 10.050 |
+| 781 | 2017 | 13.001 |
+| 833 | 2018 | 16.796 |
+| 894 | 2021 | 21.094 |
+| **Total** | **2013–2021** | **77.237 registros / 30.086 investigadores únicos** |
 
 Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores Socrata y metadatos de cada dataset.
 
@@ -93,11 +103,9 @@ Análisis de variables de conflicto, etnia y discapacidad. Comparación con prop
 
 | Rol | GitHub |
 |-----|--------|
-| Líder estadística | [@MariaAmaya12](https://github.com/MariaAmaya12) |
-| Desarrollo + redes | [@PaulBetancour](https://github.com/PaulBetancour) |
 | Pipeline + deploy | [@Victor-Diaz-Usta](https://github.com/Victor-Diaz-Usta) |
 
-**Director:** [@Izainea](https://github.com/Izainea)
+**Director / Revisor PRs:** [@Izainea](https://github.com/Izainea)
 
 ## Metodologia
 

@@ -1,20 +1,25 @@
-# Catalogo de Datos del Proyecto
-# ================================
-# Cada entrada incluye el identificador Socrata, la URL, campos clave
-# y la periodicidad de actualizacion.
-#
-# fuentes:
-#   - nombre: "Nombre descriptivo del dataset"
-#     plataforma: "datos.gov.co"
-#     socrata_id: "xxxx-xxxx"
-#     url: "https://www.datos.gov.co/resource/xxxx-xxxx"
-#     formato: "csv"
-#     campos_clave:
-#       - campo1
-#       - campo2
-#     periodicidad: "trimestral"
-#     ultimo_pull: null
-#     notas: "Descripcion breve"
+# Catalogo de Datos del Proyecto — Observatorio MinCiencias
+# ============================================================
+# El dataset bqtm-4y2h contiene TODAS las convocatorias (2013-2021)
+# en un solo recurso Socrata. No existen endpoints separados por año.
 
-fuentes: []
-  # TODO: Agregar las fuentes de datos del proyecto
+fuentes:
+
+  - nombre: "Investigadores Reconocidos — Consolidado 2013-2021"
+    plataforma: "datos.gov.co"
+    socrata_id: "bqtm-4y2h"
+    url: "https://www.datos.gov.co/resource/bqtm-4y2h.csv"
+    formato: "csv"
+    tamanio_registros: 77237
+    investigadores_unicos: 30086
+    ultimo_pull: "2026-04-23"
+    notas: >
+      Dataset unificado con las 6 convocatorias históricas de MinCiencias.
+      Plataforma ScienTI - Colombia.
+    convocatorias:
+      - { id: 16, nombre: "Convocatoria 640 de 2013", anio: 2013, registros: 8016 }
+      - { id: 17, nombre: "Convocatoria 693 de 2014", anio: 2014, registros: 8280 }
+      - { id: 18, nombre: "Convocatoria 737 de 2015", anio: 2015, registros: 10050 }
+      - { id: 19, nombre: "Convocatoria 781 de 2017", anio: 2017, registros: 13001 }
+      - { id: 20, nombre: "Convocatoria 833 de 2018", anio: 2018, registros: 16796 }
+      - { id: 21, nombre: "Convocatoria 894 de 2021", anio: 2021, registros: 21094 }

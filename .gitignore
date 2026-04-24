@@ -56,3 +56,6 @@ mlruns/
 *.tmp
 .coverage
 htmlcov/
+
+# === Claude Code context (local only) ===
+CLAUDE.md
