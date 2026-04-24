@@ -25,7 +25,7 @@ fuentes:
       - { id: 17, nombre: "Convocatoria 693 de 2014", anio: 2014, registros: 8280 }
       - { id: 18, nombre: "Convocatoria 737 de 2015", anio: 2015, registros: 10050 }
       - { id: 19, nombre: "Convocatoria 781 de 2017", anio: 2017, registros: 13001 }
-      - { id: 20, nombre: "Convocatoria 833 de 2018", anio: 2018, registros: 16796 }
+      - { id: 20, nombre: "Convocatoria 833 de 2018", anio: 2018, ano_convo_campo: 2019, registros: 16796, nota: "El campo ANO_CONVO registra 2019-12-06 (fecha de publicación de resultados); el año nominal de la convocatoria es 2018." }
       - { id: 21, nombre: "Convocatoria 894 de 2021", anio: 2021, registros: 21094 }
 
     variables:
