@@ -12,10 +12,14 @@ fuentes:
     formato: "csv"
     tamanio_registros: 77237
     investigadores_unicos: 30086
+    num_variables: 30
+    periodicidad: "Por convocatoria (no periódica fija; se abre cada 1-3 años)"
     ultimo_pull: "2026-04-23"
     notas: >
       Dataset unificado con las 6 convocatorias históricas de MinCiencias.
-      Plataforma ScienTI - Colombia.
+      Plataforma ScienTI - Colombia. Una fila por investigador por convocatoria.
+      El campo inst_filia puede contener múltiples instituciones separadas por pipe (|).
+
     convocatorias:
       - { id: 16, nombre: "Convocatoria 640 de 2013", anio: 2013, registros: 8016 }
       - { id: 17, nombre: "Convocatoria 693 de 2014", anio: 2014, registros: 8280 }
@@ -23,3 +27,150 @@ fuentes:
       - { id: 19, nombre: "Convocatoria 781 de 2017", anio: 2017, registros: 13001 }
       - { id: 20, nombre: "Convocatoria 833 de 2018", anio: 2018, registros: 16796 }
       - { id: 21, nombre: "Convocatoria 894 de 2021", anio: 2021, registros: 21094 }
+
+    variables:
+      # --- Identificación de la convocatoria ---
+      - nombre: id_convocatoria
+        tipo: integer
+        descripcion: "Identificador numérico de la convocatoria"
+        valores_ejemplo: [16, 17, 18, 19, 20, 21]
+
+      - nombre: nme_convocatoria
+        tipo: string
+        descripcion: "Nombre completo de la convocatoria"
+        valores_ejemplo: ["Convocatoria 640 de 2013", "Convocatoria 894 de 2021"]
+
+      - nombre: ano_convo
+        tipo: integer
+        descripcion: "Año de la convocatoria"
+        valores_ejemplo: [2013, 2014, 2015, 2017, 2018, 2021]
+
+      # --- Identificación del investigador ---
+      - nombre: id_persona_pr
+        tipo: string
+        descripcion: "Identificador único del investigador en el sistema ScienTI. Clave para tracking longitudinal entre convocatorias."
+        uso_analitico: "JOIN entre convocatorias para panel longitudinal"
+
+      # --- Área de conocimiento OCDE ---
+      - nombre: id_area_con_pr
+        tipo: integer
+        descripcion: "Identificador numérico del área de conocimiento OCDE"
+
+      - nombre: nme_gran_area_pr
+        tipo: string
+        descripcion: "Gran área de conocimiento según clasificación OCDE (nivel 1)"
+        valores_ejemplo: ["Ciencias Naturales", "Ingeniería y Tecnología", "Ciencias Médicas y de la Salud",
+                          "Ciencias Agrícolas", "Ciencias Sociales", "Humanidades"]
+
+      - nombre: nme_area_pr
+        tipo: string
+        descripcion: "Área de conocimiento según clasificación OCDE (nivel 2)"
+
+      - nombre: nme_esp_area_pr
+        tipo: string
+        descripcion: "Especialidad del área de conocimiento OCDE (nivel 3, más granular)"
+
+      # --- Género ---
+      - nombre: nme_genero_pr
+        tipo: string
+        descripcion: "Género del investigador declarado en ScienTI"
+        valores_ejemplo: ["Masculino", "Femenino"]
+
+      # --- Lugar de nacimiento ---
+      - nombre: nme_pais_nac_pr
+        tipo: string
+        descripcion: "País de nacimiento del investigador"
+
+      - nombre: nme_region_nac_pr
+        tipo: string
+        descripcion: "Región de nacimiento (agrupación supradepartamental)"
+
+      - nombre: nme_departamento_nac_pr
+        tipo: string
+        descripcion: "Departamento de nacimiento"
+
+      - nombre: nme_municipio_nac_pr
+        tipo: string
+        descripcion: "Municipio de nacimiento"
+
+      - nombre: cod_dane_nac_pr
+        tipo: string
+        descripcion: "Código DANE del municipio de nacimiento (5 dígitos)"
+
+      # --- Nivel de formación ---
+      - nombre: id_niv_formacion_pr
+        tipo: integer
+        descripcion: "Identificador numérico del nivel de formación más alto alcanzado"
+
+      - nombre: nme_niv_form_pr
+        tipo: string
+        descripcion: "Nombre del nivel de formación más alto"
+        valores_ejemplo: ["Doctorado", "Maestría", "Especialización", "Pregrado"]
+
+      - nombre: nro_orden_form_pr
+        tipo: integer
+        descripcion: "Orden numérico del nivel de formación (mayor = más alto)"
+
+      # --- Clasificación del investigador ---
+      - nombre: id_clas_pr
+        tipo: integer
+        descripcion: "Identificador numérico de la categoría de clasificación"
+
+      - nombre: nme_clasificacion_pr
+        tipo: string
+        descripcion: "Categoría de clasificación MinCiencias resultado de la convocatoria"
+        valores_ejemplo: ["Investigador Junior", "Investigador Asociado", "Investigador Senior", "Investigador Emérito"]
+
+      - nombre: orden_clas_pr
+        tipo: integer
+        descripcion: "Orden numérico de la categoría (1=Junior, 4=Emérito). Útil para matrices de transición."
+
+      # --- Edad ---
+      - nombre: edad_anos_pr
+        tipo: integer
+        descripcion: "Edad del investigador en años al momento de la convocatoria"
+
+      # --- Lugar de residencia ---
+      - nombre: nme_pais_res_pr
+        tipo: string
+        descripcion: "País de residencia del investigador"
+
+      - nombre: nme_region_res_pr
+        tipo: string
+        descripcion: "Región de residencia (agrupación supradepartamental)"
+
+      - nombre: nme_departamento_res_pr
+        tipo: string
+        descripcion: "Departamento de residencia"
+
+      - nombre: nme_municipio_res_pr
+        tipo: string
+        descripcion: "Municipio de residencia"
+
+      - nombre: cod_dane_res_pr
+        tipo: string
+        descripcion: "Código DANE del municipio de residencia (5 dígitos). Útil para joins con shapefiles geográficos."
+
+      # --- Variables de diversidad ---
+      - nombre: id_victima_conflicto
+        tipo: string
+        descripcion: "Indicador si el investigador es víctima del conflicto armado interno"
+        valores_ejemplo: ["Si", "No"]
+
+      - nombre: txt_grupo_etnico
+        tipo: string
+        descripcion: "Grupo étnico al que pertenece el investigador"
+        valores_ejemplo: ["Ninguno de los anteriores", "Afrocolombiano", "Indígena", "Palenquero", "Raizal", "Rom"]
+
+      - nombre: txt_poblacion_disca
+        tipo: string
+        descripcion: "Condición de discapacidad declarada por el investigador"
+
+      # --- Afiliación institucional ---
+      - nombre: inst_filia
+        tipo: string
+        descripcion: >
+          Nombre(s) de la(s) institución(es) de afiliación del investigador.
+          Cuando hay múltiples, están separadas por pipe (|).
+          Usada para análisis de redes de co-filiación institucional.
+        uso_analitico: "Separar por | y construir grafo bipartito investigador-institución"
