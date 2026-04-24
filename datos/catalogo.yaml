@@ -174,3 +174,38 @@ fuentes:
           Cuando hay múltiples, están separadas por pipe (|).
           Usada para análisis de redes de co-filiación institucional.
         uso_analitico: "Separar por | y construir grafo bipartito investigador-institución"
+
+# ---------------------------------------------------------------------------
+# Campos clave para análisis longitudinal
+# ---------------------------------------------------------------------------
+campos_clave_analiticos:
+  llave_unica_seguimiento: id_persona_pr
+  variable_tiempo: ano_convo
+  variable_categoria_codigo: id_clas_pr
+  variable_categoria_nombre: nme_clasificacion_pr
+  variable_categoria_orden: orden_clas_pr
+  variables_territoriales:
+    - nme_region_nac_pr
+    - nme_departamento_nac_pr
+    - nme_municipio_nac_pr
+    - cod_dane_nac_pr
+    - nme_region_res_pr
+    - nme_departamento_res_pr
+    - nme_municipio_res_pr
+    - cod_dane_res_pr
+
+# ---------------------------------------------------------------------------
+# Referencias de documentación oficial
+# ---------------------------------------------------------------------------
+documentacion_referencia:
+  - sitio: "Repositorio e-Anaquel MinCiencias"
+    proposito: "Validación de resultados oficiales y publicaciones de convocatorias"
+    url: "https://repositorio.minciencias.gov.co/"
+
+  - sitio: "ScienTI Colombia"
+    proposito: "Consulta de perfiles de investigadores y avales institucionales"
+    url: "https://www.minciencias.gov.co/scienti"
+
+  - sitio: "datos.gov.co — Dataset bqtm-4y2h"
+    proposito: "Fuente primaria del dataset consolidado (API Socrata)"
+    url: "https://www.datos.gov.co/resource/bqtm-4y2h.csv"
