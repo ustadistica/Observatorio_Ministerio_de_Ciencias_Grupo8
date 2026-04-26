@@ -1,11 +1,13 @@
 """
 analisis/redes.py
 
-Network analysis de co-filiacion institucional — Issue #15.
+Network analysis de co-filiacion institucional — Issues #15 y #16.
 
 Un investigador con dos instituciones en inst_filia crea un enlace entre ambas.
 Nodo = institucion; arista = investigadores compartidos (peso = conteo).
 """
+
+import pathlib
 
 import pandas as pd
 import networkx as nx
@@ -105,3 +107,74 @@ def metricas_por_convocatoria(pares: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)[["anio", "n_nodos", "n_aristas", "densidad",
                                 "n_componentes", "tam_componente_mayor",
                                 "grado_promedio", "grado_max", "nodo_mayor_grado"]]
+
+
+def subgrafo_grado_minimo(G: nx.Graph, grado_min: int = 2) -> nx.Graph:
+    """Subgrafo con nodos de grado >= grado_min (excluye hojas aisladas)."""
+    nodos = [n for n, d in G.degree() if d >= grado_min]
+    return G.subgraph(nodos).copy()
+
+
+def generar_html_pyvis(
+    G: nx.Graph,
+    ruta_salida: pathlib.Path,
+    titulo: str = "Co-filiacion institucional",
+) -> None:
+    """
+    Genera visualizacion interactiva HTML con Pyvis.
+
+    Tamano de nodo proporcional al grado ponderado.
+    Grosor de arista proporcional al peso.
+    Color de nodo segun betweenness (blanco=bajo, rojo=alto).
+    """
+    from pyvis.network import Network
+    import networkx as nx_local
+
+    between = nx.betweenness_centrality(G, weight="weight", normalized=True)
+    grado_w = dict(G.degree(weight="weight"))
+    max_grado = max(grado_w.values()) if grado_w else 1
+    max_between = max(between.values()) if between else 1
+
+    net = Network(
+        height="750px",
+        width="100%",
+        bgcolor="#1a1a2e",
+        font_color="white",
+        notebook=False,
+    )
+    net.barnes_hut(gravity=-8000, central_gravity=0.3, spring_length=120)
+
+    for node in G.nodes():
+        g = grado_w.get(node, 1)
+        b = between.get(node, 0)
+        size = 8 + (g / max_grado) * 40
+        # Color: escala de azul claro (baja centralidad) a rojo (alta)
+        r = int(50 + (b / max_between) * 205)
+        gb = int(120 - (b / max_between) * 100)
+        color = f"#{r:02x}{gb:02x}{gb:02x}"
+        label = node if len(node) <= 40 else node[:37] + "..."
+        net.add_node(
+            node,
+            label=label,
+            title=f"{node}<br>Grado ponderado: {g}<br>Betweenness: {b:.4f}",
+            size=size,
+            color=color,
+        )
+
+    max_peso = max((d["weight"] for _, _, d in G.edges(data=True)), default=1)
+    for u, v, data in G.edges(data=True):
+        peso = data["weight"]
+        width = 1 + (peso / max_peso) * 6
+        net.add_edge(u, v, value=peso, width=width,
+                     title=f"{u} — {v}<br>Investigadores compartidos: {peso}")
+
+    net.set_options("""
+    {
+      "nodes": {"font": {"size": 11}},
+      "edges": {"color": {"opacity": 0.5}},
+      "physics": {"stabilization": {"iterations": 200}}
+    }
+    """)
+    ruta_salida.parent.mkdir(parents=True, exist_ok=True)
+    net.write_html(str(ruta_salida))
+
