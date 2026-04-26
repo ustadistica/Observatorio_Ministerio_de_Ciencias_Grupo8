@@ -86,9 +86,15 @@ poetry run streamlit run app/streamlit_app.py
 
 Actualización de datos (verificar convocatoria 2023), automatizar ingesta con sodapy, refactorizar notebooks.
 
-### Sprint 2 (Sem 3-4)
+### Sprint 2 (Sem 3-4) — EN CURSO
 
-Análisis longitudinal: tracking de investigadores entre convocatorias, matrices de transición de categoría, concentración territorial (HHI).
+| Issue | Título | Estado |
+|---|---|---|
+| #11 | Panel longitudinal de investigadores | ✅ Completado |
+| #12 | Matrices de transición de categoría | 🔲 Pendiente |
+| #13 | Análisis de concentración territorial (HHI) | 🔲 Pendiente |
+| #14 | Modelo dimensional en DuckDB | 🔲 Pendiente |
+| #22 | Análisis de género por área OCDE | 🔲 Pendiente |
 
 ### Sprint 3 (Sem 5-7)
 
