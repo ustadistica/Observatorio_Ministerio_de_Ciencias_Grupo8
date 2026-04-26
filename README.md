@@ -108,6 +108,14 @@ Actualización de datos (verificar convocatoria 2023), automatizar ingesta con s
 
 Network analysis de co-filiación institucional (NetworkX + Pyvis). Dashboard Streamlit con mapa, distribuciones y grafo interactivo.
 
+| Issue | Título | Estado |
+|---|---|---|
+| #15 | Network analysis de co-filiación | ✅ Completado |
+| #16 | Visualización de grafo interactivo | 🔄 En progreso |
+| #17 | Dashboard: mapa de investigadores | ⏳ Pendiente |
+| #18 | Dashboard: tabla de instituciones | ⏳ Pendiente |
+| #19 | Deploy dashboard en Streamlit Cloud | ⏳ Pendiente |
+
 ### Sprint 4 (Sem 8)
 
 Análisis de variables de conflicto, etnia y discapacidad. Comparación con proporciones poblacionales DANE 2018.
