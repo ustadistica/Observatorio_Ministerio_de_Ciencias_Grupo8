@@ -3,6 +3,7 @@ Paquete de análisis — Observatorio MinCiencias.
 """
 from .genero import pct_femenino_por_area, tabla_pivot_pct_femenino, brecha_genero, evolucion_pct_femenino
 from .territorial import hhi, hhi_por_convocatoria, top_territorios, tabla_cuotas
+from .redes import construir_pares, construir_grafo, metricas_grafo, tabla_nodos, tabla_aristas, metricas_por_convocatoria
 from .longitudinal import (
     construir_panel,
     comparar_periodo,
@@ -15,6 +16,12 @@ from .longitudinal import (
 )
 
 __all__ = [
+    "construir_pares",
+    "construir_grafo",
+    "metricas_grafo",
+    "tabla_nodos",
+    "tabla_aristas",
+    "metricas_por_convocatoria",
     "pct_femenino_por_area",
     "tabla_pivot_pct_femenino",
     "brecha_genero",
