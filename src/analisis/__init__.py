@@ -1,6 +1,7 @@
 """
 Paquete de análisis — Observatorio MinCiencias.
 """
+from .territorial import hhi, hhi_por_convocatoria, top_territorios, tabla_cuotas
 from .longitudinal import (
     construir_panel,
     comparar_periodo,
@@ -13,6 +14,10 @@ from .longitudinal import (
 )
 
 __all__ = [
+    "hhi",
+    "hhi_por_convocatoria",
+    "top_territorios",
+    "tabla_cuotas",
     "construir_panel",
     "comparar_periodo",
     "resumen_tracking",
