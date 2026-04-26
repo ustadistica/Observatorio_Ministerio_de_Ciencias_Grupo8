@@ -92,7 +92,7 @@ Actualización de datos (verificar convocatoria 2023), automatizar ingesta con s
 |---|---|---|
 | #11 | Panel longitudinal de investigadores | ✅ Completado |
 | #12 | Matrices de transición de categoría | ✅ Completado |
-| #13 | Análisis de concentración territorial (HHI) | 🔲 Pendiente |
+| #13 | Análisis de concentración territorial (HHI) | ✅ Completado |
 | #14 | Modelo dimensional en DuckDB | 🔲 Pendiente |
 | #22 | Análisis de género por área OCDE | 🔲 Pendiente |
 
