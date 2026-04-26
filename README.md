@@ -86,7 +86,7 @@ poetry run streamlit run app/streamlit_app.py
 
 Actualización de datos (verificar convocatoria 2023), automatizar ingesta con sodapy, refactorizar notebooks.
 
-### Sprint 2 (Sem 3-4) — EN CURSO
+### Sprint 2 (Sem 3-4) — COMPLETADO ✅
 
 | Issue | Título | Estado |
 |---|---|---|
@@ -94,7 +94,7 @@ Actualización de datos (verificar convocatoria 2023), automatizar ingesta con s
 | #12 | Matrices de transición de categoría | ✅ Completado |
 | #13 | Análisis de concentración territorial (HHI) | ✅ Completado |
 | #14 | Modelo dimensional en DuckDB | ✅ Completado |
-| #22 | Análisis de género por área OCDE | 🔲 Pendiente |
+| #22 | Análisis de género por área OCDE | ✅ Completado |
 
 ### Sprint 3 (Sem 5-7)
 
