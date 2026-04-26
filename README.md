@@ -39,23 +39,27 @@ Observatorio_Ministerio_de_Ciencias_Grupo7/
 |   +-- workflows/
 |       +-- etl_update.yml       # GitHub Actions para ingesta periodica
 |-- src/
-|   |-- ingesta/                 # Scripts de extraccion (sodapy)
-|   |-- transformacion/          # Limpieza, normalizacion, joins
-|   |-- modelo/                  # Modelo estrella / modelado estadistico
-|   +-- visualizacion/           # Funciones de graficos reutilizables
+|   |-- ingesta/                 # Paquete de carga (cargar_consolidado + sodapy)
+|   |-- analisis/                # Logica reutilizable: longitudinal, territorial, genero
+|   |-- modelo/                  # Modelo estrella DuckDB (dimensional.py)
+|   +-- Transformacion.py        # Pipeline limpieza + normalizacion
+|-- scripts/                     # Orquestacion por sprint (genera figuras + CSVs)
+|   |-- sprint2_panel_longitudinal.py
+|   |-- sprint2_matrices_transicion.py
+|   |-- sprint2_territorial.py
+|   |-- sprint2_genero_ocde.py
+|   +-- sprint2_duckdb.py
 |-- notebooks/
-|   |-- 01_eda.ipynb
-|   |-- 02_analisis.ipynb
-|   +-- 03_modelado.ipynb
-|-- app/
-|   +-- streamlit_app.py         # Dashboard interactivo
+|   +-- 01_eda.ipynb             # Unico notebook activo (EDA exploratorio)
+|-- streamlit_app.py             # Dashboard interactivo (Sprint 3)
 |-- datos/
-|   |-- raw/                     # Datos crudos (gitignored si pesados)
-|   |-- processed/               # Datos limpios
+|   |-- raw/                     # Datos crudos (gitignored)
+|   |-- processed/               # observatorio.duckdb (gitignored)
 |   +-- catalogo.yaml            # Metadatos de cada dataset
+|-- artifacts/                   # Figuras PNG generadas por sprint
+|-- evidencias/                  # CSVs exportados por los scripts
 |-- docs/                        # Informes y documentacion
 |-- tests/                       # Tests automatizados
-|-- artifacts/                   # Artefactos generados (metricas, reportes)
 +-- models/                      # Modelos serializados
 ```
 
@@ -70,14 +74,18 @@ cd Observatorio_Ministerio_de_Ciencias_Grupo7
 pip install poetry
 poetry install
 
-# Ejecutar pipeline de ingesta
-poetry run python -m src.ingesta.main
+# Descargar dataset consolidado desde Socrata
+poetry run python -m src.ingesta.minciencias
 
-# Ejecutar pipeline de transformacion
-poetry run python -m src.transformacion.main
+# Ejecutar scripts de Sprint 2 (genera figuras en artifacts/ y CSVs en evidencias/)
+poetry run python scripts/sprint2_panel_longitudinal.py
+poetry run python scripts/sprint2_matrices_transicion.py
+poetry run python scripts/sprint2_territorial.py
+poetry run python scripts/sprint2_genero_ocde.py
+poetry run python scripts/sprint2_duckdb.py
 
 # Lanzar dashboard
-poetry run streamlit run app/streamlit_app.py
+poetry run streamlit run streamlit_app.py
 ```
 
 ## Cronograma -- CRISP-DM
