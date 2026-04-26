@@ -8,6 +8,8 @@ from .longitudinal import (
     tracking_por_categoria,
     tracking_todos_periodos,
     tasa_retencion_por_periodo,
+    matriz_transicion,
+    matrices_todos_periodos,
 )
 
 __all__ = [
@@ -17,4 +19,6 @@ __all__ = [
     "tracking_por_categoria",
     "tracking_todos_periodos",
     "tasa_retencion_por_periodo",
+    "matriz_transicion",
+    "matrices_todos_periodos",
 ]

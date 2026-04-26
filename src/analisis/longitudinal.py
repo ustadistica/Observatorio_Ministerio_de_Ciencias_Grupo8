@@ -130,6 +130,55 @@ def tracking_todos_periodos(panel: pd.DataFrame) -> pd.DataFrame:
     return pd.concat(bloques, ignore_index=True)
 
 
+def matriz_transicion(
+    comp: pd.DataFrame, incluir_desaparece: bool = False
+) -> tuple:
+    """
+    Calcula la matriz de conteos y la de probabilidades de transición.
+
+    Parameters
+    ----------
+    comp : resultado de comparar_periodo
+    incluir_desaparece : si True agrega "Desaparece" como estado final posible
+
+    Returns
+    -------
+    (conteos, probabilidades) — ambos DataFrames con filas = categoría inicial
+    """
+    temp = comp.copy()
+    if incluir_desaparece:
+        col_final = "categoria_final_ext"
+        temp[col_final] = temp["categoria_final"].fillna("Desaparece")
+    else:
+        col_final = "categoria_final"
+        temp = temp.dropna(subset=["categoria_final"])
+
+    conteos = pd.crosstab(temp["categoria_inicial"], temp[col_final])
+    # Ordenar columnas por orden canónico cuando es posible
+    orden_cols = [c for c in [*ORDEN_CATEGORIAS.keys(), "Desaparece"] if c in conteos.columns]
+    conteos = conteos[orden_cols]
+    probs = conteos.div(conteos.sum(axis=1), axis=0).round(4)
+    return conteos, probs
+
+
+def matrices_todos_periodos(
+    panel: pd.DataFrame, incluir_desaparece: bool = True
+) -> dict:
+    """
+    Calcula matrices de transición para todos los pares consecutivos.
+
+    Retorna un dict con estructura:
+        { "2013–2014": (conteos_df, probs_df), ... }
+    """
+    anios = sorted(panel["ANO_CONVO_INT"].unique())
+    resultado = {}
+    for a0, a1 in zip(anios, anios[1:]):
+        comp = comparar_periodo(panel, a0, a1)
+        periodo = f"{a0}–{a1}"
+        resultado[periodo] = matriz_transicion(comp, incluir_desaparece=incluir_desaparece)
+    return resultado
+
+
 def tasa_retencion_por_periodo(panel: pd.DataFrame) -> pd.DataFrame:
     """
     Calcula la tasa de retención entre convocatorias consecutivas.
