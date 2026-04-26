@@ -117,8 +117,8 @@ def main() -> None:
         conteos.to_csv(EVIDENCIAS / f"matriz_transicion_obs_{pf}.csv")
         probs.to_csv(EVIDENCIAS / f"matriz_probabilidades_obs_{pf}.csv")
 
-    print(f"\nFiguras → {ARTIFACTS.relative_to(ROOT)}")
-    print(f"CSVs    → {EVIDENCIAS.relative_to(ROOT)}")
+    print(f"\nFiguras : {ARTIFACTS.relative_to(ROOT)}")
+    print(f"CSVs    : {EVIDENCIAS.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

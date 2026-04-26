@@ -221,8 +221,8 @@ def main() -> None:
             EVIDENCIAS / f"panel_longitudinal_cat_{a0}_{a1}.csv"
         )
 
-    print(f"\nFiguras → {ARTIFACTS.relative_to(ROOT)}")
-    print(f"CSVs    → {EVIDENCIAS.relative_to(ROOT)}")
+    print(f"\nFiguras : {ARTIFACTS.relative_to(ROOT)}")
+    print(f"CSVs    : {EVIDENCIAS.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

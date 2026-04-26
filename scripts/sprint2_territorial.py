@@ -134,8 +134,8 @@ def main() -> None:
     hhi_region.to_csv(EVIDENCIAS / "territorial_hhi_region_por_convocatoria.csv", index=False)
     cuotas_pivot.to_csv(EVIDENCIAS / "territorial_cuotas_departamento.csv")
 
-    print(f"\nFiguras → {ARTIFACTS.relative_to(ROOT)}")
-    print(f"CSVs    → {EVIDENCIAS.relative_to(ROOT)}")
+    print(f"\nFiguras : {ARTIFACTS.relative_to(ROOT)}")
+    print(f"CSVs    : {EVIDENCIAS.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
