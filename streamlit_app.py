@@ -166,11 +166,86 @@ def seccion_areas(df: pd.DataFrame) -> None:
     st.plotly_chart(fig, use_container_width=True)
 
 
-def seccion_departamentos(df: pd.DataFrame) -> None:
-    st.header("🗺️ Distribución por departamento de residencia")
+_COORDENADAS_DEPTO = {
+    "AMAZONAS": (-1.44, -71.57),
+    "ANTIOQUIA": (7.19, -75.34),
+    "ARAUCA": (6.54, -71.00),
+    "ARCHIPIÉLAGO DE SAN ANDRÉS, PROVIDENCIA Y SANTA CATALINA": (12.53, -81.72),
+    "ATLÁNTICO": (10.69, -74.87),
+    "BOGOTÁ, D. C.": (4.71, -74.07),
+    "BOLÍVAR": (8.67, -74.03),
+    "BOYACÁ": (5.45, -73.36),
+    "CALDAS": (5.30, -75.27),
+    "CAQUETÁ": (1.61, -75.61),
+    "CASANARE": (5.75, -71.57),
+    "CAUCA": (2.53, -76.62),
+    "CESAR": (9.33, -73.50),
+    "CHOCÓ": (5.69, -76.66),
+    "CÓRDOBA": (8.39, -75.51),
+    "CUNDINAMARCA": (5.03, -74.01),
+    "GUAINÍA": (2.58, -68.53),
+    "GUAVIARE": (2.57, -72.67),
+    "HUILA": (2.53, -75.52),
+    "LA GUAJIRA": (11.35, -72.48),
+    "MAGDALENA": (10.41, -74.41),
+    "META": (3.99, -73.56),
+    "NARIÑO": (1.28, -77.35),
+    "NORTE DE SANTANDER": (7.94, -72.50),
+    "PUTUMAYO": (0.44, -76.64),
+    "QUINDÍO": (4.46, -75.67),
+    "RISARALDA": (5.31, -75.98),
+    "SANTANDER": (6.64, -73.65),
+    "SUCRE": (9.30, -75.40),
+    "TOLIMA": (4.09, -75.15),
+    "VALLE DEL CAUCA": (3.80, -76.51),
+    "VAUPÉS": (0.86, -70.81),
+    "VICHADA": (4.42, -69.59),
+}
+
+
+def seccion_mapa(df: pd.DataFrame) -> None:
+    st.header("Mapa de investigadores por departamento")
     col = "NME_DEPARTAMENTO_RES_PR"
     if col not in df.columns:
         st.warning("Columna de departamento no disponible.")
+        return
+
+    conteo = df[col].value_counts().reset_index()
+    conteo.columns = ["Departamento", "Investigadores"]
+    conteo = conteo[conteo["Departamento"].isin(_COORDENADAS_DEPTO)]
+    conteo["lat"] = conteo["Departamento"].map(lambda d: _COORDENADAS_DEPTO[d][0])
+    conteo["lon"] = conteo["Departamento"].map(lambda d: _COORDENADAS_DEPTO[d][1])
+
+    fig = px.scatter_mapbox(
+        conteo,
+        lat="lat",
+        lon="lon",
+        size="Investigadores",
+        color="Investigadores",
+        hover_name="Departamento",
+        hover_data={"Investigadores": True, "lat": False, "lon": False},
+        color_continuous_scale="YlOrRd",
+        size_max=60,
+        zoom=4.5,
+        center={"lat": 4.5, "lon": -74.0},
+        mapbox_style="open-street-map",
+        title="Investigadores reconocidos por departamento de residencia",
+    )
+    fig.update_layout(margin={"r": 0, "t": 40, "l": 0, "b": 0}, height=520)
+    st.plotly_chart(fig, use_container_width=True)
+
+    with st.expander("Ver tabla por departamento"):
+        st.dataframe(
+            conteo[["Departamento", "Investigadores"]]
+            .sort_values("Investigadores", ascending=False)
+            .reset_index(drop=True),
+            use_container_width=True,
+        )
+
+
+def seccion_departamentos(df: pd.DataFrame) -> None:
+    col = "NME_DEPARTAMENTO_RES_PR"
+    if col not in df.columns:
         return
     top20 = df[col].value_counts().head(20).reset_index()
     top20.columns = ["Departamento", "Cantidad"]
@@ -243,6 +318,7 @@ def main() -> None:
         seccion_genero(df)
 
     seccion_areas(df)
+    seccion_mapa(df)
     seccion_departamentos(df)
     seccion_nivel_formacion(df)
     seccion_datos_crudos(df)
