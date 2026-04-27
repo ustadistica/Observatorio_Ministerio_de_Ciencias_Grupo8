@@ -2,7 +2,9 @@
 
 > **Ustadistica** -- Consultoria e Investigacion . Universidad Santo Tomas . 2026-I
 
-Observatorio de investigadores reconocidos por MinCiencias. Análisis longitudinal de convocatorias 2017, 2019, 2021 (y 2023 si disponible).
+Observatorio crítico del sistema de reconocimiento de investigadores de MinCiencias. Análisis longitudinal de **6 convocatorias** (2013-2021) con foco en **calidad de los datos**, **concentración territorial**, **brecha de género**, **redes de co-filiación institucional** y **subrepresentación de minorías**.
+
+El proyecto produce insumos para un informe crítico sobre las falencias de las convocatorias y el estado de la investigación en Colombia.
 
 ## Fuentes de Datos
 
@@ -22,10 +24,24 @@ Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores 
 
 ## Preguntas de Investigacion
 
-- ¿Cuál es la tasa de retención de investigadores reconocidos entre convocatorias sucesivas?
-- ¿Qué instituciones concentran la mayor producción de investigadores Senior y Emérito?
-- ¿Existe segregación territorial en el reconocimiento de investigadores por fuera de las tres principales ciudades?
-- ¿La representación de mujeres investigadoras ha mejorado significativamente entre 2017 y 2021 en áreas STEM?
+- ¿Qué tan confiable es la información que MinCiencias publica? ¿Permite analizar el sistema de manera comparable entre convocatorias?
+- ¿El sistema retiene a los investigadores reconocidos entre convocatorias? ¿Qué porcentaje sube/baja/desaparece?
+- ¿La capacidad investigativa está distribuida equitativamente o concentrada? Comparación per cápita con población DANE 2018.
+- ¿Hay paridad de género por gran área OCDE? ¿La brecha en STEM se ha cerrado en una década?
+- ¿Cómo se conectan las instituciones a través de investigadores con doble afiliación? ¿Hay universidades-puente?
+- ¿La composición de los investigadores reflejala diversidad poblacional de Colombia (etnia, discapacidad, víctimas del conflicto)?
+
+## Hallazgos críticos (vista rápida)
+
+| # | Hallazgo | Implicación |
+|---|---|---|
+| 1 | Bogotá + Antioquia = 51% del país | Concentración territorial brutal |
+| 2 | 24% de mujeres en Ingeniería vs 48% en Ciencias Médicas | Brecha estructural por área |
+| 3 | Co-filiación solo capturada en 2019 (569 casos) | Cambio de captura, no de realidad |
+| 4 | 0% de cobertura de etnia/discapacidad/conflicto antes de 2021 | Diversidad invisible 8 años |
+| 5 | Afros 3x, Indígenas 7.9x, Discapacidad 8x subrepresentados vs DANE | Barreras estructurales |
+| 6 | Raizales/Palenqueros/Rrom sobrerrepresentados 3-6x | Programas focalizados con efecto |
+| 7 | 10 edades > 100 años (máx 956), conv. 833 mal etiquetada | Calidad de datos cuestionable |
 
 ## Estructura del Proyecto
 
@@ -39,25 +55,37 @@ Observatorio_Ministerio_de_Ciencias_Grupo7/
 |   +-- workflows/
 |       +-- etl_update.yml       # GitHub Actions para ingesta periodica
 |-- src/
-|   |-- ingesta/                 # Paquete de carga (cargar_consolidado + sodapy)
-|   |-- analisis/                # Logica reutilizable: longitudinal, territorial, genero
-|   |-- modelo/                  # Modelo estrella DuckDB (dimensional.py)
+|   |-- ingesta/                 # cargar_consolidado + sodapy (Socrata)
+|   |-- analisis/                # Logica reutilizable
+|   |   |-- longitudinal.py      # Panel + matrices de transicion
+|   |   |-- territorial.py       # HHI + cuotas territoriales
+|   |   |-- genero.py            # Brecha por area OCDE
+|   |   |-- redes.py             # Co-filiacion + normalizar_institucion + Pyvis
+|   |   +-- diversidad.py        # Etnia, discapacidad, conflicto vs DANE/RUV
+|   |-- modelo/dimensional.py    # Modelo estrella DuckDB
 |   +-- Transformacion.py        # Pipeline limpieza + normalizacion
-|-- scripts/                     # Orquestacion por sprint (genera figuras + CSVs)
+|-- scripts/                     # Orquestacion por sprint
 |   |-- sprint2_panel_longitudinal.py
 |   |-- sprint2_matrices_transicion.py
 |   |-- sprint2_territorial.py
 |   |-- sprint2_genero_ocde.py
-|   +-- sprint2_duckdb.py
+|   |-- sprint2_duckdb.py
+|   |-- sprint3_redes.py
+|   |-- sprint3_grafo_interactivo.py
+|   +-- sprint4_diversidad.py
 |-- notebooks/
 |   +-- 01_eda.ipynb             # Unico notebook activo (EDA exploratorio)
-|-- streamlit_app.py             # Dashboard interactivo (Sprint 3)
+|-- streamlit_app.py             # Dashboard — 6 tabs tipo capitulo del informe
+|-- .streamlit/config.toml       # Tema y configuracion para Streamlit Cloud
+|-- requirements.txt             # Deps minimas runtime para deploy
 |-- datos/
 |   |-- raw/                     # Datos crudos (gitignored)
 |   |-- processed/               # observatorio.duckdb (gitignored)
+|   |-- tarea_join/              # Excel consolidado versionado en git (12 MB)
 |   +-- catalogo.yaml            # Metadatos de cada dataset
 |-- artifacts/                   # Figuras PNG generadas por sprint
 |-- evidencias/                  # CSVs exportados por los scripts
+|-- hallazgos/                   # HTMLs interactivos (grafos Pyvis)
 |-- docs/                        # Informes y documentacion
 |-- tests/                       # Tests automatizados
 +-- models/                      # Modelos serializados
@@ -77,14 +105,17 @@ poetry install
 # Descargar dataset consolidado desde Socrata
 poetry run python -m src.ingesta.minciencias
 
-# Ejecutar scripts de Sprint 2 (genera figuras en artifacts/ y CSVs en evidencias/)
-poetry run python scripts/sprint2_panel_longitudinal.py
-poetry run python scripts/sprint2_matrices_transicion.py
-poetry run python scripts/sprint2_territorial.py
-poetry run python scripts/sprint2_genero_ocde.py
-poetry run python scripts/sprint2_duckdb.py
+# Ejecutar todos los analisis (genera figuras en artifacts/ y CSVs en evidencias/)
+poetry run python scripts/sprint2_panel_longitudinal.py    # Issue #11
+poetry run python scripts/sprint2_matrices_transicion.py   # Issue #12
+poetry run python scripts/sprint2_territorial.py           # Issue #13
+poetry run python scripts/sprint2_genero_ocde.py           # Issue #22
+poetry run python scripts/sprint2_duckdb.py                # Issue #14
+poetry run python scripts/sprint3_redes.py                 # Issue #15
+poetry run python scripts/sprint3_grafo_interactivo.py     # Issue #16 — HTMLs Pyvis
+poetry run python scripts/sprint4_diversidad.py            # Issue #20
 
-# Lanzar dashboard
+# Lanzar dashboard (6 tabs tipo capitulo del informe)
 poetry run streamlit run streamlit_app.py
 ```
 
@@ -137,12 +168,25 @@ Network analysis de co-filiación institucional (NetworkX + Pyvis). Dashboard St
 
 ### Sprint 4 (Sem 8)
 
-Análisis de variables de conflicto, etnia y discapacidad. Comparación con proporciones poblacionales DANE 2018.
+Análisis de variables de conflicto, etnia y discapacidad. Comparación con proporciones poblacionales DANE 2018 / RUV 2021.
 
 | Issue | Título | Estado |
 |---|---|---|
 | #20 | Análisis de variables de conflicto y diversidad | ✅ Completado |
 | #21 | Informe final reproducible | ⏳ Pendiente |
+
+### Refactor del dashboard (post-Sprint 4)
+
+Reescritura del dashboard con narrativa crítica para alimentar el informe final. **6 tabs tipo capítulo**:
+
+1. **Calidad de los datos** — heatmap de cobertura + tabla de anomalías (edad>100, conv. mal etiquetadas)
+2. **Trayectoria longitudinal** — retención + matrices de transición interactivas
+3. **Concentración territorial** — mapa + per cápita DANE 2018 + HHI evolutivo
+4. **Brecha de género y diversidad** — heatmap género + comparación DANE/RUV con metodología explicada
+5. **Redes y poder institucional** — grafo Pyvis embebido + top instituciones (con normalización)
+6. **Datos crudos** — auditoría directa con descarga CSV
+
+Cada sección sigue el patrón **Pregunta → Hallazgo → Caveat**.
 
 
 ## Equipo
