@@ -139,6 +139,11 @@ Network analysis de co-filiación institucional (NetworkX + Pyvis). Dashboard St
 
 Análisis de variables de conflicto, etnia y discapacidad. Comparación con proporciones poblacionales DANE 2018.
 
+| Issue | Título | Estado |
+|---|---|---|
+| #20 | Análisis de variables de conflicto y diversidad | ✅ Completado |
+| #21 | Informe final reproducible | ⏳ Pendiente |
+
 
 ## Equipo
 
