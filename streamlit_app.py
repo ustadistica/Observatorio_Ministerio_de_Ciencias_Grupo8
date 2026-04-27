@@ -282,6 +282,72 @@ def seccion_nivel_formacion(df: pd.DataFrame) -> None:
     st.plotly_chart(fig, use_container_width=True)
 
 
+_CAT_CORTA = {
+    "INVESTIGADOR JUNIOR": "Junior",
+    "INVESTIGADOR ASOCIADO": "Asociado",
+    "INVESTIGADOR SÉNIOR": "Sénior",
+    "INVESTIGADOR EMÉRITO": "Emérito",
+}
+
+
+@st.cache_data(show_spinner=False)
+def _tabla_instituciones(df_hash: str, df: pd.DataFrame) -> pd.DataFrame:
+    """Desagrega inst_filia y construye tabla institución × categoría."""
+    cols = ["INST_FILIA", "NME_CLASIFICACION_PR"]
+    sub = df[cols].dropna(subset=["INST_FILIA"])
+    rows = []
+    for _, row in sub.iterrows():
+        cat = _CAT_CORTA.get(str(row["NME_CLASIFICACION_PR"]).upper(), str(row["NME_CLASIFICACION_PR"]))
+        for inst in str(row["INST_FILIA"]).split("|"):
+            inst = inst.strip()
+            if inst:
+                rows.append({"Institución": inst, "Categoría": cat})
+    inst_df = pd.DataFrame(rows)
+    pivot = (
+        inst_df.groupby(["Institución", "Categoría"])
+        .size()
+        .unstack(fill_value=0)
+    )
+    for cat in ["Junior", "Asociado", "Sénior", "Emérito"]:
+        if cat not in pivot.columns:
+            pivot[cat] = 0
+    pivot = pivot[["Junior", "Asociado", "Sénior", "Emérito"]]
+    pivot["Total"] = pivot.sum(axis=1)
+    return pivot.sort_values("Total", ascending=False).reset_index()
+
+
+def seccion_instituciones(df: pd.DataFrame) -> None:
+    st.header("Instituciones de afiliación")
+
+    tabla = _tabla_instituciones(str(len(df)), df)
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Instituciones únicas", f"{len(tabla):,}")
+    col2.metric("Institución líder", tabla.iloc[0]["Institución"][:40])
+    col3.metric("Investigadores (líder)", f"{int(tabla.iloc[0]['Total']):,}")
+
+    top_n = st.slider("Mostrar top N instituciones", min_value=5, max_value=50, value=20, step=5)
+    top = tabla.head(top_n)
+
+    fig = px.bar(
+        top,
+        x="Total",
+        y="Institución",
+        orientation="h",
+        color="Total",
+        color_continuous_scale="Blues",
+        title=f"Top {top_n} instituciones por total de reconocimientos",
+        hover_data={"Junior": True, "Asociado": True, "Sénior": True, "Emérito": True},
+    )
+    fig.update_layout(yaxis={"autorange": "reversed"}, height=500)
+    st.plotly_chart(fig, use_container_width=True)
+
+    with st.expander("Tabla completa por institución y categoría"):
+        buscar = st.text_input("Buscar institución", key="buscar_inst")
+        vista = tabla if not buscar else tabla[tabla["Institución"].str.contains(buscar, case=False, na=False)]
+        st.dataframe(vista, use_container_width=True, height=400)
+
+
 def seccion_datos_crudos(df: pd.DataFrame) -> None:
     with st.expander("🗃️ Ver datos (primeras 500 filas)"):
         st.dataframe(df.head(500))
@@ -321,6 +387,7 @@ def main() -> None:
     seccion_mapa(df)
     seccion_departamentos(df)
     seccion_nivel_formacion(df)
+    seccion_instituciones(df)
     seccion_datos_crudos(df)
 
 
