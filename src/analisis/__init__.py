@@ -8,6 +8,10 @@ from .redes import (
     tabla_nodos, tabla_aristas, metricas_por_convocatoria,
     subgrafo_grado_minimo, generar_html_pyvis,
 )
+from .diversidad import (
+    cobertura_por_convocatoria, distribucion_categoria, comparar_dane,
+    interseccional_genero_etnia, categoria_por_minoria, DANE_REFERENCIA,
+)
 from .longitudinal import (
     construir_panel,
     comparar_periodo,
@@ -28,6 +32,12 @@ __all__ = [
     "metricas_por_convocatoria",
     "subgrafo_grado_minimo",
     "generar_html_pyvis",
+    "cobertura_por_convocatoria",
+    "distribucion_categoria",
+    "comparar_dane",
+    "interseccional_genero_etnia",
+    "categoria_por_minoria",
+    "DANE_REFERENCIA",
     "pct_femenino_por_area",
     "tabla_pivot_pct_femenino",
     "brecha_genero",
