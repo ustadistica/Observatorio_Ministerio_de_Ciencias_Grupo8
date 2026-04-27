@@ -33,6 +33,7 @@ from analisis.diversidad import (  # noqa: E402
     distribucion_categoria,
     comparar_dane,
 )
+from analisis.redes import normalizar_institucion  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Configuracion de pagina
@@ -99,21 +100,7 @@ def cargar_datos() -> pd.DataFrame:
     return df
 
 
-@st.cache_data(show_spinner=False)
-def normalizar_institucion(nombre: str) -> str:
-    """Colapsa variantes (sedes, parentesis, mayusculas) a una sola entidad."""
-    if pd.isna(nombre):
-        return nombre
-    s = str(nombre).upper().strip()
-    # Quitar contenido entre parentesis
-    while "(" in s and ")" in s:
-        i, j = s.index("("), s.index(")")
-        s = (s[:i] + s[j+1:]).strip()
-    # Quitar "SEDE X" y similares
-    for marcador in [" SEDE ", " - SEDE", " SECCIONAL "]:
-        if marcador in s:
-            s = s.split(marcador)[0].strip()
-    return s.strip()
+# normalizar_institucion ahora vive en src/analisis/redes.py — se importa arriba
 
 
 # ---------------------------------------------------------------------------
@@ -460,15 +447,33 @@ def seccion_diversidad(df: pd.DataFrame) -> None:
 
     st.subheader("Brecha de género por gran área OCDE (% femenino)")
     try:
-        pivot = tabla_pivot_pct_femenino(df, col_area="NME_GRAN_AREA_PR") * 100
-        pivot = pivot.drop(columns="promedio") if "promedio" in pivot.columns else pivot
+        pivot = tabla_pivot_pct_femenino(df, col_area="NME_GRAN_AREA_PR")
+        if "promedio" in pivot.columns:
+            pivot = pivot.drop(columns="promedio")
+        pivot = (pivot * 100).round(1)
+        # Acortar etiquetas largas para que se lean
+        pivot.index = [idx if len(idx) <= 30 else idx[:27] + "…" for idx in pivot.index]
+        pivot.columns = [str(c) for c in pivot.columns]
+
         fig = px.imshow(
-            pivot, text_auto=".0f", aspect="auto",
-            color_continuous_scale="RdYlGn", zmin=0, zmax=60,
+            pivot.values,
+            x=pivot.columns,
+            y=pivot.index,
+            text_auto=".1f",
+            color_continuous_scale="RdYlGn",
+            zmin=0, zmax=60,
+            aspect="auto",
             labels={"x": "Convocatoria", "y": "Gran área OCDE", "color": "% femenino"},
-            title="Verde = paridad, rojo = brecha estructural",
         )
-        fig.add_vline(x=-0.5, line_color="black")
+        fig.update_layout(
+            title="Verde = paridad (50%), rojo = brecha estructural",
+            height=480,
+            margin=dict(l=240, r=20, t=60, b=40),
+            xaxis=dict(side="bottom"),
+            yaxis=dict(tickfont=dict(size=11)),
+            coloraxis_colorbar=dict(title="% F"),
+        )
+        fig.update_traces(textfont_size=12)
         st.plotly_chart(fig, use_container_width=True)
         st.caption(
             "**Ciencias Médicas** se acerca a la paridad (~48%). "
@@ -478,32 +483,113 @@ def seccion_diversidad(df: pd.DataFrame) -> None:
     except Exception as e:
         st.info(f"Análisis de género no disponible: {e}")
 
-    st.subheader("Subrepresentación de minorías vs DANE 2018 (convocatoria 2021)")
+    st.subheader("Subrepresentación de minorías vs población colombiana")
+
+    with st.expander("📖 Cómo se calcula la subrepresentación — léelo antes del gráfico", expanded=False):
+        st.markdown("""
+**Paso a paso del cálculo:**
+
+1. Tomamos **solo la convocatoria 2021** (la única con datos de diversidad).
+2. Excluimos los registros con `NO DISPONIBLE` (~3.2%, son no-respuesta).
+3. De los ~20.420 que sí respondieron, contamos cuántos se autorreconocen
+   como Afrocolombiano, Indígena, etc., y calculamos el **% sobre el total**.
+4. Comparamos con el **% poblacional** según la fuente oficial correspondiente:
+   - Etnia → DANE Censo Nacional de Población y Vivienda (CNPV) 2018
+   - Discapacidad → DANE CNPV 2018
+   - Víctima del conflicto → Registro Único de Víctimas (RUV), corte 31-dic-2021
+
+5. **Razón de subrepresentación** = `% poblacional / % MinCiencias`.
+
+**Cómo leer la razón:**
+- Razón **3.0x** = "para reflejar la composición del país, debería haber 3 veces más
+  investigadores afrocolombianos de los que hay".
+- Razón **< 1.0** = sobrerrepresentación (hay MÁS proporción que en la población general).
+
+**¿Por qué solo 2018 / por qué no hay cifras DANE 2021?**
+DANE actualiza la composición étnica únicamente con cada **censo nacional**
+(cada ~10 años). El último es CNPV 2018. La composición se asume estable hasta
+el próximo censo. Por eso comparamos investigadores de 2021 contra la fuente más
+reciente disponible. RUV sí es un registro continuo y por eso la cifra de
+víctimas sí corresponde a 2021.
+
+**Caveats importantes:**
+- La comparación correcta no es contra "toda la población" sino contra la
+  **población elegible** (con educación superior). Las brechas de acceso a
+  posgrado ya filtran a las minorías antes de llegar al sistema MinCiencias.
+  Por tanto **parte de la subrepresentación es heredada** de barreras educativas
+  previas, no atribuible solo al sistema de reconocimiento.
+- El **autorreconocimiento étnico** depende de la voluntad del investigador.
+  El 96% que respondió "NINGÚN GRUPO ÉTNICO" puede incluir mestizos que sí
+  tienen ascendencia afro o indígena pero no se autorreconocen.
+- DANE reconoce un **subregistro** de afrocolombianos en 2018 (CNPV reportó 6.7%,
+  pero estimaciones corregidas hablan de ~9.3%). Usamos la cifra oficial del censo.
+        """)
+
     df_2021 = df[df["ANO_CONVO_INT"] == 2021]
     if len(df_2021) > 0:
         try:
             comp = comparar_dane(df_2021)
-            comp_long = comp.melt(id_vars="grupo",
-                                  value_vars=["pct_minciencias", "pct_dane_2018"],
-                                  var_name="Fuente", value_name="%")
+
+            # Grafico principal: barras agrupadas
+            comp_long = comp.melt(
+                id_vars="grupo",
+                value_vars=["pct_minciencias", "pct_dane_2018"],
+                var_name="Fuente", value_name="%",
+            )
             comp_long["Fuente"] = comp_long["Fuente"].map({
-                "pct_minciencias": "Investigadores 2021",
-                "pct_dane_2018": "Población (DANE/RUV)",
+                "pct_minciencias": "Investigadores MinCiencias 2021",
+                "pct_dane_2018": "Población Colombia (DANE 2018 / RUV 2021)",
             })
-            fig = px.bar(comp_long, x="grupo", y="%", color="Fuente",
-                         barmode="group", text_auto=".2f",
-                         title="MinCiencias vs realidad poblacional",
-                         color_discrete_map={"Investigadores 2021": "#1f77b4",
-                                             "Población (DANE/RUV)": "#d62728"})
-            fig.update_xaxes(tickangle=20)
+            fig = px.bar(
+                comp_long, x="grupo", y="%", color="Fuente",
+                barmode="group", text_auto=".2f",
+                title="¿Hay tantos investigadores de minorías como hay población minoritaria?",
+                color_discrete_map={
+                    "Investigadores MinCiencias 2021": "#1f77b4",
+                    "Población Colombia (DANE 2018 / RUV 2021)": "#d62728",
+                },
+            )
+            fig.update_xaxes(tickangle=20, title="")
+            fig.update_yaxes(title="% sobre el total")
+            fig.update_layout(height=460, legend=dict(orientation="h", y=-0.25))
             st.plotly_chart(fig, use_container_width=True)
 
-            with st.expander("Tabla detallada de subrepresentación"):
-                st.dataframe(comp, use_container_width=True, hide_index=True)
+            # Grafico secundario: razon de subrepresentacion
+            comp_pos = comp.dropna(subset=["razon_subrepresentacion"]).copy()
+            comp_pos["color"] = comp_pos["razon_subrepresentacion"].apply(
+                lambda r: "Subrepresentado" if r > 1 else "Sobrerrepresentado"
+            )
+            fig2 = px.bar(
+                comp_pos.sort_values("razon_subrepresentacion"),
+                x="razon_subrepresentacion", y="grupo",
+                orientation="h", color="color",
+                text=comp_pos.sort_values("razon_subrepresentacion")["razon_subrepresentacion"]
+                    .apply(lambda r: f"{r:.1f}x"),
+                color_discrete_map={"Subrepresentado": "#d62728",
+                                    "Sobrerrepresentado": "#2ca02c"},
+                title="Razón de (sub/sobre)representación: cuántas veces fuera de proporción",
+            )
+            fig2.add_vline(x=1.0, line_dash="dash", line_color="black",
+                           annotation_text="Equidad (1.0x)")
+            fig2.update_layout(height=380, legend_title_text="",
+                               xaxis_title="Razón = % población / % investigadores")
+            st.plotly_chart(fig2, use_container_width=True)
+
+            with st.expander("📊 Ver tabla detallada con todos los números"):
+                tabla_pretty = comp.copy()
+                tabla_pretty.columns = [
+                    "Grupo", "N en investigadores 2021",
+                    "% en MinCiencias", "% en población",
+                    "Razón subrepr.",
+                ]
+                st.dataframe(tabla_pretty, use_container_width=True, hide_index=True)
                 st.caption(
-                    "Razón > 1: subrepresentado. Razón < 1: sobrerrepresentado. "
-                    "Las minorías muy pequeñas (Raizales, Palenqueros, Rrom) están "
-                    "sobrerrepresentadas — posible efecto de programas focalizados."
+                    "**Hallazgo clave para el informe:** Las minorías mayoritarias "
+                    "(afros, indígenas) están subrepresentadas 3-8x. Las minorías "
+                    "muy pequeñas (Raizales, Palenqueros, Rrom) están "
+                    "**sobrerrepresentadas** 3-6x — esto sugiere que los programas "
+                    "focalizados a estos grupos sí tienen efecto, mientras que las "
+                    "barreras estructurales para afros e indígenas no se han movido."
                 )
         except Exception as e:
             st.info(f"Comparación DANE no disponible: {e}")
@@ -543,21 +629,47 @@ def seccion_redes(df: pd.DataFrame) -> None:
         st.info("Genera el HTML del grafo con: `python scripts/sprint3_grafo_interactivo.py`")
 
     st.subheader("Top instituciones por número de reconocimientos")
-    inst = (df["INST_FILIA"].dropna().str.split("|").explode()
-            .str.strip().str.upper().value_counts().head(20)
-            .reset_index())
+
+    aplicar_norm = st.toggle(
+        "Normalizar instituciones (consolidar sedes / razones sociales)",
+        value=True,
+        help="Colapsa 'UNAL Bogotá', 'UNAL Medellín' y similares en una sola entidad",
+    )
+
+    inst_raw = (df["INST_FILIA"].dropna().str.split("|").explode().str.strip())
+    if aplicar_norm:
+        inst_serie = inst_raw.map(normalizar_institucion)
+    else:
+        inst_serie = inst_raw.str.upper()
+
+    n_unicas = inst_serie.nunique()
+    inst = inst_serie.value_counts().head(20).reset_index()
     inst.columns = ["Institución", "Reconocimientos"]
+
     fig = px.bar(inst, x="Reconocimientos", y="Institución", orientation="h",
                  color="Reconocimientos", color_continuous_scale="Blues",
-                 title="Universidad de Antioquia y UNAL Bogotá lideran")
-    fig.update_layout(yaxis={"autorange": "reversed"}, height=500)
+                 title=f"Top 20 — {n_unicas:,} instituciones únicas tras normalización" if aplicar_norm
+                 else f"Top 20 — {n_unicas:,} instituciones sin normalizar")
+    fig.update_layout(yaxis={"autorange": "reversed"}, height=550, margin=dict(l=280))
     st.plotly_chart(fig, use_container_width=True)
-    st.caption(
-        "**Caveat de calidad:** el dataset reporta 2.762 instituciones únicas, "
-        "pero muchas son la misma con diferente nombre (sedes, paréntesis, "
-        "razón social). Una normalización institucional reduciría el conteo a "
-        "~800-1.000 entidades reales."
-    )
+
+    if aplicar_norm:
+        crudo = inst_raw.str.upper().nunique()
+        reduccion = crudo - n_unicas
+        st.caption(
+            f"**Normalización aplicada**: {crudo:,} → {n_unicas:,} entidades "
+            f"(−{reduccion:,}, {reduccion/crudo*100:.1f}%). Se consolidaron sedes "
+            "(p.ej. UNAL Bogotá + UNAL Medellín → UNAL) usando reglas de paréntesis "
+            "y sufijos 'SEDE X'/'SECCIONAL'. **Caveat:** la normalización es "
+            "conservadora — variantes ortográficas (acentos, abreviaturas, '&' vs 'Y') "
+            "no se colapsan automáticamente. Una normalización exhaustiva (con fuzzy "
+            "matching o tabla maestra manual) reduciría aún más el conteo."
+        )
+    else:
+        st.caption(
+            "Vista cruda: cada variante ortográfica cuenta como entidad distinta. "
+            "Activa la normalización para ver el conteo real."
+        )
 
 
 # ---------------------------------------------------------------------------

@@ -6,7 +6,7 @@ from .territorial import hhi, hhi_por_convocatoria, top_territorios, tabla_cuota
 from .redes import (
     construir_pares, construir_grafo, metricas_grafo,
     tabla_nodos, tabla_aristas, metricas_por_convocatoria,
-    subgrafo_grado_minimo, generar_html_pyvis,
+    subgrafo_grado_minimo, generar_html_pyvis, normalizar_institucion,
 )
 from .diversidad import (
     cobertura_por_convocatoria, distribucion_categoria, comparar_dane,
@@ -32,6 +32,7 @@ __all__ = [
     "metricas_por_convocatoria",
     "subgrafo_grado_minimo",
     "generar_html_pyvis",
+    "normalizar_institucion",
     "cobertura_por_convocatoria",
     "distribucion_categoria",
     "comparar_dane",

@@ -8,8 +8,44 @@ Nodo = institucion; arista = investigadores compartidos (peso = conteo).
 """
 
 import pathlib
+import re
 
 import pandas as pd
+
+
+def normalizar_institucion(nombre) -> str:
+    """
+    Colapsa variantes (sedes, parentesis, mayusculas) a una sola entidad.
+
+    Reglas:
+    - Si hay parentesis y contiene una institucion (Universidad/Instituto/etc),
+      ese parentesis ES la institucion madre -> usarlo
+    - Si no, eliminar contenido entre parentesis
+    - Eliminar sufijos de sede: " SEDE X", " SECCIONAL X", " - SEDE"
+    - Mayusculas y espacios normalizados
+    """
+    if pd.isna(nombre) or not str(nombre).strip():
+        return nombre
+    s = str(nombre).upper().strip()
+
+    # Detectar institucion madre dentro de parentesis
+    m = re.search(r"\(([^)]+)\)", s)
+    if m:
+        contenido = m.group(1).strip()
+        marcadores = ["UNIVERSIDAD", "INSTITUTO", "CORPORACION", "FUNDACION",
+                      "COLEGIO", "ESCUELA", "POLITECNICO", "POLITÉCNICO",
+                      "CENTRO", "HOSPITAL"]
+        if len(contenido.split()) >= 2 and any(k in contenido for k in marcadores):
+            s = contenido
+        else:
+            s = re.sub(r"\s*\([^)]*\)", "", s).strip()
+
+    # Eliminar sufijos de sedes / seccionales
+    for marcador in [" SEDE ", " SECCIONAL ", " - SEDE", " - SECCIONAL"]:
+        if marcador in s:
+            s = s.split(marcador)[0].strip()
+
+    return " ".join(s.split())
 import networkx as nx
 
 
