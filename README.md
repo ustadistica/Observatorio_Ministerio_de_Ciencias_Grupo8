@@ -112,7 +112,7 @@ Network analysis de co-filiación institucional (NetworkX + Pyvis). Dashboard St
 |---|---|---|
 | #15 | Network analysis de co-filiación | ✅ Completado |
 | #16 | Visualización de grafo interactivo | ✅ Completado |
-| #17 | Dashboard: mapa de investigadores | ⏳ Pendiente |
+| #17 | Dashboard: mapa de investigadores | ✅ Completado |
 | #18 | Dashboard: tabla de instituciones | ⏳ Pendiente |
 | #19 | Deploy dashboard en Streamlit Cloud | ⏳ Pendiente |
 
