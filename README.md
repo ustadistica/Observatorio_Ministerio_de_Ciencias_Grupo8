@@ -88,6 +88,25 @@ poetry run python scripts/sprint2_duckdb.py
 poetry run streamlit run streamlit_app.py
 ```
 
+## Deploy en Streamlit Cloud
+
+El dashboard puede desplegarse gratuitamente en [Streamlit Community Cloud](https://share.streamlit.io):
+
+1. Iniciar sesión con la cuenta de GitHub.
+2. Clic en **New app** → seleccionar el repo `Victor-Diaz-Usta/Min_ciencias`.
+3. Configuración:
+   - **Branch:** `main_VictorD` (o `main` después del merge)
+   - **Main file path:** `streamlit_app.py`
+   - **Python version:** 3.10+
+4. Clic en **Deploy**.
+
+Streamlit Cloud detecta automáticamente:
+- `requirements.txt` → instala `streamlit`, `pandas`, `numpy`, `plotly`, `openpyxl`
+- `.streamlit/config.toml` → tema y configuración del servidor
+- `datos/tarea_join/investigadores_consolidado.xlsx` → fuente de datos (12 MB, versionada en git)
+
+El primer build tarda ~3 minutos. Builds posteriores son incrementales tras cada push a la rama configurada.
+
 ## Cronograma -- CRISP-DM
 
 ### Sprint 1 (Sem 1-2)
@@ -114,7 +133,7 @@ Network analysis de co-filiación institucional (NetworkX + Pyvis). Dashboard St
 | #16 | Visualización de grafo interactivo | ✅ Completado |
 | #17 | Dashboard: mapa de investigadores | ✅ Completado |
 | #18 | Dashboard: tabla de instituciones | ✅ Completado |
-| #19 | Deploy dashboard en Streamlit Cloud | ⏳ Pendiente |
+| #19 | Deploy dashboard en Streamlit Cloud | ✅ Listo para deploy |
 
 ### Sprint 4 (Sem 8)
 
