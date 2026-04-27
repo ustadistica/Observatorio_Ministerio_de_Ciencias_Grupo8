@@ -288,12 +288,17 @@ def panel_completo(df_hash: int, df: pd.DataFrame) -> dict:
     for a0, a1 in zip(anios, anios[1:]):
         comp = comparar_periodo(panel, a0, a1)
         n0 = len(comp)
-        ret = (comp["estado"] == "Se mantiene").sum() + (comp["estado"] == "Sube").sum() + (comp["estado"] == "Baja").sum()
-        rows.append({"Periodo": f"{a0}→{a1}", "Investigadores en {a0}": n0,
-                     "Retenidos": ret, "Tasa retención": ret / n0 * 100})
+        retenidos_mask = comp["resultado"].isin(["Se mantiene", "Sube", "Baja"])
+        ret = int(retenidos_mask.sum())
+        rows.append({
+            "Periodo": f"{int(a0)}→{int(a1)}",
+            f"Investigadores iniciales": n0,
+            "Retenidos": ret,
+            "Tasa retención (%)": round(ret / n0 * 100, 1) if n0 else 0,
+        })
         try:
-            conteos, _ = matriz_transicion(comp, incluir_desaparece=False)
-            transiciones[f"{a0}→{a1}"] = conteos
+            conteos, _ = matriz_transicion(comp, incluir_desaparece=True)
+            transiciones[f"{int(a0)}→{int(a1)}"] = conteos
         except Exception:
             pass
     return {"retencion": pd.DataFrame(rows), "transiciones": transiciones}
@@ -332,11 +337,14 @@ def seccion_trayectoria(df: pd.DataFrame) -> None:
             datos = panel_completo(len(df), df)
             st.subheader("Tasa de retención entre convocatorias consecutivas")
             ret_df = datos["retencion"]
-            fig_ret = px.line(ret_df, x="Periodo", y="Tasa retención", markers=True,
-                              title="Retención (%) — el sistema mantiene 3 de cada 4 investigadores")
-            fig_ret.update_yaxes(range=[0, 100])
-            st.plotly_chart(fig_ret, use_container_width=True)
-            st.dataframe(ret_df, use_container_width=True, hide_index=True)
+            if not ret_df.empty:
+                fig_ret = px.line(ret_df, x="Periodo", y="Tasa retención (%)", markers=True,
+                                  title="Retención (%) — el sistema mantiene 3 de cada 4 investigadores")
+                fig_ret.update_yaxes(range=[0, 100])
+                st.plotly_chart(fig_ret, use_container_width=True)
+                st.dataframe(ret_df, use_container_width=True, hide_index=True)
+            else:
+                st.info("No hay suficientes convocatorias en el filtro para calcular retención.")
 
             transiciones = datos["transiciones"]
             if transiciones:

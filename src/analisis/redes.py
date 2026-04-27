@@ -49,9 +49,12 @@ def normalizar_institucion(nombre) -> str:
 import networkx as nx
 
 
-def construir_pares(df: pd.DataFrame) -> pd.DataFrame:
+def construir_pares(df: pd.DataFrame, normalizar: bool = True) -> pd.DataFrame:
     """
     Extrae pares (inst_a, inst_b) de investigadores con doble afiliacion.
+
+    Si normalizar=True (default), aplica normalizar_institucion() para colapsar
+    sedes y variantes (UNAL Bogota + UNAL Medellin -> UNAL).
 
     Retorna columnas: [ID_PERSONA_PR, ANO_CONVO_INT, inst_a, inst_b]
     """
@@ -61,8 +64,14 @@ def construir_pares(df: pd.DataFrame) -> pd.DataFrame:
         .str.split("|", n=1, expand=True)
         .apply(lambda s: s.str.strip())
     )
-    multi["inst_a"] = multi["inst_a"].str.upper().str.strip()
-    multi["inst_b"] = multi["inst_b"].str.upper().str.strip()
+    if normalizar:
+        multi["inst_a"] = multi["inst_a"].map(normalizar_institucion)
+        multi["inst_b"] = multi["inst_b"].map(normalizar_institucion)
+    else:
+        multi["inst_a"] = multi["inst_a"].str.upper().str.strip()
+        multi["inst_b"] = multi["inst_b"].str.upper().str.strip()
+    # Eliminar self-loops generados por la normalizacion (ej: UNAL Bogota | UNAL Medellin -> UNAL | UNAL)
+    multi = multi[multi["inst_a"] != multi["inst_b"]].copy()
     # Normalizar orden para que (A,B) == (B,A)
     multi[["inst_a", "inst_b"]] = pd.DataFrame(
         [sorted([a, b]) for a, b in zip(multi["inst_a"], multi["inst_b"])],
