@@ -22,6 +22,18 @@ from .longitudinal import (
     matriz_transicion,
     matrices_todos_periodos,
 )
+from .produccion import (
+    normalizar_produccion,
+    cobertura_reconocidos,
+    cobertura_autores_unicos,
+    productividad_por_categoria,
+    productividad_por_genero_area,
+    brecha_productividad_genero,
+    productividad_territorial,
+    mix_tipologias,
+    tipologias_por_categoria,
+    reconocidos_sin_produccion,
+)
 
 __all__ = [
     "construir_pares",
@@ -55,4 +67,14 @@ __all__ = [
     "tasa_retencion_por_periodo",
     "matriz_transicion",
     "matrices_todos_periodos",
+    "normalizar_produccion",
+    "cobertura_reconocidos",
+    "cobertura_autores_unicos",
+    "productividad_por_categoria",
+    "productividad_por_genero_area",
+    "brecha_productividad_genero",
+    "productividad_territorial",
+    "mix_tipologias",
+    "tipologias_por_categoria",
+    "reconocidos_sin_produccion",
 ]

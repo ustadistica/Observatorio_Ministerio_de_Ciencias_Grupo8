@@ -23,7 +23,7 @@ import streamlit as st
 ROOT = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from ingesta import cargar_consolidado  # noqa: E402
+from ingesta import cargar_consolidado, cargar_produccion  # noqa: E402
 from Transformacion import transformar  # noqa: E402
 from analisis.longitudinal import construir_panel, comparar_periodo, matriz_transicion  # noqa: E402
 from analisis.territorial import hhi_por_convocatoria  # noqa: E402
@@ -34,6 +34,16 @@ from analisis.diversidad import (  # noqa: E402
     comparar_dane,
 )
 from analisis.redes import normalizar_institucion  # noqa: E402
+from analisis.produccion import (  # noqa: E402
+    normalizar_produccion,
+    cobertura_reconocidos,
+    cobertura_autores_unicos,
+    productividad_por_categoria,
+    brecha_productividad_genero,
+    productividad_territorial,
+    mix_tipologias,
+    reconocidos_sin_produccion,
+)
 
 # ---------------------------------------------------------------------------
 # Configuracion de pagina
@@ -681,10 +691,218 @@ def seccion_redes(df: pd.DataFrame) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Seccion 6: Datos crudos
+# Seccion 6: Productividad y desempeno
+# ---------------------------------------------------------------------------
+@st.cache_data(show_spinner="Cargando producción de grupos (3.2M filas)…")
+def cargar_produccion_normalizada() -> pd.DataFrame:
+    return normalizar_produccion(cargar_produccion())
+
+
+def seccion_productividad(df: pd.DataFrame) -> None:
+    st.header("6️⃣ Productividad y desempeño — ¿quién produce el conocimiento?")
+    narrativa(
+        pregunta="¿La producción científica reflejada en MinCiencias es coherente "
+                 "con el reconocimiento? ¿Los Senior producen más que los Junior? "
+                 "¿La brecha de género se replica en outputs?",
+        takeaway="Sí — Senior producen 4× más que Junior. Pero el sistema "
+                 "captura productos firmados por miles de autores que NUNCA fueron "
+                 "reconocidos: ~37% de los autores únicos NO están en el padrón.",
+        caveat="El cruce usa id_persona (id_persona_pd ↔ id_persona_pr). El "
+               "dataset de producción 33dq-ab5a tiene la 'ventana de observación' "
+               "como referencia temporal — los productos pueden ser anteriores.",
+    )
+
+    try:
+        prod = cargar_produccion_normalizada()
+    except FileNotFoundError:
+        st.warning(
+            "El dataset de producción no está disponible. Ejecute: "
+            "`python -m src.ingesta.produccion`"
+        )
+        return
+
+    # Métricas globales
+    cov_unicos = cobertura_autores_unicos(prod, df)
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Productos totales", f"{len(prod):,}")
+    c2.metric("Autores únicos", f"{cov_unicos['autores_unicos_total']:,}")
+    c3.metric("% autores que son reconocidos",
+              f"{cov_unicos['pct_autores_reconocidos']:.1f}%")
+    c4.metric("Reconocidos sin producción",
+              f"{cov_unicos['reconocidos_sin_produccion']:,}",
+              help="Investigadores reconocidos que no aparecen en ninguna "
+                   "ventana del dataset de producción.")
+
+    # ----------------------------------------------------------------------
+    st.subheader("Cobertura de reconocimiento — ¿quién firma los productos?")
+    cov = cobertura_reconocidos(prod, df)
+    cov_plot = cov.melt(
+        id_vars="ANO_CONVO_INT",
+        value_vars=["n_reconocidos", "n_no_reconocidos"],
+        var_name="tipo", value_name="n",
+    )
+    cov_plot["tipo"] = cov_plot["tipo"].map({
+        "n_reconocidos": "Investigadores reconocidos (cualquier convocatoria)",
+        "n_no_reconocidos": "Autores NO reconocidos",
+    })
+    fig = px.bar(
+        cov_plot, x="ANO_CONVO_INT", y="n", color="tipo",
+        labels={"n": "# productos", "ANO_CONVO_INT": "Convocatoria", "tipo": ""},
+        title="Composición de la producción por estatus de reconocimiento",
+        color_discrete_map={
+            "Investigadores reconocidos (cualquier convocatoria)": "#1f77b4",
+            "Autores NO reconocidos": "#cccccc",
+        },
+    )
+    fig.update_layout(height=420, legend=dict(orientation="h", y=-0.15))
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption(
+        "El % de productos firmados por reconocidos baja con el tiempo "
+        f"({cov.iloc[0]['pct_reconocidos']:.1f}% en {int(cov.iloc[0]['ANO_CONVO_INT'])} → "
+        f"{cov.iloc[-1]['pct_reconocidos']:.1f}% en {int(cov.iloc[-1]['ANO_CONVO_INT'])}). "
+        "Los grupos cada vez incluyen más coautores externos al sistema MinCiencias."
+    )
+
+    # ----------------------------------------------------------------------
+    st.subheader("Productividad por categoría de reconocimiento")
+    prod_cat = productividad_por_categoria(prod, df)
+    prod_cat_plot = prod_cat[
+        prod_cat["NME_CLASIFICACION_PR"].isin(CAT_CORTA.keys())
+    ].copy()
+    prod_cat_plot["Categoría"] = prod_cat_plot["NME_CLASIFICACION_PR"].map(CAT_CORTA)
+
+    fig = px.line(
+        prod_cat_plot, x="ANO_CONVO_INT", y="productos_promedio",
+        color="Categoría", markers=True,
+        labels={"productos_promedio": "Productos promedio por investigador",
+                "ANO_CONVO_INT": "Convocatoria"},
+        title="¿Producen más los Senior que los Junior?",
+        category_orders={"Categoría": ["Junior", "Asociado", "Sénior", "Emérito"]},
+    )
+    fig.update_layout(height=420)
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption(
+        "La productividad escala con la categoría: Senior produce ~4× más que "
+        "Junior. Los Eméritos rompen el patrón: producción más baja porque "
+        "muchos están al final de su carrera activa (y desaparecen del padrón "
+        "en la siguiente convocatoria)."
+    )
+
+    # ----------------------------------------------------------------------
+    st.subheader("Brecha de género en productividad por gran área OCDE")
+    brecha = brecha_productividad_genero(prod, df).dropna()
+    brecha_plot = brecha[~brecha["NME_GRAN_AREA_PR"].isin(["NO REGISTRA", "NO REPORTADO"])]
+    brecha_long = brecha_plot.melt(
+        id_vars="NME_GRAN_AREA_PR",
+        value_vars=["prom_femenino", "prom_masculino"],
+        var_name="genero", value_name="prom",
+    )
+    brecha_long["genero"] = brecha_long["genero"].map({
+        "prom_femenino": "Mujeres", "prom_masculino": "Hombres",
+    })
+    fig = px.bar(
+        brecha_long, x="NME_GRAN_AREA_PR", y="prom", color="genero",
+        barmode="group",
+        labels={"prom": "Productos promedio por investigador",
+                "NME_GRAN_AREA_PR": "Gran área OCDE", "genero": ""},
+        title="Productos promedio por género — gran área OCDE",
+        color_discrete_map={"Mujeres": "purple", "Hombres": "darkorange"},
+    )
+    fig.update_layout(height=460, xaxis_tickangle=-25,
+                       legend=dict(orientation="h", y=-0.25))
+    st.plotly_chart(fig, use_container_width=True)
+    cols = st.columns(2)
+    cols[0].dataframe(
+        brecha_plot[["NME_GRAN_AREA_PR", "prom_femenino", "prom_masculino",
+                     "brecha_abs", "razon_f_m"]].rename(columns={
+            "NME_GRAN_AREA_PR": "Área", "prom_femenino": "Prom. ♀",
+            "prom_masculino": "Prom. ♂", "brecha_abs": "Brecha (♀−♂)",
+            "razon_f_m": "Razón ♀/♂",
+        }),
+        use_container_width=True, hide_index=True,
+    )
+    cols[1].info(
+        "**Lectura crítica.** La brecha de género no es solo de "
+        "**representación** (cuántas mujeres entran), sino también de "
+        "**productividad medida** (cuánto se les contabiliza). La brecha "
+        "más grande está en **Ciencias Médicas** e **Ingeniería**. "
+        "Humanidades es la única área con razón ≥ 1."
+    )
+
+    # ----------------------------------------------------------------------
+    st.subheader("Concentración territorial: ¿productos vs investigadores?")
+    terr = productividad_territorial(prod, df).head(15)
+    terr_plot = terr.melt(
+        id_vars="NME_DEPARTAMENTO_RES_PR",
+        value_vars=["pct_productos", "pct_investigadores"],
+        var_name="tipo", value_name="pct",
+    )
+    terr_plot["tipo"] = terr_plot["tipo"].map({
+        "pct_productos": "% de productos",
+        "pct_investigadores": "% de investigadores",
+    })
+    fig = px.bar(
+        terr_plot, x="NME_DEPARTAMENTO_RES_PR", y="pct", color="tipo",
+        barmode="group",
+        labels={"pct": "% del total nacional",
+                "NME_DEPARTAMENTO_RES_PR": "Departamento", "tipo": ""},
+        title="Top 15 departamentos: ¿concentran más productos que investigadores?",
+    )
+    fig.update_layout(height=460, xaxis_tickangle=-30,
+                      legend=dict(orientation="h", y=-0.30))
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption(
+        "**Ratio > 1** = el departamento produce más de lo que su tamaño de "
+        "padrón sugeriría (ej. Bolívar 1.24, Risaralda 1.24). **Ratio < 1** = "
+        "produce menos (Boyacá 0.88, EXTERIOR 0.34). EXTERIOR tiene investigadores "
+        "que probablemente publican fuera del circuito MinCiencias."
+    )
+
+    # ----------------------------------------------------------------------
+    st.subheader("Reconocidos sin producción registrada")
+    sin_prod = reconocidos_sin_produccion(prod, df)
+    fig = px.bar(
+        sin_prod, x="ANO_CONVO_INT", y="pct_sin_produccion",
+        text="pct_sin_produccion",
+        labels={"ANO_CONVO_INT": "Convocatoria",
+                "pct_sin_produccion": "% reconocidos sin producción"},
+        title="¿Reconocimiento sin obra registrada? Calidad de captura por convocatoria",
+        color="pct_sin_produccion", color_continuous_scale="Reds",
+    )
+    fig.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
+    fig.update_layout(height=400, coloraxis_showscale=False)
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption(
+        "La cifra cae con el tiempo (15.4% en 2013 → 5.5% en 2021). "
+        "**No es necesariamente que ahora produzcan más** — es que la captura "
+        "del campo de productos mejoró. En 2013 había 1.232 reconocidos sin "
+        "ningún producto vinculado en el dataset; en 2021 son 1.157."
+    )
+
+    # ----------------------------------------------------------------------
+    with st.expander("📚 Mix de tipologías de producto por convocatoria"):
+        mix = mix_tipologias(prod)
+        fig = px.bar(
+            mix, x="ANO_CONVO_INT", y="pct", color="NME_TIPO_MEDICION_PD",
+            labels={"pct": "% productos", "ANO_CONVO_INT": "Convocatoria",
+                    "NME_TIPO_MEDICION_PD": "Tipo medición MinCiencias"},
+            title="Composición de la producción por tipo de medición",
+        )
+        fig.update_layout(height=520, legend=dict(font=dict(size=10)))
+        st.plotly_chart(fig, use_container_width=True)
+        st.caption(
+            "Las tres categorías dominantes son **Formación de recursos humanos** "
+            "(33%), **Apropiación social** (30%) y **Nuevo conocimiento Tipo A** "
+            "(10%). El sistema MinCiencias premia tanto la docencia/formación "
+            "como la generación de nuevo conocimiento."
+        )
+
+
+# ---------------------------------------------------------------------------
+# Seccion 7: Datos crudos
 # ---------------------------------------------------------------------------
 def seccion_datos(df: pd.DataFrame) -> None:
-    st.header("6️⃣ Datos crudos — auditoría directa")
+    st.header("7️⃣ Datos crudos — auditoría directa")
     st.caption(
         f"{len(df):,} registros tras filtros. Use el buscador del DataFrame para "
         "validar casos individuales."
@@ -736,7 +954,8 @@ def main() -> None:
         "3️⃣ Territorio",
         "4️⃣ Diversidad",
         "5️⃣ Redes",
-        "6️⃣ Datos",
+        "6️⃣ Productividad",
+        "7️⃣ Datos",
     ])
     with tabs[0]:
         seccion_calidad(df)
@@ -749,6 +968,8 @@ def main() -> None:
     with tabs[4]:
         seccion_redes(df)
     with tabs[5]:
+        seccion_productividad(df)
+    with tabs[6]:
         seccion_datos(df)
 
     st.markdown("---")
