@@ -2,13 +2,17 @@
 
 > **Ustadistica** -- Consultoria e Investigacion . Universidad Santo Tomas . 2026-I
 
-Observatorio crítico del sistema de reconocimiento de investigadores de MinCiencias. Análisis longitudinal de **6 convocatorias** (2013-2021) con foco en **calidad de los datos**, **concentración territorial**, **brecha de género**, **redes de co-filiación institucional** y **subrepresentación de minorías**.
+Observatorio crítico del sistema de reconocimiento de investigadores de MinCiencias. Análisis longitudinal de **6 convocatorias** (2013-2021) con foco en **calidad de los datos**, **concentración territorial**, **brecha de género**, **redes de co-filiación institucional**, **subrepresentación de minorías** y **productividad cruzada con el dataset de producción de grupos**.
 
 El proyecto produce insumos para un informe crítico sobre las falencias de las convocatorias y el estado de la investigación en Colombia.
 
 ## Fuentes de Datos
 
-MinCiencias / datos.gov.co — Investigadores reconocidos por convocatoria. El dataset consolidado (`datos/tarea_join/investigadores_consolidado.xlsx`) integra **6 convocatorias históricas**:
+MinCiencias / datos.gov.co. Dos datasets cruzados por `id_persona`:
+
+### 1. Investigadores reconocidos por convocatoria (`bqtm-4y2h`)
+
+Dataset consolidado (`datos/tarea_join/investigadores_consolidado.xlsx`) que integra **6 convocatorias históricas**:
 
 | Convocatoria | Año | Registros |
 |---|---|---|
@@ -20,7 +24,23 @@ MinCiencias / datos.gov.co — Investigadores reconocidos por convocatoria. El d
 | 894 | 2021 | 21.094 |
 | **Total** | **2013–2021** | **77.237 registros / 30.086 investigadores únicos** |
 
-Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores Socrata y metadatos de cada dataset.
+### 2. Producción de grupos de investigación (`33dq-ab5a`)
+
+Dataset descargado por API Socrata (~1.2 GB, gitignored). Una fila por producto-autor:
+
+| Convocatoria | Productos |
+|---|---:|
+| 16 / 2013 | 238.407 |
+| 17 / 2014 | 342.160 |
+| 18 / 2015 | 376.653 |
+| 19 / 2017 | 536.648 |
+| 20 / 2019 | 762.719 |
+| 21 / 2021 | 910.042 |
+| **Total** | **3.166.629** |
+
+**Llave de cruce:** `produccion.id_persona_pd ↔ investigadores.id_persona_pr` (más `id_convocatoria` para asegurar la ventana).
+
+Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores Socrata y metadatos completos de cada dataset.
 
 ## Preguntas de Investigacion
 
@@ -29,7 +49,8 @@ Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores 
 - ¿La capacidad investigativa está distribuida equitativamente o concentrada? Comparación per cápita con población DANE 2018.
 - ¿Hay paridad de género por gran área OCDE? ¿La brecha en STEM se ha cerrado en una década?
 - ¿Cómo se conectan las instituciones a través de investigadores con doble afiliación? ¿Hay universidades-puente?
-- ¿La composición de los investigadores reflejala diversidad poblacional de Colombia (etnia, discapacidad, víctimas del conflicto)?
+- ¿La composición de los investigadores refleja la diversidad poblacional de Colombia (etnia, discapacidad, víctimas del conflicto)?
+- ¿Quién firma realmente la producción que MinCiencias mide? ¿Los Senior producen más que los Junior? ¿La brecha de género se replica en outputs?
 
 ## Hallazgos críticos (vista rápida)
 
@@ -42,6 +63,9 @@ Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores 
 | 5 | Afros 3x, Indígenas 7.9x, Discapacidad 8x subrepresentados vs DANE | Barreras estructurales |
 | 6 | Raizales/Palenqueros/Rrom sobrerrepresentados 3-6x | Programas focalizados con efecto |
 | 7 | 10 edades > 100 años (máx 956), conv. 833 mal etiquetada | Calidad de datos cuestionable |
+| 8 | Solo 36.9% de los autores únicos en producción son investigadores reconocidos | El sistema captura coautoría externa al padrón |
+| 9 | Productividad escala con categoría: Junior 30 / Asociado 65 / **Senior 121** productos | Reconocimiento alineado con output |
+| 10 | Brecha de género en productividad en 5/6 grandes áreas OCDE | La brecha de representación se duplica en outputs medidos |
 
 ## Estructura del Proyecto
 
@@ -55,13 +79,14 @@ Observatorio_Ministerio_de_Ciencias_Grupo7/
 |   +-- workflows/
 |       +-- etl_update.yml       # GitHub Actions para ingesta periodica
 |-- src/
-|   |-- ingesta/                 # cargar_consolidado + sodapy (Socrata)
+|   |-- ingesta/                 # cargar_consolidado + cargar_produccion + sodapy (Socrata)
 |   |-- analisis/                # Logica reutilizable
 |   |   |-- longitudinal.py      # Panel + matrices de transicion
 |   |   |-- territorial.py       # HHI + cuotas territoriales
 |   |   |-- genero.py            # Brecha por area OCDE
 |   |   |-- redes.py             # Co-filiacion + normalizar_institucion + Pyvis
-|   |   +-- diversidad.py        # Etnia, discapacidad, conflicto vs DANE/RUV
+|   |   |-- diversidad.py        # Etnia, discapacidad, conflicto vs DANE/RUV
+|   |   +-- produccion.py        # Cruce produccion <-> investigadores (Sprint 5)
 |   |-- modelo/dimensional.py    # Modelo estrella DuckDB
 |   +-- Transformacion.py        # Pipeline limpieza + normalizacion
 |-- scripts/                     # Orquestacion por sprint
@@ -72,10 +97,12 @@ Observatorio_Ministerio_de_Ciencias_Grupo7/
 |   |-- sprint2_duckdb.py
 |   |-- sprint3_redes.py
 |   |-- sprint3_grafo_interactivo.py
-|   +-- sprint4_diversidad.py
+|   |-- sprint4_diversidad.py
+|   |-- sprint5_produccion.py    # 6 figuras + 7 CSVs de productividad cruzada
+|   +-- sprint5_duckdb.py        # fact_produccion + dim_grupo + vw_investigador_x_produccion
 |-- notebooks/
 |   +-- 01_eda.ipynb             # Unico notebook activo (EDA exploratorio)
-|-- streamlit_app.py             # Dashboard — 6 tabs tipo capitulo del informe
+|-- streamlit_app.py             # Dashboard — 7 tabs tipo capitulo del informe
 |-- .streamlit/config.toml       # Tema y configuracion para Streamlit Cloud
 |-- requirements.txt             # Deps minimas runtime para deploy
 |-- datos/
@@ -102,8 +129,9 @@ cd Observatorio_Ministerio_de_Ciencias_Grupo7
 pip install poetry
 poetry install
 
-# Descargar dataset consolidado desde Socrata
-poetry run python -m src.ingesta.minciencias
+# Descargar datasets consolidados desde Socrata
+poetry run python -m src.ingesta.minciencias               # Investigadores reconocidos
+poetry run python -m src.ingesta.produccion                # Produccion de grupos (~1.2 GB, paginado)
 
 # Ejecutar todos los analisis (genera figuras en artifacts/ y CSVs en evidencias/)
 poetry run python scripts/sprint2_panel_longitudinal.py    # Issue #11
@@ -114,8 +142,10 @@ poetry run python scripts/sprint2_duckdb.py                # Issue #14
 poetry run python scripts/sprint3_redes.py                 # Issue #15
 poetry run python scripts/sprint3_grafo_interactivo.py     # Issue #16 — HTMLs Pyvis
 poetry run python scripts/sprint4_diversidad.py            # Issue #20
+poetry run python scripts/sprint5_produccion.py            # Issue #24 — Cruce produccion x investigadores
+poetry run python scripts/sprint5_duckdb.py                # Issue #24 — Tablas fact_produccion en DuckDB
 
-# Lanzar dashboard (6 tabs tipo capitulo del informe)
+# Lanzar dashboard (7 tabs tipo capitulo del informe)
 poetry run streamlit run streamlit_app.py
 ```
 
@@ -175,16 +205,27 @@ Análisis de variables de conflicto, etnia y discapacidad. Comparación con prop
 | #20 | Análisis de variables de conflicto y diversidad | ✅ Completado |
 | #21 | Informe final reproducible | ⏳ Pendiente |
 
-### Refactor del dashboard (post-Sprint 4)
+### Sprint 5 (Sem 9) — COMPLETADO ✅
 
-Reescritura del dashboard con narrativa crítica para alimentar el informe final. **6 tabs tipo capítulo**:
+Integración del dataset de **Producción de Grupos** (Socrata `33dq-ab5a`, 3.166.629 filas) cruzado con el padrón de investigadores por `id_persona_pd ↔ id_persona_pr`.
+
+| Issue | Título | Estado |
+|---|---|---|
+| #24 | Análisis de producción cruzado con investigadores | ✅ Completado |
+
+Salidas: `src/analisis/produccion.py` (10 funciones), `scripts/sprint5_*.py` (orquestación + DuckDB), 6 figuras + 7 CSVs en `evidencias/produccion_*.csv`, tab nueva en el dashboard.
+
+### Refactor del dashboard (post-Sprint 5)
+
+Dashboard con narrativa crítica para alimentar el informe final. **7 tabs tipo capítulo**:
 
 1. **Calidad de los datos** — heatmap de cobertura + tabla de anomalías (edad>100, conv. mal etiquetadas)
 2. **Trayectoria longitudinal** — retención + matrices de transición interactivas
 3. **Concentración territorial** — mapa + per cápita DANE 2018 + HHI evolutivo
 4. **Brecha de género y diversidad** — heatmap género + comparación DANE/RUV con metodología explicada
 5. **Redes y poder institucional** — grafo Pyvis embebido + top instituciones (con normalización)
-6. **Datos crudos** — auditoría directa con descarga CSV
+6. **Productividad y desempeño** — cobertura de reconocimiento, productividad por categoría, brecha de género en outputs, concentración territorial de productos, reconocidos sin producción
+7. **Datos crudos** — auditoría directa con descarga CSV
 
 Cada sección sigue el patrón **Pregunta → Hallazgo → Caveat**.
 
