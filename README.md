@@ -2,7 +2,7 @@
 
 > **Ustadistica** -- Consultoria e Investigacion . Universidad Santo Tomas . 2026-I
 
-Observatorio crítico del sistema de reconocimiento de investigadores de MinCiencias. Análisis longitudinal de **6 convocatorias** (2013-2021) con foco en **calidad de los datos**, **concentración territorial**, **brecha de género**, **redes de co-filiación institucional**, **subrepresentación de minorías** y **productividad cruzada con el dataset de producción de grupos**.
+Observatorio crítico del sistema de reconocimiento de investigadores de MinCiencias. Análisis longitudinal de **6 convocatorias** (2013-2021) con foco en **calidad de los datos**, **concentración territorial**, **brecha de género**, **redes de co-filiación institucional**, **subrepresentación de minorías**, **productividad cruzada con el dataset de producción de grupos**, y **flujos investigador → institución** mediante una tabla maestra de IES construida ad-hoc.
 
 El proyecto produce insumos para un informe crítico sobre las falencias de las convocatorias y el estado de la investigación en Colombia.
 
@@ -62,10 +62,14 @@ Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores 
 | 4 | 0% de cobertura de etnia/discapacidad/conflicto antes de 2021 | Diversidad invisible 8 años |
 | 5 | Afros 3x, Indígenas 7.9x, Discapacidad 8x subrepresentados vs DANE | Barreras estructurales |
 | 6 | Raizales/Palenqueros/Rrom sobrerrepresentados 3-6x | Programas focalizados con efecto |
-| 7 | 10 edades > 100 años (máx 956), conv. 833 mal etiquetada | Calidad de datos cuestionable |
+| 7 | 22 edades > 100 años (máx 956), conv. 833 mal etiquetada | Calidad de datos cuestionable (tratamiento documentado) |
 | 8 | Solo 36.9% de los autores únicos en producción son investigadores reconocidos | El sistema captura coautoría externa al padrón |
 | 9 | Productividad escala con categoría: Junior 30 / Asociado 65 / **Senior 121** productos | Reconocimiento alineado con output |
 | 10 | Brecha de género en productividad en 5/6 grandes áreas OCDE | La brecha de representación se duplica en outputs medidos |
+| 11 | 2.762 cadenas únicas en `inst_filia` → ~800 IES reales | Captura sin estandarización; tabla maestra entregada cubre 91% |
+| 12 | Bogotá retiene 92% de sus investigadores **y** absorbe 1.000+ de otros dpto | No solo concentra: atrae. Cundinamarca/Risaralda retención local ~70% |
+| 13 | Ciencias Sociales gana en volumen (585k); **Ingeniería** en productividad por investigador (67) | "¿Qué área produce más?" depende de la métrica |
+| 14 | Eméritos quedan **vitalicios** — no reaparecen porque no necesitan re-postular | El 100% de "desaparición" es diseño del sistema |
 
 ## Estructura del Proyecto
 
@@ -86,7 +90,8 @@ Observatorio_Ministerio_de_Ciencias_Grupo7/
 |   |   |-- genero.py            # Brecha por area OCDE
 |   |   |-- redes.py             # Co-filiacion + normalizar_institucion + Pyvis
 |   |   |-- diversidad.py        # Etnia, discapacidad, conflicto vs DANE/RUV
-|   |   +-- produccion.py        # Cruce produccion <-> investigadores (Sprint 5)
+|   |   |-- produccion.py        # Cruce produccion <-> investigadores (Sprint 5)
+|   |   +-- calidad.py           # Validacion documentada de atipicos (Sprint 6)
 |   |-- modelo/dimensional.py    # Modelo estrella DuckDB
 |   +-- Transformacion.py        # Pipeline limpieza + normalizacion
 |-- scripts/                     # Orquestacion por sprint
@@ -99,12 +104,23 @@ Observatorio_Ministerio_de_Ciencias_Grupo7/
 |   |-- sprint3_grafo_interactivo.py
 |   |-- sprint4_diversidad.py
 |   |-- sprint5_produccion.py    # 6 figuras + 7 CSVs de productividad cruzada
-|   +-- sprint5_duckdb.py        # fact_produccion + dim_grupo + vw_investigador_x_produccion
+|   |-- sprint5_duckdb.py        # fact_produccion + dim_grupo + vw_investigador_x_produccion
+|   |-- sprint6_validacion_calidad.py   # Tratamiento documentado de atipicos
+|   |-- sprint6_sankey_categoria.py     # 5 Sankeys de transicion de categoria
+|   |-- sprint6_ocde_composicion.py     # Composicion tipo producto por area OCDE
+|   |-- sprint6_tabla_maestra_ies.py    # Tabla maestra IES (211 IES, 91% cobertura)
+|   |-- sprint6_geografia_institucional.py  # Cruce residencia x departamento institucion
+|   |-- sprint6_sankey_territorial.py   # Sankey residencia -> institucion
+|   +-- generar_manual.py        # Genera docs/manual.ipynb desde codigo
 |-- notebooks/
 |   +-- 01_eda.ipynb             # Unico notebook activo (EDA exploratorio)
 |-- streamlit_app.py             # Dashboard — 7 tabs tipo capitulo del informe
 |-- .streamlit/config.toml       # Tema y configuracion para Streamlit Cloud
 |-- requirements.txt             # Deps minimas runtime para deploy
+|-- docs/
+|   |-- presentacion/index.html  # 18 slides Reveal.js para Izainea (20 min)
+|   |-- manual.ipynb             # Notebook ejecutable con los 15 hallazgos
+|   +-- informe/informe_final.tex # Informe consolidado en LaTeX (~30 pag)
 |-- datos/
 |   |-- raw/                     # Datos crudos (gitignored)
 |   |-- processed/               # observatorio.duckdb (gitignored)
@@ -134,19 +150,35 @@ poetry run python -m src.ingesta.minciencias               # Investigadores reco
 poetry run python -m src.ingesta.produccion                # Produccion de grupos (~1.2 GB, paginado)
 
 # Ejecutar todos los analisis (genera figuras en artifacts/ y CSVs en evidencias/)
-poetry run python scripts/sprint2_panel_longitudinal.py    # Issue #11
-poetry run python scripts/sprint2_matrices_transicion.py   # Issue #12
-poetry run python scripts/sprint2_territorial.py           # Issue #13
-poetry run python scripts/sprint2_genero_ocde.py           # Issue #22
-poetry run python scripts/sprint2_duckdb.py                # Issue #14
-poetry run python scripts/sprint3_redes.py                 # Issue #15
-poetry run python scripts/sprint3_grafo_interactivo.py     # Issue #16 — HTMLs Pyvis
-poetry run python scripts/sprint4_diversidad.py            # Issue #20
-poetry run python scripts/sprint5_produccion.py            # Issue #24 — Cruce produccion x investigadores
-poetry run python scripts/sprint5_duckdb.py                # Issue #24 — Tablas fact_produccion en DuckDB
+poetry run python scripts/sprint2_panel_longitudinal.py    # Panel longitudinal
+poetry run python scripts/sprint2_matrices_transicion.py   # Matrices de transicion
+poetry run python scripts/sprint2_territorial.py           # HHI territorial
+poetry run python scripts/sprint2_genero_ocde.py           # Brecha por area OCDE
+poetry run python scripts/sprint2_duckdb.py                # Modelo estrella DuckDB
+poetry run python scripts/sprint3_redes.py                 # Co-filiacion
+poetry run python scripts/sprint3_grafo_interactivo.py     # Grafo Pyvis interactivo
+poetry run python scripts/sprint4_diversidad.py            # Diversidad vs DANE/RUV
+poetry run python scripts/sprint5_produccion.py            # Cruce produccion x investigadores
+poetry run python scripts/sprint5_duckdb.py                # fact_produccion en DuckDB
+poetry run python scripts/sprint6_validacion_calidad.py    # Atipicos de edad documentados
+poetry run python scripts/sprint6_sankey_categoria.py      # 5 Sankeys transicion categoria
+poetry run python scripts/sprint6_ocde_composicion.py      # Composicion por area OCDE
+poetry run python scripts/sprint6_tabla_maestra_ies.py     # Tabla maestra de IES
+poetry run python scripts/sprint6_geografia_institucional.py  # Residencia x dpto institucion
+poetry run python scripts/sprint6_sankey_territorial.py    # Sankey territorial
+
+# Generar el notebook manual (manualcito ejecutable)
+poetry run python scripts/generar_manual.py
+poetry run jupyter notebook docs/manual.ipynb
 
 # Lanzar dashboard (7 tabs tipo capitulo del informe)
 poetry run streamlit run streamlit_app.py
+
+# Presentacion HTML para revision con director (20 min, Reveal.js)
+open docs/presentacion/index.html
+
+# Compilar informe LaTeX consolidado (~30 paginas)
+cd docs/informe && pdflatex informe_final.tex && pdflatex informe_final.tex
 ```
 
 ## Deploy en Streamlit Cloud
@@ -215,7 +247,29 @@ Integración del dataset de **Producción de Grupos** (Socrata `33dq-ab5a`, 3.16
 
 Salidas: `src/analisis/produccion.py` (10 funciones), `scripts/sprint5_*.py` (orquestación + DuckDB), 6 figuras + 7 CSVs en `evidencias/produccion_*.csv`, tab nueva en el dashboard.
 
-### Refactor del dashboard (post-Sprint 5)
+### Sprint 6 (Sem 10-11) — COMPLETADO ✅
+
+Ajustes pedidos por el director Izainea tras la revisión de la presentación. Se documenta el tratamiento de atípicos, se construye la tabla maestra de IES como entregable, se incorporan los Sankeys de transición y se agrega el cruce geográfico institucional.
+
+| Producto | Salida |
+|---|---|
+| Validación de calidad documentada | `src/analisis/calidad.py` + `scripts/sprint6_validacion_calidad.py` |
+| Sankeys de transición de categoría (5 pares) | `artifacts/sprint6_sankey/sankey_*.html` y `.png` |
+| Composición OCDE por tipo de producto | `artifacts/sprint6_ocde/` + 3 CSVs |
+| Tabla maestra de IES (211 IES, 91% cobertura) | `evidencias/tabla_maestra_ies.csv` + `mapping_inst_filia_to_ies.csv` |
+| Análisis geográfico institucional | `artifacts/sprint6_geografia/` + `evidencias/geografia_*.csv` |
+| Sankey territorial (residencia → institución) | `artifacts/sprint6_sankey/sankey_territorial.html` |
+| Notebook manual ejecutable | `docs/manual.ipynb` (49 celdas) |
+| Informe LaTeX consolidado | `docs/informe/informe_final.tex` (~30 pag) |
+| Presentación HTML 20 min | `docs/presentacion/index.html` (18 slides Reveal.js) |
+
+**Aclaraciones que aporta el Sprint 6:**
+- Los Eméritos **quedan vitalicios**. Su "desaparición" en convocatorias siguientes es diseño del sistema, no expulsión.
+- Atípicos de edad: **22 casos** (no 10) con `edad > 100`; método aplicado documentado (eliminación) y comparado con imputación por mediana del grupo.
+- Tabla maestra: las 2.762 cadenas de `inst_filia` corresponden a ~800 IES reales. El borrador entregado consolida 211 IES y cubre el 91% del padrón.
+- Geografía: Bogotá retiene 92% y absorbe ~1.000 investigadores de otros departamentos. Cundinamarca y Risaralda tienen baja retención local (~70%). Chocó y Amazonas tienen alta retención local pese a su tamaño.
+
+### Dashboard refactorizado (post-Sprint 5)
 
 Dashboard con narrativa crítica para alimentar el informe final. **7 tabs tipo capítulo**:
 
