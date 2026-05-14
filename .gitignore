@@ -6,6 +6,9 @@ __pycache__/
 dist/
 build/
 *.egg
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 
 # === Entornos virtuales ===
 .venv/
@@ -20,6 +23,8 @@ datos/processed/*.csv
 datos/processed/*.parquet
 datos/interim/
 *.duckdb
+*.duckdb-wal
+*.duckdb-shm
 *.sqlite
 *.db
 
@@ -47,6 +52,7 @@ Thumbs.db
 *.pem
 *.key
 credentials.json
+.streamlit/secrets.toml
 
 # === MLflow ===
 mlruns/
@@ -56,6 +62,7 @@ mlruns/
 *.tmp
 .coverage
 htmlcov/
+node_modules/
 
 # === Claude Code context (local only) ===
 CLAUDE.md

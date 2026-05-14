@@ -2,63 +2,229 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Observatorio MinCiencias</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Observatorio MinCiencias · 1920×1080</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css" id="theme">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap">
 
 <style>
 :root {
-  --accent: #f4c430;
-  --danger: #ef4444;
-  --positive: #10b981;
-  --bg: #0f172a;
-  --bg-soft: #1e293b;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
+  --ink:        #0b1320;
+  --ink-soft:   #1f2a3a;
+  --paper:      #f6f7fb;
+  --surface:    #ffffff;
+  --text:       #1a1d23;
+  --muted:      #6b7280;
+  --line:       #e5e7eb;
+  --primary:    #1e40af;   /* USTA blue */
+  --primary-2:  #2563eb;
+  --accent:     #d97706;   /* warm gold */
+  --danger:     #b91c1c;
+  --positive:   #047857;
+  --soft-blue:  #eff6ff;
+  --soft-gold:  #fef3c7;
 }
 
-.reveal { font-family: 'Inter', sans-serif; font-size: 28px; }
-.reveal section { text-align: left; color: var(--text); }
-.reveal h1, .reveal h2, .reveal h3 {
+html, body { background: var(--paper); }
+
+.reveal {
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  color: var(--text);
+}
+.reveal section {
+  text-align: left;
+  color: var(--text);
+  background: var(--paper);
+}
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
   font-family: 'Inter', sans-serif;
   text-transform: none;
-  letter-spacing: -0.015em;
-  color: #fff;
+  letter-spacing: -0.018em;
+  color: var(--ink);
   margin-top: 0;
 }
-.reveal h1 { font-size: 1.8em; font-weight: 800; line-height: 1.05; }
-.reveal h2 { font-size: 1.1em; font-weight: 700; margin-bottom: 0.25em; line-height: 1.1; }
-.reveal h3 { font-size: 0.95em; font-weight: 600; color: var(--accent); }
-.reveal p, .reveal li { color: var(--text); line-height: 1.35; }
-.reveal strong { color: #fff; font-weight: 700; }
-.reveal em { color: var(--accent); font-style: normal; font-weight: 600; }
+.reveal h1 { font-size: 2.6em; font-weight: 900; line-height: 1.02; }
+.reveal h2 { font-size: 1.4em; font-weight: 800; margin: 0 0 14px 0; line-height: 1.08; }
+.reveal h3 { font-size: 1.05em; font-weight: 700; color: var(--primary); }
+.reveal p, .reveal li { color: var(--text); line-height: 1.4; font-size: 0.86em; }
+.reveal strong { color: var(--ink); font-weight: 700; }
+.reveal em { color: var(--accent); font-style: normal; font-weight: 700; }
+.reveal a { color: var(--primary); }
 
-.footer-brand {
-  position: fixed;
-  bottom: 12px;
-  left: 28px;
-  font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-  z-index: 5;
-}
-
+/* Eyebrow / section labels */
 .eyebrow {
   display: inline-block;
   font-size: 0.46em;
-  font-weight: 600;
-  letter-spacing: 0.18em;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 4px;
+  color: var(--primary);
+  padding: 4px 12px;
+  background: var(--soft-blue);
+  border-radius: 4px;
+  margin-bottom: 14px;
 }
-.subtitle { color: var(--muted); font-size: 0.68em; font-weight: 500; }
+.subtitle {
+  color: var(--muted);
+  font-size: 0.7em;
+  font-weight: 500;
+}
 
-/* Big figure layout: image dominates, comments below */
+/* Footer brand */
+.footer-brand {
+  position: fixed;
+  bottom: 18px;
+  left: 36px;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  z-index: 5;
+}
+.footer-brand strong { color: var(--ink); font-weight: 700; }
+
+/* Cover */
+.cover {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(217,119,6,0.12), transparent 45%),
+    radial-gradient(circle at 12% 88%, rgba(30,64,175,0.14), transparent 45%),
+    linear-gradient(180deg, #ffffff 0%, #f4f6fb 100%) !important;
+  padding: 60px !important;
+}
+.cover .eyebrow {
+  font-size: 0.6em;
+  letter-spacing: 0.3em;
+  background: transparent;
+  padding: 0;
+  color: var(--accent);
+}
+.cover h1 {
+  font-size: 3em;
+  line-height: 1.02;
+  margin: 18px 0 24px 0;
+  max-width: 1400px;
+}
+.cover .lead {
+  font-size: 0.92em;
+  color: var(--ink-soft);
+  max-width: 1300px;
+  line-height: 1.45;
+  font-weight: 400;
+}
+.cover .meta {
+  margin-top: 60px;
+  font-size: 0.66em;
+  color: var(--muted);
+  border-top: 2px solid var(--ink);
+  padding-top: 18px;
+  max-width: 1300px;
+}
+.cover .meta strong { color: var(--ink); }
+
+/* Section divider — dark slide */
+.section-divider {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(37,99,235,0.18), transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(217,119,6,0.15), transparent 50%),
+    #0b1320 !important;
+  color: #fff !important;
+  text-align: center !important;
+  padding: 80px !important;
+}
+.section-divider .eyebrow {
+  font-size: 0.7em;
+  letter-spacing: 0.35em;
+  background: rgba(255,255,255,0.08);
+  color: #fcd34d;
+  padding: 6px 18px;
+}
+.section-divider h1 {
+  font-size: 3.4em;
+  color: #fff;
+  margin-top: 20px;
+}
+.section-divider .subtitle {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.78em;
+  margin-top: 16px;
+}
+
+/* KPI grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 30px;
+}
+.kpi {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px 22px;
+  border-top: 4px solid var(--primary);
+  box-shadow: 0 4px 12px rgba(11,19,32,0.06);
+}
+.kpi .num {
+  font-size: 2.4em;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.kpi .lbl {
+  font-size: 0.42em;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.kpi.alt { border-top-color: var(--accent); }
+.kpi.alt2 { border-top-color: var(--positive); }
+.kpi.alt3 { border-top-color: var(--danger); }
+
+/* Two-column layout */
+.col2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.col2-tight {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+/* Lists */
+ul.tight { padding-left: 1.2em; margin: 0.4em 0; }
+ul.tight li { margin: 8px 0; font-size: 0.82em; line-height: 1.45; }
+
+ul.bullets-large li { font-size: 0.95em; margin: 14px 0; }
+
+/* Note boxes */
+.note-box {
+  background: var(--surface);
+  border-left: 4px solid var(--primary);
+  padding: 18px 22px;
+  border-radius: 4px;
+  font-size: 0.78em;
+  color: var(--text);
+  line-height: 1.5;
+  box-shadow: 0 2px 6px rgba(11,19,32,0.04);
+}
+.note-box.alert { border-left-color: var(--danger); }
+.note-box.gold  { border-left-color: var(--accent); }
+.note-box.good  { border-left-color: var(--positive); }
+.note-box strong { display: block; margin-bottom: 6px; color: var(--ink); font-size: 1em; }
+
+/* Figure slide */
 .figslide {
   display: flex;
   flex-direction: column;
@@ -69,10 +235,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 4px;
-  margin-bottom: 8px;
+  margin: 10px 0 14px 0;
   min-height: 0;
   overflow: hidden;
+  background: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  padding: 14px;
 }
 .figslide img {
   max-width: 100%;
@@ -80,144 +249,232 @@
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: 6px;
-  background: #fff;
-  padding: 4px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  border-radius: 4px;
 }
 .figslide .notes {
-  font-size: 0.6em;
-  display: flex;
-  gap: 22px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  border-top: 2px solid var(--ink);
+  padding-top: 16px;
   flex: 0 0 auto;
 }
-.figslide .notes div { flex: 1; }
-.figslide .notes strong { color: var(--accent); display: block; font-size: 0.85em; margin-bottom: 2px; font-weight: 700; }
-
-/* KPI strip for opener */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-top: 14px;
+.figslide .notes > div { font-size: 0.74em; line-height: 1.5; }
+.figslide .notes strong {
+  color: var(--primary);
+  display: block;
+  font-size: 0.85em;
+  margin-bottom: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
-.kpi {
-  background: var(--bg-soft);
+
+/* Headline number style */
+.headline {
+  display: flex;
+  align-items: baseline;
+  gap: 30px;
+  margin: 16px 0 18px 0;
+  padding: 22px 26px;
+  background: var(--surface);
+  border-radius: 12px;
+  border-left: 5px solid var(--accent);
+  box-shadow: 0 3px 10px rgba(11,19,32,0.05);
+}
+.headline .big {
+  font-size: 3.2em;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.headline .lead {
+  font-size: 0.92em;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* Sankey tabs (single view with year navigation) */
+.sankey-tabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 4px 0 14px 0;
+  flex-wrap: wrap;
+}
+.sankey-tabs button {
+  background: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 26px;
+  font-family: 'Inter', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 2px 6px rgba(11,19,32,0.05);
+}
+.sankey-tabs button:hover {
+  background: var(--soft-blue);
+  border-color: var(--primary-2);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+.sankey-tabs button.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 4px 14px rgba(30,64,175,0.35);
+}
+.sankey-tabs button.nav-arrow {
+  padding: 12px 18px;
+  font-size: 22px;
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+.sankey-tabs button.nav-arrow:hover {
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
+  color: #fcd34d;
+}
+
+/* Sankey viewer (large single image) */
+.sankey-viewer {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
   border-radius: 10px;
-  padding: 14px 12px;
-  border-left: 3px solid var(--accent);
+  border: 1px solid var(--line);
+  padding: 14px;
+  min-height: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(11,19,32,0.06);
 }
-.kpi .num { font-size: 1.85em; font-weight: 800; color: #fff; line-height: 1; }
-.kpi .lbl { font-size: 0.46em; color: var(--muted); margin-top: 6px; line-height: 1.25; letter-spacing: 0.04em; }
-
-.col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; }
-
-table.minimal {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.7em;
-  margin-top: 10px;
+.sankey-viewer img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  transition: opacity 0.25s ease;
 }
-table.minimal th, table.minimal td {
-  padding: 8px 12px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-table.minimal th { color: var(--accent); font-weight: 600; font-size: 0.85em; letter-spacing: 0.05em; text-transform: uppercase; }
 
-ul.tight { padding-left: 1.1em; margin: 0.4em 0; }
-ul.tight li { margin: 5px 0; font-size: 0.74em; }
-
-.quiet { color: var(--muted); font-size: 0.66em; }
-
-/* Cover */
-.cover {
-  background: radial-gradient(circle at 18% 18%, rgba(244,196,48,0.22), transparent 55%),
-              radial-gradient(circle at 82% 82%, rgba(56,189,248,0.16), transparent 50%),
-              #0a1226;
-}
-.cover h1 { font-size: 2.4em; line-height: 1.05; margin: 0 0 16px 0; }
-.cover .lead { font-size: 0.78em; color: var(--text); max-width: 820px; line-height: 1.5; }
-.cover .meta {
-  margin-top: 32px;
-  font-size: 0.62em;
-  color: var(--muted);
-  border-top: 1px solid rgba(255,255,255,0.1);
+/* Insight strip below sankey viewer */
+.sankey-insight {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 22px;
+  border-top: 2px solid var(--ink);
   padding-top: 14px;
+  margin-top: 12px;
+  flex: 0 0 auto;
+}
+.sankey-insight > div { font-size: 20px; line-height: 1.45; color: var(--text); }
+.sankey-insight strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.sankey-insight .pair-tag {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--ink);
+  color: #fcd34d;
+  padding: 4px 12px;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
 }
 
 /* Recommendations */
 .rec-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 10px;
+  gap: 18px;
+  margin-top: 18px;
 }
 .rec {
-  background: var(--bg-soft);
-  border-radius: 8px;
-  padding: 10px 14px;
-  border-top: 3px solid var(--accent);
-  font-size: 0.62em;
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 18px 22px;
+  border-top: 4px solid var(--primary);
+  box-shadow: 0 2px 8px rgba(11,19,32,0.05);
+  font-size: 0.72em;
 }
-.rec h4 { color: var(--accent); margin: 0 0 4px 0; font-size: 1em; font-weight: 700; }
-.rec ul { margin: 0; padding-left: 16px; }
-.rec li { margin: 3px 0; line-height: 1.3; }
+.rec.alt  { border-top-color: var(--accent); }
+.rec.alt2 { border-top-color: var(--positive); }
+.rec.alt3 { border-top-color: var(--danger); }
+.rec h4 { color: var(--ink); margin: 0 0 10px 0; font-size: 1.05em; font-weight: 800; }
+.rec ul { margin: 0; padding-left: 18px; }
+.rec li { margin: 6px 0; line-height: 1.45; }
 
-/* Section dividers */
-.section-divider {
-  background: linear-gradient(135deg, rgba(244,196,48,0.16), #0a1226 70%);
-  text-align: center !important;
-}
-.section-divider .eyebrow { font-size: 0.7em; letter-spacing: 0.3em; }
-.section-divider h1 { font-size: 2.2em; margin-top: 10px; }
+/* Quiet caption */
+.quiet { color: var(--muted); font-size: 0.7em; line-height: 1.5; }
 
-/* Headline number for slides without images */
-.headline {
-  display: flex;
-  align-items: baseline;
-  gap: 22px;
-  margin: 12px 0 10px 0;
-}
-.headline .big {
-  font-size: 3em;
-  font-weight: 900;
-  color: var(--accent);
-  line-height: 1;
-}
-.headline .lead { font-size: 0.78em; color: var(--text); }
-
-.tag-row { margin-top: 8px; }
+/* Tag pills */
+.tag-row { margin-top: 12px; }
 .tag {
   display: inline-block;
   font-size: 0.5em;
-  padding: 3px 10px;
+  padding: 5px 14px;
   border-radius: 999px;
-  letter-spacing: 0.04em;
-  font-weight: 600;
-  margin-right: 6px;
-  background: rgba(244,196,48,0.18);
-  color: var(--accent);
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  margin-right: 8px;
+  background: var(--soft-blue);
+  color: var(--primary);
+  text-transform: uppercase;
+}
+.tag.gold { background: var(--soft-gold); color: var(--accent); }
+
+/* Tables */
+table.minimal {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.7em;
+  margin-top: 14px;
+}
+table.minimal th, table.minimal td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+table.minimal th {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.85em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--soft-blue);
+}
+table.minimal tr:hover td { background: var(--soft-blue); }
+
+/* Slide number style override */
+.reveal .slide-number {
+  background: rgba(11,19,32,0.85);
+  color: #fcd34d;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  padding: 4px 10px;
 }
 
-.note-box {
-  background: var(--bg-soft);
-  border-left: 3px solid var(--accent);
-  padding: 10px 14px;
-  border-radius: 4px;
-  margin-top: 10px;
-  font-size: 0.66em;
-  color: var(--text);
-  line-height: 1.4;
-}
-.note-box.alert { border-left-color: var(--danger); }
 </style>
 </head>
 <body>
 
-<div class="footer-brand">UNIVERSIDAD SANTO TOMÁS · USTADISTICA · 2026-I</div>
+<div class="footer-brand"><strong>USTADISTICA</strong> · UNIVERSIDAD SANTO TOMÁS · 2026-I</div>
 
 <div class="reveal">
   <div class="slides">
@@ -226,59 +483,59 @@ ul.tight li { margin: 5px 0; font-size: 0.74em; }
     <!-- 1. PORTADA                                                           -->
     <!-- =================================================================== -->
     <section class="cover">
-      <div class="eyebrow">Observatorio MinCiencias</div>
+      <div class="eyebrow">Observatorio MinCiencias · 2013–2021</div>
       <h1>El sistema de reconocimiento<br>de investigadores en Colombia</h1>
       <p class="lead">
-        Análisis longitudinal de seis convocatorias entre 2013 y 2021,
-        sobre treinta mil investigadores reconocidos y tres millones
-        de productos académicos contabilizados por MinCiencias.
+        Análisis descriptivo sobre <strong>30.086 investigadores</strong> reconocidos
+        en seis convocatorias y <strong>3,16 millones de productos académicos</strong>
+        registrados por MinCiencias. Una mirada cruzada a las personas, su
+        producción, los territorios, los campos OCDE y la trayectoria de
+        categorías en el tiempo.
       </p>
       <div class="meta">
-        Víctor Díaz · Universidad Santo Tomás<br>
-        Fuentes: datos.gov.co · ScienTI Colombia
+        <strong>Víctor Díaz</strong> · Universidad Santo Tomás<br>
+        Fuentes: datos.gov.co · ScienTI Colombia · DANE 2018 · RUV 2022
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 2. AGENDA                                                            -->
+    <!-- 2. CIFRAS + AGENDA                                                   -->
     <!-- =================================================================== -->
     <section>
-      <div class="eyebrow">Agenda</div>
-      <h2>Lo que veremos</h2>
-      <ul class="tight" style="font-size: 1em; margin-top: 18px;">
-        <li>El sistema en cifras y cómo se construyó la lectura cruzada de los datos.</li>
-        <li>Diez hallazgos sobre calidad, territorio, género, diversidad y productividad.</li>
-        <li>Cuatro líneas de recomendación para MinCiencias.</li>
-        <li>Limitaciones del análisis y preguntas que quedan abiertas.</li>
-      </ul>
-      <p class="quiet" style="margin-top: 24px;">
-        El análisis revisa cómo MinCiencias captura, clasifica y publica a sus
-        investigadores reconocidos. No es una infografía celebratoria.
-      </p>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 3. CIFRAS DEL SISTEMA                                                -->
-    <!-- =================================================================== -->
-    <section>
-      <div class="eyebrow">Punto de partida</div>
-      <h2>El sistema en cifras</h2>
+      <div class="eyebrow">El sistema en cifras</div>
+      <h2>Punto de partida</h2>
 
       <div class="kpi-grid">
-        <div class="kpi"><div class="num">6</div><div class="lbl">CONVOCATORIAS · 2013-2021</div></div>
-        <div class="kpi"><div class="num">30.086</div><div class="lbl">INVESTIGADORES ÚNICOS RECONOCIDOS</div></div>
-        <div class="kpi"><div class="num">3,16 M</div><div class="lbl">PRODUCTOS ACADÉMICOS CONTABILIZADOS</div></div>
-        <div class="kpi"><div class="num">7.467</div><div class="lbl">GRUPOS DE INVESTIGACIÓN</div></div>
+        <div class="kpi"><div class="num">6</div><div class="lbl">Convocatorias · 2013-2021</div></div>
+        <div class="kpi alt"><div class="num">30.086</div><div class="lbl">Investigadores únicos</div></div>
+        <div class="kpi alt2"><div class="num">3,16 M</div><div class="lbl">Productos académicos</div></div>
+        <div class="kpi alt3"><div class="num">7.467</div><div class="lbl">Grupos de investigación</div></div>
       </div>
 
-      <p class="quiet" style="margin-top: 22px;">
-        Convocatorias 640 (2013), 693 (2014), 737 (2015), 781 (2017),
-        833 (publicada en 2019) y 894 (2021). La de 2023 no estaba disponible al cierre.
-      </p>
+      <div class="col2" style="margin-top: 38px;">
+        <div>
+          <h3 style="margin-bottom: 14px;">Los cinco ejes del análisis</h3>
+          <ul class="tight bullets-large">
+            <li><strong>Personas.</strong> Quiénes son y cómo se distribuyen.</li>
+            <li><strong>Producción.</strong> Qué firman y qué se les contabiliza.</li>
+            <li><strong>Territorios.</strong> Dónde viven y dónde trabajan.</li>
+            <li><strong>Campos OCDE.</strong> Volumen y productividad por área.</li>
+            <li><strong>Longitudinal.</strong> Cómo cambian de categoría en el tiempo.</li>
+          </ul>
+        </div>
+        <div class="note-box">
+          <strong>Lo que esta lectura permite</strong>
+          Por primera vez se contrasta el reconocimiento con la producción medida:
+          quién la firma, en qué área, con qué intensidad, desde qué territorio
+          y cómo evoluciona su categoría a lo largo de una década.
+          Las convocatorias cubiertas son 640 (2013), 693 (2014), 737 (2015),
+          781 (2017), 833 (publicada en 2019) y 894 (2021).
+        </div>
+      </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 4. CRUCE DE DATOS                                                    -->
+    <!-- 3. CRUCE DE DATOS                                                    -->
     <!-- =================================================================== -->
     <section>
       <div class="eyebrow">Construcción del análisis</div>
@@ -286,136 +543,71 @@ ul.tight li { margin: 5px 0; font-size: 0.74em; }
 
       <div class="col2">
         <div>
+          <ul class="tight bullets-large">
+            <li>Padrón de <strong>investigadores reconocidos</strong> por convocatoria <em>(bqtm-4y2h)</em>.</li>
+            <li>Padrón de <strong>productos contabilizados</strong> a grupos de investigación <em>(33dq-ab5a)</em>.</li>
+            <li>El cruce se hizo por <strong>identidad de persona</strong> dentro de la misma convocatoria.</li>
+            <li><strong>95%</strong> de los reconocidos tiene al menos un producto en alguna ventana.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">id_persona_pr ↔ id_persona_pd</span>
+            <span class="tag gold">id_convocatoria</span>
+          </div>
+        </div>
+        <div class="note-box gold">
+          <strong>Caveat: ventana de observación</strong>
+          Un producto firmado en 2018 puede aparecer en la convocatoria de 2021.
+          Las cifras se leen como <em>atribución oficial</em>, no como producción
+          generada en un año calendario específico. Esto importa al comparar
+          tendencias temporales finas.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- DIVISOR 1 — PERSONAS                                                 -->
+    <!-- =================================================================== -->
+    <section class="section-divider">
+      <div class="eyebrow">Eje 1</div>
+      <h1>Personas</h1>
+      <p class="subtitle">Quiénes son · cómo se distribuyen · qué cobertura tiene la diversidad</p>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 4. CALIDAD DE DATOS — COMPACTO                                       -->
+    <!-- =================================================================== -->
+    <section>
+      <div class="eyebrow">Calidad del padrón</div>
+      <h2>Lo que hay que limpiar antes de leer las cifras</h2>
+
+      <div class="col2">
+        <div>
+          <div class="headline">
+            <div class="big">22</div>
+            <div class="lead">apariciones con <strong>edad &gt; 100 años</strong> (máximo: 956). Tratamiento: <em>eliminación</em> tras documentar el atípico.</div>
+          </div>
           <ul class="tight">
-            <li>El primer dataset registra <strong>quiénes</strong> son los investigadores reconocidos por convocatoria.</li>
-            <li>El segundo registra <strong>qué productos</strong> les contabiliza MinCiencias en cada ventana.</li>
-            <li>El cruce se hizo por identidad de persona dentro de la misma convocatoria.</li>
-            <li>El 95% de los reconocidos tiene al menos un producto registrado en alguna ventana.</li>
+            <li><strong>Convocatoria 833</strong> fechada 2019-12-06 (día de publicación, no año de apertura).</li>
+            <li><strong>~5%</strong> sin departamento; <strong>~3%</strong> sin género reportado.</li>
+            <li><strong>2.762</strong> cadenas de afiliación → consolidadas en una tabla maestra de <strong>211 IES canónicas (91% de cobertura)</strong>.</li>
           </ul>
         </div>
         <div class="note-box">
-          <strong>Lo que esto permite ver.</strong>
-          Por primera vez se puede contrastar el reconocimiento con la producción
-          medida: quién la firma, en qué área, con qué intensidad, desde qué territorio.
-          También revela qué autores quedan fuera del padrón.
+          <strong>Decisiones documentadas</strong>
+          Cada atípico está auditable en <code>evidencias/calidad_atipicos_edad.csv</code>.
+          La tabla maestra de instituciones es uno de los entregables que
+          proponemos a MinCiencias: cubre 211 IES, mapea las 258 cadenas más
+          frecuentes y deja la cola larga (9% restante) marcada como "revisar".
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 5. DIVISOR                                                            -->
-    <!-- =================================================================== -->
-    <section class="section-divider">
-      <h1>Diez hallazgos</h1>
-      <p class="subtitle">Calidad · Territorio · Género · Diversidad · Productividad</p>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 6. HALLAZGO 1 — ANOMALÍAS                                             -->
-    <!-- =================================================================== -->
-    <section>
-      <div class="eyebrow">01 · Calidad de datos</div>
-      <h2>Errores que se notan a simple vista</h2>
-
-      <div class="headline">
-        <div class="big">956</div>
-        <div class="lead">la edad máxima registrada en el padrón. Hay 10 investigadores con más de 100 años.</div>
-      </div>
-
-      <ul class="tight">
-        <li>La convocatoria 833 está fechada con <strong>2019-12-06</strong>, que es el día que se publicaron resultados, no el año de apertura (2018).</li>
-        <li>Cerca del 5% del padrón no tiene departamento; cerca del 3% no tiene género reportado.</li>
-        <li>Validar antes de publicar es trabajo de horas. Cualquier reporte oficial que parta de aquí hereda el error.</li>
-      </ul>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 7. HALLAZGO 2 — INSTITUCIONES                                         -->
+    <!-- 5. GÉNERO POR GRAN ÁREA                                              -->
     <!-- =================================================================== -->
     <section class="figslide">
-      <div class="eyebrow">02 · Calidad de datos</div>
-      <h2>2.762 instituciones registradas, ~800 reales</h2>
-
-      <div class="figwrap">
-        <img src="assets/fig03_top_instituciones.png" alt="Top instituciones por reconocimientos">
-      </div>
-
-      <div class="notes">
-        <div>
-          <strong>El caso típico</strong>
-          UNAL Bogotá, UNAL Medellín, UNAL Manizales y UNAL Palmira aparecen como cuatro entidades.
-        </div>
-        <div>
-          <strong>Y los grupos</strong>
-          Códigos de grupo idénticos figuran con dos nombres distintos por cambios históricos de razón social.
-        </div>
-        <div>
-          <strong>Efecto en rankings</strong>
-          Sin tabla maestra, los conteos por institución y los rankings de productividad se distorsionan.
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 8. HALLAZGO 3 — CONCENTRACIÓN TERRITORIAL                            -->
-    <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">03 · Territorio</div>
-      <h2>Bogotá y Antioquia concentran el 51% del país</h2>
-
-      <div class="figwrap">
-        <img src="assets/fig01_top_departamentos.png" alt="Top departamentos">
-      </div>
-
-      <div class="notes">
-        <div>
-          <strong>Reparto</strong>
-          Bogotá 32%, Antioquia 16%. El 52% restante se distribuye entre los otros 30 departamentos.
-        </div>
-        <div>
-          <strong>Cola larga</strong>
-          22 departamentos no llegan a 500 investigadores reconocidos. Vichada y Vaupés tienen menos de 50.
-        </div>
-        <div>
-          <strong>Per cápita</strong>
-          La diferencia con la población DANE 2018 amplifica la brecha entre la capital y la periferia.
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 9. HALLAZGO 4 — RATIO TERRITORIAL                                    -->
-    <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">04 · Territorio</div>
-      <h2>No todos los territorios producen lo que su tamaño sugeriría</h2>
-
-      <div class="figwrap">
-        <img src="assets/fig04_concentracion_territorial.png" alt="Concentracion territorial">
-      </div>
-
-      <div class="notes">
-        <div>
-          <strong>Por encima</strong>
-          Bolívar y Risaralda generan más productos que su porcentaje de investigadores (ratio 1,24).
-        </div>
-        <div>
-          <strong>Por debajo</strong>
-          Boyacá y Cundinamarca caen a 0,88. Los investigadores en el exterior bajan a 0,34.
-        </div>
-        <div>
-          <strong>Lectura</strong>
-          La centralización no es solo geográfica; también es desigual en el rendimiento por investigador.
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 10. HALLAZGO 5 — BRECHA DE GÉNERO                                    -->
-    <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">05 · Género</div>
-      <h2>La brecha cambia mucho según el área</h2>
+      <div class="eyebrow">Brecha de género</div>
+      <h2>La paridad cambia mucho según el área</h2>
 
       <div class="figwrap">
         <img src="assets/fig02_heatmap_pct_femenino.png" alt="Heatmap pct femenino por gran area">
@@ -428,128 +620,56 @@ ul.tight li { margin: 5px 0; font-size: 0.74em; }
         </div>
         <div>
           <strong>Máximo</strong>
-          48% de mujeres en Ciencias Médicas; las áreas de Ciencias Sociales y Humanidades cerca de la paridad.
+          48% en Ciencias Médicas. Sociales y Humanidades cerca de la paridad.
         </div>
         <div>
           <strong>Lo que oculta el promedio</strong>
-          El 40% global del sistema da una falsa idea de paridad. Por área, la realidad es muy distinta.
+          El 40% global da una falsa idea de paridad. Por área la realidad es muy distinta.
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 11. HALLAZGO 6 — GÉNERO + PRODUCTIVIDAD                              -->
+    <!-- 6. DIVERSIDAD — COMPACTO                                             -->
     <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">06 · Género</div>
-      <h2>La brecha también se replica en productividad</h2>
+    <section>
+      <div class="eyebrow">Diversidad</div>
+      <h2>Ocho años sin registrar, una foto en 2021</h2>
 
-      <div class="figwrap">
-        <img src="assets/fig03_brecha_genero_productividad.png" alt="Brecha de genero en productividad">
-      </div>
-
-      <div class="notes">
+      <div class="col2-tight">
         <div>
-          <strong>Cinco de seis áreas</strong>
-          Las mujeres registran menos productos en promedio. La excepción es Humanidades.
+          <img src="assets/fig02_comparacion_dane.png" alt="Comparacion con DANE"
+               style="width: 100%; border-radius: 8px; border: 1px solid var(--line); background: white; padding: 8px;">
         </div>
         <div>
-          <strong>Mayor brecha</strong>
-          Ciencias Médicas (–2,95 productos) e Ingeniería (–2,59). La razón mujeres/hombres baja a 0,88.
-        </div>
-        <div>
-          <strong>Doble penalización</strong>
-          Pocas entran y a las que entran se les contabiliza menos producción.
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 12. HALLAZGO 7 — DIVERSIDAD INVISIBLE                                -->
-    <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">07 · Diversidad</div>
-      <h2>Ocho años sin registrar diversidad</h2>
-
-      <div class="figwrap">
-        <img src="assets/fig01_cobertura_temporal.png" alt="Cobertura temporal de variables de diversidad">
-      </div>
-
-      <div class="notes">
-        <div>
-          <strong>Cobertura</strong>
-          Etnia, discapacidad y víctimas del conflicto: 0% en 2013–2019, 96,8% en 2021.
-        </div>
-        <div>
-          <strong>Consecuencia directa</strong>
-          No se puede saber si la representación de minorías mejoró, empeoró o se mantuvo en una década.
-        </div>
-        <div>
-          <strong>Análisis longitudinal</strong>
-          Imposible por construcción. Solo hay un punto temporal con datos.
+          <ul class="tight">
+            <li><strong>Cobertura</strong>: 0% en 2013–2019, <strong>96,8%</strong> en 2021.</li>
+            <li><strong>Subrepresentados</strong>: Indígenas 7,9× menos · Afros 3× · Víctimas conflicto 8,6× · Discapacidad 8×.</li>
+            <li><strong>Sobrerrepresentados</strong>: Raizales, palenqueros y rrom (3-6× sobre su peso poblacional).</li>
+            <li><strong>No se retropola</strong>. Ser víctima de conflicto en 2021 no implica haberlo sido en 2015 — análisis longitudinal de diversidad <em>imposible por construcción</em>.</li>
+          </ul>
+          <p class="quiet" style="margin-top: 14px;">
+            La comparación correcta sería contra población con educación superior,
+            no contra población total — la brecha real es menor pero sigue siendo significativa.
+          </p>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 13. HALLAZGO 8 — SUB Y SOBREREPRESENTACIÓN                           -->
+    <!-- DIVISOR 2 — PRODUCCIÓN                                               -->
     <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">08 · Diversidad</div>
-      <h2>Frente a la población, los reconocidos no la reflejan</h2>
-
-      <div class="figwrap">
-        <img src="assets/fig02_comparacion_dane.png" alt="Comparacion con DANE">
-      </div>
-
-      <div class="notes">
-        <div>
-          <strong>Subrepresentados</strong>
-          Indígenas 7,9× menos; afrocolombianos 3×; víctimas del conflicto 8,6×; discapacidad 8×.
-        </div>
-        <div>
-          <strong>Sobrerrepresentados</strong>
-          Raizales, palenqueros y rrom aparecen entre 3 y 6 veces sobre su peso poblacional.
-        </div>
-        <div>
-          <strong>Caveat</strong>
-          La comparación correcta sería contra población con educación superior, no la total. La brecha real es menor pero sigue siendo significativa.
-        </div>
-      </div>
+    <section class="section-divider">
+      <div class="eyebrow">Eje 2</div>
+      <h1>Producción</h1>
+      <p class="subtitle">Cobertura · productividad por categoría · brecha de género en outputs</p>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 14. HALLAZGO 9 — PRODUCTIVIDAD POR CATEGORÍA                         -->
+    <!-- 7. AUTORÍA NO RECONOCIDA                                             -->
     <!-- =================================================================== -->
     <section class="figslide">
-      <div class="eyebrow">09 · Productividad</div>
-      <h2>La productividad escala con la categoría reconocida</h2>
-
-      <div class="figwrap">
-        <img src="assets/fig02_productividad_por_categoria.png" alt="Productividad por categoria">
-      </div>
-
-      <div class="notes">
-        <div>
-          <strong>El orden esperado</strong>
-          Junior 30 productos · Asociado 65 · Senior 121 (a lo largo de su trayectoria reconocida).
-        </div>
-        <div>
-          <strong>Eméritos producen menos</strong>
-          Promedio 34 productos. La categoría es la más exigente del sistema.
-        </div>
-        <div>
-          <strong>Aclaración: vitalicios</strong>
-          Los Eméritos no reaparecen en la siguiente convocatoria porque el reconocimiento queda vitalicio. No es ausencia del sistema, es diseño.
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 15. HALLAZGO 10 — AUTORÍA NO RECONOCIDA                              -->
-    <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">10 · Productividad</div>
+      <div class="eyebrow">Cobertura del padrón</div>
       <h2>El 36,9% de los autores no son investigadores reconocidos</h2>
 
       <div class="figwrap">
@@ -559,7 +679,7 @@ ul.tight li { margin: 5px 0; font-size: 0.74em; }
       <div class="notes">
         <div>
           <strong>El detalle</strong>
-          77.401 autores únicos firman productos. Solo 28.590 están en el padrón. Quedan 48.811 fuera.
+          77.401 autores únicos firman productos. Solo 28.590 están en el padrón. Quedan <em>48.811</em> fuera.
         </div>
         <div>
           <strong>Tendencia</strong>
@@ -573,15 +693,465 @@ ul.tight li { margin: 5px 0; font-size: 0.74em; }
     </section>
 
     <!-- =================================================================== -->
-    <!-- 16. DIVISOR — RECOMENDACIONES                                        -->
+    <!-- 8. PRODUCTIVIDAD POR CATEGORÍA                                       -->
     <!-- =================================================================== -->
-    <section class="section-divider">
-      <h1>Recomendaciones</h1>
-      <p class="subtitle">Cuatro líneas de acción para MinCiencias</p>
+    <section class="figslide">
+      <div class="eyebrow">Productividad por categoría</div>
+      <h2>La trayectoria reconocida escala con productividad</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig02_productividad_por_categoria.png" alt="Productividad por categoria">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Orden esperado</strong>
+          Junior 30 · Asociado 65 · Senior <em>121</em> productos a lo largo de su trayectoria reconocida.
+        </div>
+        <div>
+          <strong>Eméritos producen menos</strong>
+          Promedio 34 productos. La categoría es la más exigente del sistema.
+        </div>
+        <div>
+          <strong>Vitalicios</strong>
+          Los Eméritos no reaparecen porque el reconocimiento queda vitalicio: no es ausencia, es diseño.
+        </div>
+      </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 17. RECOMENDACIONES                                                  -->
+    <!-- 9. BRECHA DE GÉNERO EN PRODUCTIVIDAD                                 -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Brecha de género · productividad</div>
+      <h2>La brecha también se replica en outputs</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig03_brecha_genero_productividad.png" alt="Brecha de genero en productividad">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>5 de 6 áreas</strong>
+          Las mujeres registran menos productos en promedio. Única excepción: Humanidades.
+        </div>
+        <div>
+          <strong>Mayor brecha</strong>
+          Ciencias Médicas <em>−2,95</em> productos · Ingeniería <em>−2,59</em>. Razón M/H baja a 0,88.
+        </div>
+        <div>
+          <strong>Doble penalización</strong>
+          Pocas entran al sistema y a las que entran se les contabiliza menos producción.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- DIVISOR 3 — TERRITORIOS                                              -->
+    <!-- =================================================================== -->
+    <section class="section-divider">
+      <div class="eyebrow">Eje 3 · Lo más importante</div>
+      <h1>Territorios</h1>
+      <p class="subtitle">Dónde viven · dónde trabajan · cómo fluye el talento</p>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 10. CONCENTRACIÓN TERRITORIAL                                        -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Concentración</div>
+      <h2>Bogotá y Antioquia concentran el 48% del país</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig01_top_departamentos.png" alt="Top departamentos">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Reparto</strong>
+          Bogotá 32%, Antioquia 16%. El 52% restante se distribuye entre los otros 30 departamentos.
+        </div>
+        <div>
+          <strong>Cola larga</strong>
+          22 departamentos no llegan a 500 investigadores reconocidos. Vichada y Vaupés &lt; 50.
+        </div>
+        <div>
+          <strong>Per cápita</strong>
+          La diferencia con población DANE 2018 amplifica la brecha capital–periferia.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 11. RATIO TERRITORIAL                                                -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Productividad territorial</div>
+      <h2>No todos los territorios producen lo que su tamaño sugeriría</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig04_concentracion_territorial.png" alt="Concentracion territorial">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Por encima</strong>
+          Bolívar y Risaralda generan más productos que su % de investigadores (ratio <em>1,24</em>).
+        </div>
+        <div>
+          <strong>Por debajo</strong>
+          Boyacá y Cundinamarca caen a 0,88. Investigadores en el exterior: <em>0,34</em>.
+        </div>
+        <div>
+          <strong>Lectura</strong>
+          La centralización no es solo geográfica; también es desigual en el rendimiento por investigador.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 12. GEOGRAFÍA INSTITUCIONAL — HEATMAP                                -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Geografía institucional</div>
+      <h2>Dónde reside vs. dónde trabaja el investigador</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig_heatmap_residencia_institucion.png" alt="Heatmap residencia x institucion">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Bogotá absorbe</strong>
+          Retiene 92% de los suyos <em>y</em> absorbe 1.000+ de otros departamentos.
+        </div>
+        <div>
+          <strong>Flujos transversales</strong>
+          Antioquia → Bogotá: 242 investigadores · Valle → Bogotá: 236.
+        </div>
+        <div>
+          <strong>Cundinamarca</strong>
+          Solo 67% de retención local — un tercio trabaja en Bogotá.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 13. SANKEY TERRITORIAL                                               -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Sankey · flujo residencia → institución</div>
+      <h2>El mapa de la movilidad investigador → centro de trabajo</h2>
+
+      <div class="figwrap">
+        <img src="assets/sankey_territorial.png" alt="Sankey territorial">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Vichada</strong>
+          El único investigador del departamento trabaja en Bogotá.
+        </div>
+        <div>
+          <strong>Sorpresa: Chocó</strong>
+          Retiene el <em>92%</em> de sus reconocidos pese a tener solo 49.
+        </div>
+        <div>
+          <strong>Risaralda</strong>
+          71% retención local — un caso de territorio mediano con sistema propio.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 14. RETENCIÓN LOCAL + DESTINOS PEQUEÑOS                              -->
+    <!-- =================================================================== -->
+    <section>
+      <div class="eyebrow">Retención y destinos</div>
+      <h2>Quién retiene a los suyos y a dónde van los que migran</h2>
+
+      <div class="col2">
+        <div>
+          <img src="assets/fig_pct_local_por_dpto.png" alt="Pct local por dpto"
+               style="width: 100%; border-radius: 8px; border: 1px solid var(--line); background: white; padding: 8px;">
+          <p class="quiet" style="margin-top: 8px;">% del padrón departamental que trabaja en una institución del mismo departamento.</p>
+        </div>
+        <div>
+          <img src="assets/fig_top_destinos_pequenos.png" alt="Top destinos investigadores pequenos"
+               style="width: 100%; border-radius: 8px; border: 1px solid var(--line); background: white; padding: 8px;">
+          <p class="quiet" style="margin-top: 8px;">Para departamentos &lt; 500 reconocidos: a dónde van los que no se quedan.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- DIVISOR 4 — CAMPOS OCDE                                              -->
+    <!-- =================================================================== -->
+    <section class="section-divider">
+      <div class="eyebrow">Eje 4</div>
+      <h1>Campos OCDE</h1>
+      <p class="subtitle">Volumen · productividad por área · composición de tipologías</p>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 15. VOLUMEN POR ÁREA OCDE                                            -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Volumen</div>
+      <h2>Ciencias Sociales lidera en volumen total</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig_volumen_por_area.png" alt="Volumen por area OCDE">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Top 3</strong>
+          Ciencias Sociales <em>585k</em> · Ingeniería <em>388k</em> · Naturales <em>387k</em>.
+        </div>
+        <div>
+          <strong>Medio</strong>
+          Médicas 275k · Humanidades 120k.
+        </div>
+        <div>
+          <strong>Cola</strong>
+          Agrícolas 76k — área especializada con menor base institucional.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 16. PRODUCTIVIDAD POR ÁREA OCDE                                      -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Productividad por investigador</div>
+      <h2>Pero Ingeniería gana en productos por persona</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig_productividad_por_area.png" alt="Productividad por area OCDE">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Ranking</strong>
+          Ingeniería <em>67</em> · Sociales 62 · Médicas 59 · Naturales 58 · Agrícolas 53 · Humanidades 48.
+        </div>
+        <div>
+          <strong>Lectura</strong>
+          La pregunta "¿qué área produce más en Colombia?" depende de la métrica — volumen o productividad.
+        </div>
+        <div>
+          <strong>Implicación</strong>
+          Las políticas focalizadas necesitan distinguir entre tamaño de base e intensidad por investigador.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 17. COMPOSICIÓN DE TIPOS POR ÁREA                                    -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Composición de productos</div>
+      <h2>El mix de tipologías define el perfil del área</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig_composicion_tipo_por_area.png" alt="Composicion tipo producto por area">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Sistema completo</strong>
+          33% Formación de RR.HH · 30% Apropiación social · 10% Nuevo conocimiento Tipo A.
+        </div>
+        <div>
+          <strong>Tipo A concentrado</strong>
+          Ciencias Naturales y Médicas lideran en artículos indexados de alto impacto.
+        </div>
+        <div>
+          <strong>Humanidades / Sociales</strong>
+          Mayor peso relativo de apropiación social y formación — perfil distinto.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- DIVISOR 5 — LONGITUDINAL                                             -->
+    <!-- =================================================================== -->
+    <section class="section-divider">
+      <div class="eyebrow">Eje 5</div>
+      <h1>Análisis longitudinal</h1>
+      <p class="subtitle">Cómo cambian las categorías de los investigadores a lo largo de seis convocatorias</p>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 18. SANKEY NAVEGABLE — UN SOLO GRÁFICO GRANDE CON BOTONES             -->
+    <!-- =================================================================== -->
+    <section class="figslide" id="slide-sankey">
+      <div class="eyebrow">Sankey · transición de categoría</div>
+      <h2>Trayectoria de categorías: cómo se mueven los investigadores</h2>
+
+      <div class="sankey-tabs">
+        <button class="nav-arrow" id="sankey-prev" aria-label="Anterior">◀</button>
+        <button data-year="2013_2014" class="active">2013 → 2014</button>
+        <button data-year="2014_2015">2014 → 2015</button>
+        <button data-year="2015_2017">2015 → 2017</button>
+        <button data-year="2017_2019">2017 → 2019</button>
+        <button data-year="2019_2021">2019 → 2021</button>
+        <button class="nav-arrow" id="sankey-next" aria-label="Siguiente">▶</button>
+      </div>
+
+      <div class="sankey-viewer">
+        <img id="sankey-img" src="assets/sankey_2013_2014.png" alt="Sankey transición categoría">
+      </div>
+
+      <div class="sankey-insight">
+        <div>
+          <span class="pair-tag" id="sankey-pair-tag">2013 → 2014</span>
+          <strong id="sankey-headline">Hallazgo</strong>
+          <span id="sankey-finding">Primera ventana muy corta: el sistema apenas reclasifica. Predomina la permanencia en categoría.</span>
+        </div>
+        <div>
+          <strong>Lectura transversal</strong>
+          Los descensos <em>no son raros</em>: desde Asociado hacia Junior hay flujo significativo en todos los pares, especialmente cuando la producción cae.
+        </div>
+        <div>
+          <strong>Eméritos vitalicios</strong>
+          En todos los Sankeys los Eméritos "salen" del flujo: el reconocimiento queda vitalicio, no requieren re-postulación. No es expulsión, es diseño.
+        </div>
+      </div>
+    </section>
+
+    <script>
+    (function() {
+      const data = {
+        '2013_2014': {
+          tag: '2013 → 2014',
+          headline: 'Estabilidad inicial',
+          finding: 'Primera ventana muy corta (1 año). El sistema apenas reclasifica: predomina la permanencia en categoría.'
+        },
+        '2014_2015': {
+          tag: '2014 → 2015',
+          headline: 'Movilidad incipiente',
+          finding: 'Continúa la estabilidad pero ya aparecen promociones de Junior a Asociado. Pocos descensos.'
+        },
+        '2015_2017': {
+          tag: '2015 → 2017',
+          headline: 'Ventana de 2 años',
+          finding: 'Aumentan las promociones acumuladas y empiezan a verse descensos desde Asociado hacia Junior por caída de productividad.'
+        },
+        '2017_2019': {
+          tag: '2017 → 2019',
+          headline: 'Reajuste a la baja',
+          finding: 'Patrón claro: una fracción significativa de Asociados desciende a Junior. La categoría no es escalera unidireccional.'
+        },
+        '2019_2021': {
+          tag: '2019 → 2021',
+          headline: 'La foto más rica',
+          finding: 'Ventana con mayor volumen: cubre el salto a 21k reconocidos. Eméritos del 2019 desaparecen del flujo (vitalicios).'
+        }
+      };
+      const order = ['2013_2014', '2014_2015', '2015_2017', '2017_2019', '2019_2021'];
+      const img = document.getElementById('sankey-img');
+      const tagEl = document.getElementById('sankey-pair-tag');
+      const headEl = document.getElementById('sankey-headline');
+      const findEl = document.getElementById('sankey-finding');
+      const buttons = document.querySelectorAll('#slide-sankey .sankey-tabs button[data-year]');
+
+      function setYear(year) {
+        if (!data[year]) return;
+        img.src = 'assets/sankey_' + year + '.png';
+        tagEl.textContent = data[year].tag;
+        headEl.textContent = data[year].headline;
+        findEl.textContent = data[year].finding;
+        buttons.forEach(b => b.classList.toggle('active', b.dataset.year === year));
+      }
+      function currentIndex() {
+        const active = document.querySelector('#slide-sankey .sankey-tabs button[data-year].active');
+        return active ? order.indexOf(active.dataset.year) : 0;
+      }
+      buttons.forEach(b => b.addEventListener('click', e => { e.stopPropagation(); setYear(b.dataset.year); }));
+      document.getElementById('sankey-prev').addEventListener('click', e => {
+        e.stopPropagation();
+        const i = currentIndex();
+        setYear(order[(i - 1 + order.length) % order.length]);
+      });
+      document.getElementById('sankey-next').addEventListener('click', e => {
+        e.stopPropagation();
+        const i = currentIndex();
+        setYear(order[(i + 1) % order.length]);
+      });
+    })();
+    </script>
+
+    <!-- =================================================================== -->
+    <!-- 19. INSIGHT DESCENSO                                                 -->
+    <!-- =================================================================== -->
+    <section>
+      <div class="eyebrow">Lectura clave del Sankey</div>
+      <h2>Asociado → Junior: el descenso por dejar de producir</h2>
+
+      <div class="col2">
+        <div>
+          <div class="headline">
+            <div class="big">↓</div>
+            <div class="lead">La mayoría de los descensos van de <strong>Asociado a Junior</strong>. El sistema no es escalera unidireccional.</div>
+          </div>
+          <ul class="tight">
+            <li>En cada convocatoria, una fracción significativa de Asociados <strong>baja a Junior</strong> porque su producción cae y no cumple el umbral de Asociado.</li>
+            <li>El sistema permite reajuste hacia abajo, no solo promoción.</li>
+            <li>El director del observatorio confirma esta lectura: <em>"la mayoría de Asociados que descienden lo hacen porque dejaron de producir"</em>.</li>
+          </ul>
+        </div>
+        <div class="note-box gold">
+          <strong>Implicación de política</strong>
+          La categoría reconocida es un indicador <em>dinámico</em>, no acumulativo.
+          Un investigador puede haber sido Senior alguna vez y aparecer hoy como Junior.
+          Cualquier reporte oficial que liste "investigadores Senior" debe especificar
+          la convocatoria de referencia: la categoría se actualiza a la baja también.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 20. EMÉRITOS VITALICIOS                                              -->
+    <!-- =================================================================== -->
+    <section>
+      <div class="eyebrow">Aclaración importante</div>
+      <h2>Eméritos: la "desaparición" es diseño del sistema</h2>
+
+      <div class="col2">
+        <div>
+          <div class="headline">
+            <div class="big">100%</div>
+            <div class="lead">de los Eméritos de una convocatoria <strong>no aparecen</strong> en la siguiente. Pero no es expulsión.</div>
+          </div>
+          <ul class="tight">
+            <li>El reconocimiento <strong>Emérito queda vitalicio</strong>: no requiere re-postulación.</li>
+            <li>Esto explica el patrón en todos los Sankeys: los Eméritos "salen" del flujo.</li>
+            <li>Una lectura ingenua del dato sugeriría caída completa; la lectura informada lo identifica como diseño.</li>
+          </ul>
+        </div>
+        <div class="note-box good">
+          <strong>Lectura correcta</strong>
+          Los Eméritos del 2019 NO se cuentan como "perdidos" en 2021.
+          Mantienen el reconocimiento de por vida; simplemente no necesitan
+          volver a postularse. Aclaración aportada por el director del
+          Observatorio para evitar interpretaciones equivocadas en el informe final.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- DIVISOR 6 — RECOMENDACIONES                                          -->
+    <!-- =================================================================== -->
+    <section class="section-divider">
+      <div class="eyebrow">Cierre</div>
+      <h1>Recomendaciones a MinCiencias</h1>
+      <p class="subtitle">Cuatro líneas de acción que no requieren esperar a la próxima convocatoria</p>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 21. RECOMENDACIONES                                                  -->
     <!-- =================================================================== -->
     <section>
       <div class="eyebrow">Política pública</div>
@@ -591,32 +1161,32 @@ ul.tight li { margin: 5px 0; font-size: 0.74em; }
         <div class="rec">
           <h4>A · Calidad y gobernanza</h4>
           <ul>
-            <li>Validación previa a la publicación: edad ≤ 100, fecha de convocatoria distinta de la de publicación.</li>
-            <li>Tabla maestra de instituciones mantenida por MinCiencias (entregamos una propuesta inicial).</li>
+            <li>Validación previa a la publicación: edad ≤ 100, fecha de convocatoria ≠ fecha de publicación.</li>
+            <li><strong>Tabla maestra de instituciones</strong> mantenida por MinCiencias — entregamos una propuesta inicial (211 IES, 91% cobertura).</li>
             <li>Departamento de la institución como campo obligatorio en el registro.</li>
           </ul>
         </div>
-        <div class="rec">
+        <div class="rec alt">
           <h4>B · Equidad y diversidad</h4>
           <ul>
-            <li>Captura obligatoria de etnia, discapacidad y conflicto desde el formulario inicial, no solo desde 2021.</li>
+            <li>Captura obligatoria de etnia, discapacidad y conflicto desde el formulario inicial — no solo desde 2021.</li>
             <li>Comparar representación contra población con educación superior, no contra población total.</li>
-            <li>Programas focalizados en regiones con ratio territorial menor a 1.</li>
+            <li>Programas focalizados en territorios con ratio &lt; 1.</li>
           </ul>
         </div>
-        <div class="rec">
+        <div class="rec alt2">
           <h4>C · Apertura y trazabilidad</h4>
           <ul>
             <li>Captura sistemática de doble afiliación en todas las convocatorias.</li>
             <li>Apertura del dataset de proyectos evaluados para cerrar el ciclo idea–producto.</li>
-            <li>Visibilización de coautores fuera del padrón.</li>
+            <li>Visibilización de los 48.811 coautores fuera del padrón.</li>
           </ul>
         </div>
-        <div class="rec">
+        <div class="rec alt3">
           <h4>D · Métricas alineadas</h4>
           <ul>
             <li>Productividad ajustada por categoría, área OCDE y género.</li>
-            <li>Reporte de flujos investigador--institución: dónde reside vs.\ dónde trabaja.</li>
+            <li><strong>Reporte de flujos investigador → institución</strong>: dónde reside vs. dónde trabaja.</li>
             <li>Calendario predecible de convocatorias.</li>
           </ul>
         </div>
@@ -624,34 +1194,37 @@ ul.tight li { margin: 5px 0; font-size: 0.74em; }
     </section>
 
     <!-- =================================================================== -->
-    <!-- 18. PREGUNTAS ABIERTAS                                               -->
+    <!-- 22. LIMITACIONES                                                     -->
     <!-- =================================================================== -->
     <section>
       <div class="eyebrow">Lo que queda por trabajar</div>
       <h2>Limitaciones y preguntas abiertas</h2>
 
-      <ul class="tight">
-        <li><strong>Ventana de observación.</strong> Un producto firmado en 2018 puede aparecer en la convocatoria 2021. Las cifras se leen como atribución oficial, no como producción real por año.</li>
-        <li><strong>Normalización institucional.</strong> El conteo de 2.762 entidades baja a 2.585 con reglas conservadoras; un trabajo manual o con fuzzy matching lo llevaría a ~800.</li>
-        <li><strong>Convocatoria 2023.</strong> Pendiente de publicación. La actualización completaría la serie.</li>
+      <ul class="tight bullets-large">
+        <li><strong>Ventana de observación.</strong> Un producto firmado en 2018 puede aparecer en la convocatoria 2021. Las cifras son atribución oficial, no producción anual.</li>
+        <li><strong>Normalización institucional.</strong> 2.762 cadenas → 211 IES canónicas (91%). Llevar al ~100% requiere fuzzy matching manual.</li>
+        <li><strong>Convocatoria 2023.</strong> Pendiente de publicación. Completaría la serie con un séptimo punto temporal.</li>
         <li><strong>Coautores externos.</strong> No hay perfilamiento de los 48.811 autores fuera del padrón.</li>
-        <li><strong>Comparación con población educada.</strong> Sería el siguiente paso natural sobre las brechas de diversidad.</li>
+        <li><strong>Comparación con población educada.</strong> Sería el siguiente paso natural sobre brechas de diversidad.</li>
+        <li><strong>Análisis solo descriptivo.</strong> Por decisión del director: este informe no aborda modelos predictivos.</li>
       </ul>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 19. CIERRE                                                            -->
+    <!-- 23. CIERRE                                                           -->
     <!-- =================================================================== -->
     <section class="cover">
-      <h1>Gracias</h1>
+      <div class="eyebrow">Gracias</div>
+      <h1>El observatorio queda<br>como herramienta abierta</h1>
       <p class="lead">
-        El observatorio queda como herramienta abierta de auditoría sobre el
-        Sistema Nacional de CTeI. Las cifras y los caveats están publicados
-        para que cualquiera los reproduzca.
+        Las cifras, los caveats y el código están publicados para que cualquiera
+        los reproduzca. El manual técnico (<code>docs/manual.ipynb</code>) recorre
+        el pipeline completo, y el dashboard interactivo permite filtrar los
+        hallazgos por convocatoria, área y territorio.
       </p>
       <div class="meta">
-        <strong>Víctor Díaz</strong> · Universidad Santo Tomás · 2026<br>
-        Repositorio: github.com/Victor-Diaz-Usta/Min_ciencias
+        <strong>Víctor Díaz</strong> · Universidad Santo Tomás · 2026-I<br>
+        Repositorio: <code>github.com/ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo8</code>
       </div>
     </section>
 
@@ -668,11 +1241,11 @@ Reveal.initialize({
   progress: true,
   history: false,
   transition: 'slide',
-  width: 1280,
-  height: 760,
-  margin: 0.05,
-  minScale: 0.4,
-  maxScale: 1.4,
+  width: 1920,
+  height: 1080,
+  margin: 0.04,
+  minScale: 0.2,
+  maxScale: 2.0,
   plugins: [ RevealNotes ],
 });
 </script>
