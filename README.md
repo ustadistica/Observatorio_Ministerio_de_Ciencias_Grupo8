@@ -74,7 +74,7 @@ Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores 
 ## Estructura del Proyecto
 
 ```
-Observatorio_Ministerio_de_Ciencias_Grupo7/
+Observatorio_Ministerio_de_Ciencias_Grupo8/
 |-- README.md                    # Este archivo
 |-- CONTRIBUTING.md              # Guia de contribucion y Git Flow
 |-- pyproject.toml               # Poetry (dependencias + metadata)
@@ -138,8 +138,8 @@ Observatorio_Ministerio_de_Ciencias_Grupo7/
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo7.git
-cd Observatorio_Ministerio_de_Ciencias_Grupo7
+git clone https://github.com/ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo8.git
+cd Observatorio_Ministerio_de_Ciencias_Grupo8
 
 # Instalar dependencias con Poetry
 pip install poetry
@@ -186,9 +186,9 @@ cd docs/informe && pdflatex informe_final.tex && pdflatex informe_final.tex
 El dashboard puede desplegarse gratuitamente en [Streamlit Community Cloud](https://share.streamlit.io):
 
 1. Iniciar sesión con la cuenta de GitHub.
-2. Clic en **New app** → seleccionar el repo `Victor-Diaz-Usta/Min_ciencias`.
+2. Clic en **New app** → seleccionar el repo `ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo8`.
 3. Configuración:
-   - **Branch:** `main_VictorD` (o `main` después del merge)
+   - **Branch:** `main`
    - **Main file path:** `streamlit_app.py`
    - **Python version:** 3.10+
 4. Clic en **Deploy**.
