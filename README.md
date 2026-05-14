@@ -8,11 +8,11 @@ El proyecto produce insumos para un informe crítico sobre las falencias de las 
 
 ## Fuentes de Datos
 
-MinCiencias / datos.gov.co. Dos datasets cruzados por `id_persona`:
+Todos los datos provienen exclusivamente de **Socrata** (`datos.gov.co`). Dos datasets cruzados por `id_persona`:
 
 ### 1. Investigadores reconocidos por convocatoria (`bqtm-4y2h`)
 
-Dataset consolidado (`datos/tarea_join/investigadores_consolidado.xlsx`) que integra **6 convocatorias históricas**:
+Dataset descargado por API Socrata a `datos/raw/investigadores_consolidado.csv` (~30 MB, gitignored). Para obtenerlo: `python -m src.ingesta.minciencias`. Integra **6 convocatorias históricas**:
 
 | Convocatoria | Año | Registros |
 |---|---|---|
@@ -122,16 +122,13 @@ Observatorio_Ministerio_de_Ciencias_Grupo8/
 |   |-- manual.ipynb             # Notebook ejecutable con los 15 hallazgos
 |   +-- informe/informe_final.tex # Informe consolidado en LaTeX (~30 pag)
 |-- datos/
-|   |-- raw/                     # Datos crudos (gitignored)
-|   |-- processed/               # observatorio.duckdb (gitignored)
-|   |-- tarea_join/              # Excel consolidado versionado en git (12 MB)
+|   |-- raw/                     # CSVs descargados de Socrata (gitignored)
+|   |-- processed/               # observatorio.duckdb + parquets (gitignored)
 |   +-- catalogo.yaml            # Metadatos de cada dataset
 |-- artifacts/                   # Figuras PNG generadas por sprint
 |-- evidencias/                  # CSVs exportados por los scripts
 |-- hallazgos/                   # HTMLs interactivos (grafos Pyvis)
-|-- docs/                        # Informes y documentacion
-|-- tests/                       # Tests automatizados
-+-- models/                      # Modelos serializados
++-- tests/                       # Tests automatizados
 ```
 
 ## Instalacion
@@ -194,9 +191,9 @@ El dashboard puede desplegarse gratuitamente en [Streamlit Community Cloud](http
 4. Clic en **Deploy**.
 
 Streamlit Cloud detecta automáticamente:
-- `requirements.txt` → instala `streamlit`, `pandas`, `numpy`, `plotly`, `openpyxl`
+- `requirements.txt` → instala `streamlit`, `pandas`, `numpy`, `plotly`
 - `.streamlit/config.toml` → tema y configuración del servidor
-- `datos/tarea_join/investigadores_consolidado.xlsx` → fuente de datos (12 MB, versionada en git)
+- Para que el dashboard tenga datos, el deploy necesita acceso al CSV descargado de Socrata (`datos/raw/investigadores_consolidado.csv`). En desarrollo local lo genera `python -m src.ingesta.minciencias`. En el deploy se recomienda añadirlo al storage del servicio o que el código lo descargue al arrancar
 
 El primer build tarda ~3 minutos. Builds posteriores son incrementales tras cada push a la rama configurada.
 

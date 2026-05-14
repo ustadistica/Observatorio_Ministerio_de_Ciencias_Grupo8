@@ -2,14 +2,14 @@
 """
 Transformacion.py
 
-Módulo de transformación de datos para el Observatorio de Ciencia,
-Tecnología e Innovación — Investigadores Reconocidos Minciencias (Grupo 7).
+Modulo de transformacion de datos para el Observatorio de Ciencia,
+Tecnologia e Innovacion — Investigadores Reconocidos MinCiencias.
 
-Aplica limpieza, estandarización y enriquecimiento al DataFrame consolidado
-generado por ingesta.py, dejándolo listo para análisis y visualización.
+Aplica limpieza, estandarizacion y enriquecimiento al DataFrame consolidado
+descargado desde Socrata (bqtm-4y2h) por src/ingesta/minciencias.py,
+dejandolo listo para analisis y visualizacion.
 """
 
-import pathlib
 import re
 import numpy as np
 import pandas as pd
@@ -17,10 +17,7 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 # Constantes
 # ---------------------------------------------------------------------------
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-DATA_DIR = ROOT / "datos" / "tarea_join"
-
-# Columnas numéricas del dataset
+# Columnas numericas del dataset
 COLS_NUMERICAS = ["NRO_ORDEN_FORM_PR", "ORDEN_CLAS_PR", "EDAD_ANOS_PR"]
 
 # Columnas categóricas clave
@@ -214,7 +211,8 @@ def transformar(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     import sys
-    sys.path.insert(0, str(ROOT / "src"))
+    import pathlib
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
     from ingesta import cargar_consolidado
 
     df_raw = cargar_consolidado()

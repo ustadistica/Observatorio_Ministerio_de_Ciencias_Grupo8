@@ -118,10 +118,12 @@ print(f"Produccion de grupos:     {prod.shape}")
 
 md("""**Notas sobre la carga.**
 
-- `cargar_consolidado` lee primero `datos/raw/investigadores_consolidado.csv`.
-  Si no existe, recurre al Excel de respaldo en `datos/tarea_join/`.
-- `cargar_produccion` requiere el CSV crudo (1,2 GB). Si no está, ejecute
-  `python -m src.ingesta.produccion` primero.
+- Ambos datasets provienen exclusivamente de **Socrata** (datos.gov.co):
+  investigadores reconocidos = `bqtm-4y2h`, producción = `33dq-ab5a`.
+- `cargar_consolidado` lee `datos/raw/investigadores_consolidado.csv`.
+  Si no existe, ejecuta `python -m src.ingesta.minciencias` para descargarlo.
+- `cargar_produccion` requiere `datos/raw/produccion_grupos.csv` (1,2 GB).
+  Si no está, ejecuta `python -m src.ingesta.produccion` primero.
 - `transformar` parsea `ANO_CONVO_INT`, estandariza género y limpia texto.
 - `normalizar_produccion` añade `ANO_CONVO_INT` al dataset de producción y
   homogeniza tipos para que la llave de cruce funcione directo.
