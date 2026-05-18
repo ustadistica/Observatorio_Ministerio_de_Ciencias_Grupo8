@@ -29,7 +29,52 @@
   --soft-gold:  #fef3c7;
 }
 
-html, body { background: var(--paper); }
+html, body {
+  background: var(--paper);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+/* ----------------------------------------------------------------------
+   Contención robusta de cada slide.
+   Reveal.js escala el slide (1920x1080) proporcionalmente al viewport,
+   pero si un slide tiene contenido que excede su altura/ancho base,
+   parte queda cortada. Con box-sizing + max-height + overflow controlado
+   garantizamos que el contenido respeta el lienzo del slide.
+   ---------------------------------------------------------------------- */
+.reveal .slides > section,
+.reveal .slides > section > section {
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+/* Slides marcados explicitamente con scroll-y permiten scroll interno
+   cuando se ven en pantallas pequenas. */
+.reveal .slides > section.scroll-y {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* En pantallas pequenas (laptop tipico < 1280px o < 800px de alto),
+   Reveal escala todo a < 0.6x; ayudamos reduciendo padding interno
+   en componentes de soporte (footer, controles). */
+@media (max-width: 1280px), (max-height: 800px) {
+  .footer-brand {
+    font-size: 11px !important;
+    bottom: 10px !important;
+    left: 20px !important;
+  }
+}
+
+/* En pantallas muy chicas (tablet vertical o ventanas reducidas) */
+@media (max-width: 900px), (max-height: 600px) {
+  .footer-brand { display: none; }
+}
 
 .reveal {
   font-family: 'Inter', sans-serif;
@@ -260,6 +305,123 @@ ul.bullets-large li { font-size: 0.95em; margin: 14px 0; }
   flex: 0 0 auto;
 }
 .figslide .notes > div { font-size: 0.74em; line-height: 1.5; }
+
+/* ----------------------------------------------------------------------
+   Heatmap slide (Slide 12): layout horizontal — figura grande a la
+   izquierda + notas en columna estrecha a la derecha. Permite que la
+   matriz cuadrada del heatmap ocupe casi toda la altura del slide en
+   pantallas tipicas de laptop 13" (1440x900).
+   ---------------------------------------------------------------------- */
+.heatmap-slide {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.heatmap-slide .heatmap-body {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 28px;
+  min-height: 0;
+  margin-top: 8px;
+}
+.heatmap-slide .heatmap-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+.heatmap-slide .heatmap-img img {
+  max-width: 100%;
+  max-height: 100%;    /* deja que la imagen ocupe toda la altura disponible */
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.heatmap-slide .heatmap-notes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+.heatmap-slide .heatmap-notes > div {
+  font-size: 0.74em;
+  line-height: 1.5;
+  padding: 14px 16px;
+  background: var(--surface);
+  border-left: 3px solid var(--primary);
+  border-radius: 4px;
+}
+.heatmap-slide .heatmap-notes strong {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-size: 1.05em;
+}
+
+/* ----------------------------------------------------------------------
+   Sankey longitudinal (Slide 19): la imagen es horizontal larga
+   (3600x1440 a escala 2x) — ocupa todo el ancho disponible. Las 3 notas
+   van debajo en grid horizontal.
+   ---------------------------------------------------------------------- */
+.sankey-slide {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.sankey-slide .sankey-body {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 14px 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.sankey-slide .sankey-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+.sankey-slide .sankey-img img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.sankey-slide .sankey-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  flex: 0 0 auto;
+  border-top: 2px solid var(--ink);
+  padding-top: 14px;
+}
+.sankey-slide .sankey-notes > div {
+  font-size: 0.72em;
+  line-height: 1.45;
+  padding: 0 4px;
+}
+.sankey-slide .sankey-notes strong {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-size: 1.05em;
+}
 .figslide .notes strong {
   color: var(--primary);
   display: block;
@@ -756,59 +918,33 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     <!-- =================================================================== -->
     <!-- 12. GEOGRAFÍA INSTITUCIONAL — HEATMAP                                -->
     <!-- =================================================================== -->
-    <section class="figslide">
+    <section class="heatmap-slide">
       <div class="eyebrow">Geografía institucional</div>
       <h2>Dónde reside vs. dónde trabaja el investigador</h2>
 
-      <div class="figwrap">
-        <img src="assets/fig_heatmap_residencia_institucion.png" alt="Heatmap residencia x institucion">
-      </div>
-
-      <div class="notes">
-        <div>
-          <strong>Bogotá absorbe</strong>
-          Retiene 92% de los suyos <em>y</em> absorbe 1.000+ de otros departamentos.
+      <div class="heatmap-body">
+        <div class="heatmap-img">
+          <img src="assets/fig_heatmap_residencia_institucion.png" alt="Heatmap residencia x institucion">
         </div>
-        <div>
-          <strong>Flujos transversales</strong>
-          Antioquia → Bogotá: 242 investigadores · Valle → Bogotá: 236.
-        </div>
-        <div>
-          <strong>Cundinamarca</strong>
-          Solo 67% de retención local — un tercio trabaja en Bogotá.
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 13. SANKEY TERRITORIAL                                               -->
-    <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">Sankey · flujo residencia → institución</div>
-      <h2>El mapa de la movilidad investigador → centro de trabajo</h2>
-
-      <div class="figwrap">
-        <img src="assets/sankey_territorial.png" alt="Sankey territorial">
-      </div>
-
-      <div class="notes">
-        <div>
-          <strong>Vichada</strong>
-          El único investigador del departamento trabaja en Bogotá.
-        </div>
-        <div>
-          <strong>Sorpresa: Chocó</strong>
-          Retiene el <em>92%</em> de sus reconocidos pese a tener solo 49.
-        </div>
-        <div>
-          <strong>Risaralda</strong>
-          71% retención local — un caso de territorio mediano con sistema propio.
+        <div class="heatmap-notes">
+          <div>
+            <strong>Bogotá absorbe</strong>
+            Retiene 92% de los suyos <em>y</em> absorbe 1.000+ de otros departamentos.
+          </div>
+          <div>
+            <strong>Flujos transversales</strong>
+            Antioquia → Bogotá: 242 · Valle → Bogotá: 236.
+          </div>
+          <div>
+            <strong>Cundinamarca</strong>
+            Solo 67% de retención local — un tercio trabaja en Bogotá.
+          </div>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- 14. RETENCIÓN LOCAL + DESTINOS PEQUEÑOS                              -->
+    <!-- 13. RETENCIÓN LOCAL + DESTINOS PEQUEÑOS                              -->
     <!-- =================================================================== -->
     <section>
       <div class="eyebrow">Retención y destinos</div>
@@ -829,7 +965,7 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- 15. GÉNERO × TERRITORIO                                              -->
+    <!-- 14. GÉNERO × TERRITORIO                                              -->
     <!-- =================================================================== -->
     <section class="figslide">
       <div class="eyebrow">Género × territorio</div>
@@ -984,107 +1120,36 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- 18. SANKEY NAVEGABLE — UN SOLO GRÁFICO GRANDE CON BOTONES             -->
+    <!-- 19. SANKEY LONGITUDINAL — LINEA DE TIEMPO 2013-2021                    -->
     <!-- =================================================================== -->
-    <section class="figslide" id="slide-sankey">
-      <div class="eyebrow">Sankey · transición de categoría</div>
-      <h2>Trayectoria de categorías: cómo se mueven los investigadores</h2>
+    <section class="sankey-slide">
+      <div class="eyebrow">Sankey · trayectoria 2013 → 2021</div>
+      <h2>Cómo se mueven los investigadores a lo largo de seis convocatorias</h2>
 
-      <div class="sankey-tabs">
-        <button class="nav-arrow" id="sankey-prev" aria-label="Anterior">◀</button>
-        <button data-year="2013_2014" class="active">2013 → 2014</button>
-        <button data-year="2014_2015">2014 → 2015</button>
-        <button data-year="2015_2017">2015 → 2017</button>
-        <button data-year="2017_2019">2017 → 2019</button>
-        <button data-year="2019_2021">2019 → 2021</button>
-        <button class="nav-arrow" id="sankey-next" aria-label="Siguiente">▶</button>
+      <div class="sankey-body">
+        <div class="sankey-img">
+          <img src="assets/sankey_linea_tiempo.png" alt="Sankey longitudinal 2013-2021">
+        </div>
       </div>
 
-      <div class="sankey-viewer">
-        <img id="sankey-img" src="assets/sankey_2013_2014.png" alt="Sankey transición categoría">
-      </div>
-
-      <div class="sankey-insight">
+      <div class="sankey-notes">
         <div>
-          <span class="pair-tag" id="sankey-pair-tag">2013 → 2014</span>
-          <strong id="sankey-headline">Hallazgo</strong>
-          <span id="sankey-finding">Primera ventana muy corta: el sistema apenas reclasifica. Predomina la permanencia en categoría.</span>
+          <strong>Permanencia mayoritaria</strong>
+          La diagonal más gruesa son los que mantienen su categoría entre convocatorias.
         </div>
         <div>
-          <strong>Lectura transversal</strong>
-          Los descensos <em>no son raros</em>: desde Asociado hacia Junior hay flujo significativo en todos los pares, especialmente cuando la producción cae.
+          <strong>Asociado → Junior</strong>
+          Los descensos no son raros — aparecen en todos los pares cuando cae la productividad.
         </div>
         <div>
           <strong>Eméritos vitalicios</strong>
-          En todos los Sankeys los Eméritos "salen" del flujo: el reconocimiento queda vitalicio, no requieren re-postulación. No es expulsión, es diseño.
+          No continúan flujo hacia adelante: el reconocimiento queda vitalicio, no requiere re-postulación.
         </div>
       </div>
     </section>
 
-    <script>
-    (function() {
-      const data = {
-        '2013_2014': {
-          tag: '2013 → 2014',
-          headline: 'Estabilidad inicial',
-          finding: 'Primera ventana muy corta (1 año). El sistema apenas reclasifica: predomina la permanencia en categoría.'
-        },
-        '2014_2015': {
-          tag: '2014 → 2015',
-          headline: 'Movilidad incipiente',
-          finding: 'Continúa la estabilidad pero ya aparecen promociones de Junior a Asociado. Pocos descensos.'
-        },
-        '2015_2017': {
-          tag: '2015 → 2017',
-          headline: 'Ventana de 2 años',
-          finding: 'Aumentan las promociones acumuladas y empiezan a verse descensos desde Asociado hacia Junior por caída de productividad.'
-        },
-        '2017_2019': {
-          tag: '2017 → 2019',
-          headline: 'Reajuste a la baja',
-          finding: 'Patrón claro: una fracción significativa de Asociados desciende a Junior. La categoría no es escalera unidireccional.'
-        },
-        '2019_2021': {
-          tag: '2019 → 2021',
-          headline: 'La foto más rica',
-          finding: 'Ventana con mayor volumen: cubre el salto a 21k reconocidos. Eméritos del 2019 desaparecen del flujo (vitalicios).'
-        }
-      };
-      const order = ['2013_2014', '2014_2015', '2015_2017', '2017_2019', '2019_2021'];
-      const img = document.getElementById('sankey-img');
-      const tagEl = document.getElementById('sankey-pair-tag');
-      const headEl = document.getElementById('sankey-headline');
-      const findEl = document.getElementById('sankey-finding');
-      const buttons = document.querySelectorAll('#slide-sankey .sankey-tabs button[data-year]');
-
-      function setYear(year) {
-        if (!data[year]) return;
-        img.src = 'assets/sankey_' + year + '.png';
-        tagEl.textContent = data[year].tag;
-        headEl.textContent = data[year].headline;
-        findEl.textContent = data[year].finding;
-        buttons.forEach(b => b.classList.toggle('active', b.dataset.year === year));
-      }
-      function currentIndex() {
-        const active = document.querySelector('#slide-sankey .sankey-tabs button[data-year].active');
-        return active ? order.indexOf(active.dataset.year) : 0;
-      }
-      buttons.forEach(b => b.addEventListener('click', e => { e.stopPropagation(); setYear(b.dataset.year); }));
-      document.getElementById('sankey-prev').addEventListener('click', e => {
-        e.stopPropagation();
-        const i = currentIndex();
-        setYear(order[(i - 1 + order.length) % order.length]);
-      });
-      document.getElementById('sankey-next').addEventListener('click', e => {
-        e.stopPropagation();
-        const i = currentIndex();
-        setYear(order[(i + 1) % order.length]);
-      });
-    })();
-    </script>
-
     <!-- =================================================================== -->
-    <!-- 19. INSIGHT DESCENSO                                                 -->
+    <!-- 20. INSIGHT DESCENSO                                                 -->
     <!-- =================================================================== -->
     <section>
       <div class="eyebrow">Lectura clave del Sankey</div>
@@ -1113,7 +1178,7 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- 20. EMÉRITOS VITALICIOS                                              -->
+    <!-- 21. EMÉRITOS VITALICIOS                                              -->
     <!-- =================================================================== -->
     <section>
       <div class="eyebrow">Aclaración importante</div>
@@ -1151,7 +1216,7 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- 21. RECOMENDACIONES                                                  -->
+    <!-- 22. RECOMENDACIONES                                                  -->
     <!-- =================================================================== -->
     <section>
       <div class="eyebrow">Política pública</div>
@@ -1194,7 +1259,7 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- 22. LIMITACIONES                                                     -->
+    <!-- 23. LIMITACIONES                                                     -->
     <!-- =================================================================== -->
     <section>
       <div class="eyebrow">Lo que queda por trabajar</div>
@@ -1211,7 +1276,7 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- 23. CIERRE                                                           -->
+    <!-- 24. CIERRE                                                           -->
     <!-- =================================================================== -->
     <section class="cover">
       <div class="eyebrow">Gracias</div>
@@ -1243,10 +1308,21 @@ Reveal.initialize({
   transition: 'slide',
   width: 1920,
   height: 1080,
-  margin: 0.04,
-  minScale: 0.2,
-  maxScale: 2.0,
+  margin: 0.02,
+  minScale: 0.1,
+  maxScale: 2.5,
+  disableLayout: false,
+  center: false,
   plugins: [ RevealNotes ],
+});
+
+// Recalcular el layout cuando cambia el tamaño de la ventana (resize/zoom/rotación).
+// Reveal lo hace por defecto, pero forzamos un layout extra para asegurar que el
+// escalado se ajusta correctamente cuando se redimensiona muy rápido.
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => Reveal.layout(), 100);
 });
 </script>
 
