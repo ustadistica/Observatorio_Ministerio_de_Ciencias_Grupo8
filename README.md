@@ -2,7 +2,7 @@
 
 > **Ustadistica** -- Consultoria e Investigacion . Universidad Santo Tomas . 2026-I
 
-Observatorio crítico del sistema de reconocimiento de investigadores de MinCiencias. Análisis longitudinal de **6 convocatorias** (2013-2021) con foco en **calidad de los datos**, **concentración territorial**, **brecha de género**, **redes de co-filiación institucional**, **subrepresentación de minorías**, **productividad cruzada con el dataset de producción de grupos**, y **flujos investigador → institución** mediante una tabla maestra de IES construida ad-hoc.
+Observatorio crítico del sistema de reconocimiento de investigadores de MinCiencias. Análisis longitudinal de **6 convocatorias** (2013-2021) organizado en **cuatro ejes** (Producción, Territorios, Campos OCDE y trayectoria longitudinal) con el género como **lente transversal** que atraviesa los tres primeros. La calidad de los datos y la cobertura de las variables de diversidad se documentan al inicio como cautelas metodológicas, no como hallazgos analíticos.
 
 El proyecto produce insumos para un informe crítico sobre las falencias de las convocatorias y el estado de la investigación en Colombia.
 
@@ -57,7 +57,7 @@ Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores 
 | # | Hallazgo | Implicación |
 |---|---|---|
 | 1 | Bogotá + Antioquia = 51% del país | Concentración territorial brutal |
-| 2 | 24% de mujeres en Ingeniería vs 48% en Ciencias Médicas | Brecha estructural por área |
+| 2 | Sólo Ciencias Médicas supera paridad de género (50,9%). Ingeniería: 26,5% mujeres | Brecha estructural por área OCDE |
 | 3 | Co-filiación solo capturada en 2019 (569 casos) | Cambio de captura, no de realidad |
 | 4 | 0% de cobertura de etnia/discapacidad/conflicto antes de 2021 | Diversidad invisible 8 años |
 | 5 | Afros 3x, Indígenas 7.9x, Discapacidad 8x subrepresentados vs DANE | Barreras estructurales |
@@ -70,6 +70,7 @@ Consultar [`datos/catalogo.yaml`](datos/catalogo.yaml) para los identificadores 
 | 12 | Bogotá retiene 92% de sus investigadores **y** absorbe 1.000+ de otros dpto | No solo concentra: atrae. Cundinamarca/Risaralda retención local ~70% |
 | 13 | Ciencias Sociales gana en volumen (585k); **Ingeniería** en productividad por investigador (67) | "¿Qué área produce más?" depende de la métrica |
 | 14 | Eméritos quedan **vitalicios** — no reaparecen porque no necesitan re-postular | El 100% de "desaparición" es diseño del sistema |
+| 15 | **Ningún departamento alcanza paridad de género**: máx. Boyacá 42%, mín. Risaralda 30% | Brecha persistente en territorio (lente transversal) |
 
 ## Estructura del Proyecto
 

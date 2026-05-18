@@ -151,7 +151,9 @@ Entre 2013 y 2021 MinCiencias convocó seis veces para reconocer y clasificar a 
 
 El análisis cruza dos fuentes oficiales que normalmente se consultan por separado: el dataset consolidado de investigadores reconocidos (\num{77237} registros, \num{30086} personas únicas) y el dataset de productos académicos contabilizados a los grupos de investigación (\num{3166629} filas, \num{77401} autores únicos). Una vez integrados por identidad de persona dentro de la ventana de cada convocatoria, aparecen patrones que ninguno de los dos datasets revela por separado.
 
-El padrón concentra el 51\,\% entre Bogotá y Antioquia. La participación femenina sigue por debajo del 25\,\% en Ingeniería y se mantiene plana durante una década. Las variables de etnia, discapacidad y víctimas del conflicto sólo empezaron a registrarse en 2021, lo que hace inviable cualquier análisis longitudinal sobre diversidad. Y al cruzar reconocimiento con producción, aproximadamente un tercio de los autores que firman los productos contabilizados por MinCiencias no aparece en el padrón de reconocidos.
+La lectura se organiza en \textbf{cuatro ejes}: Producción, Territorios, Campos OCDE y trayectoria longitudinal. El género no aparece como eje propio sino como \textbf{lente transversal} que se aplica en los tres primeros. La calidad de los datos y la cobertura de las variables de diversidad se documentan al inicio como cautelas metodológicas, no como hallazgos analíticos.
+
+El padrón concentra el 51\,\% entre Bogotá y Antioquia. La participación femenina sigue por debajo del 27\,\% en Ingeniería y \emph{ningún departamento alcanza la paridad}, con un máximo de 42\,\% en Boyacá. Las variables de etnia, discapacidad y víctimas del conflicto sólo empezaron a registrarse en 2021, lo que hace inviable cualquier análisis longitudinal sobre diversidad. Y al cruzar reconocimiento con producción, aproximadamente un tercio de los autores que firman los productos contabilizados por MinCiencias no aparece en el padrón de reconocidos.
 
 Al cruzar también la residencia del investigador con el departamento de su institución surge un patrón adicional: Bogotá no sólo retiene al 92\,\% de sus propios investigadores sino que absorbe gente de prácticamente todos los demás departamentos. Cundinamarca y Risaralda muestran baja retención local; Chocó y Amazonas, alta. El observatorio entrega además una primera versión de la tabla maestra de instituciones (211 IES canónicas, 91\,\% de cobertura del padrón) como referencia para que MinCiencias adopte como estándar.
 
@@ -331,7 +333,7 @@ La tabla resuelve casos típicos como las cuatro sedes principales de la Univers
 \newpage
 
 % =====================================================================
-\section{Calidad de los datos}\label{sec:calidad}
+\section{Cautelas metodológicas}\label{sec:calidad}
 % =====================================================================
 
 \epigraph{``Si el dato base trae errores de captura, cualquier reporte oficial los hereda.''}{}
@@ -381,7 +383,7 @@ Cualquier análisis sobre tendencias en la representación de minorías es estru
 \textbf{Sobre retropolación.} Una posibilidad considerada fue asumir que un investigador que en 2021 declaró ser víctima del conflicto ya lo era en 2015, asignando el valor hacia atrás. La idea se descartó porque la condición de víctima del conflicto no es estática --- alguien puede no haberlo sido hace cinco años y serlo hoy --- y el dataset no permite saber la fecha del evento.
 
 % =====================================================================
-\section{Trayectoria longitudinal}\label{sec:longitudinal}
+\section{Eje 4 — Trayectoria longitudinal}\label{sec:longitudinal}
 % =====================================================================
 
 Reconstruir las seis convocatorias como serie permite preguntar qué le pasa a cada investigador entre una convocatoria y la siguiente.
@@ -428,7 +430,7 @@ En las seis convocatorias revisadas ningún investigador Emérito reaparece en l
 \end{hallazgo}
 
 % =====================================================================
-\section{Concentración territorial}\label{sec:territorial}
+\section{Eje 2 — Territorios}\label{sec:territorial}
 % =====================================================================
 
 \subsection{Bogotá y Antioquia concentran el 51\,\% del país}\label{ssec:h5}
@@ -510,25 +512,41 @@ Dos lecturas se desprenden:
 \item \textbf{Las regiones periféricas muestran patrones distintos.} Chocó sostiene una retención local del 92\,\% pese a tener apenas 49 investigadores reconocidos; Amazonas, del 76\,\%; el único caso de Vichada se va para Bogotá. Es decir, donde hay instituciones funcionales con investigadores reconocidos, la retención local es alta independientemente del tamaño del padrón.
 \end{enumerate}
 
-% =====================================================================
-\section{Brecha de género}\label{sec:genero}
-% =====================================================================
-
-\subsection{Representación femenina por área}\label{ssec:h8}
+\subsection{Género × territorio}\label{ssec:h7b-genero-territorio}
 
 \begin{hallazgo}
-\textbf{Hallazgo 8.} La participación femenina en el padrón es de aproximadamente 40\,\% global. El promedio oculta brechas estructurales por gran área OCDE: 24\,\% en Ingeniería y Tecnología, 48\,\% en Ciencias Médicas, cerca de la paridad en Humanidades y Ciencias Sociales.
+\textbf{Hallazgo 7b.} Ningún departamento alcanza la paridad de género entre los investigadores reconocidos. El máximo es Boyacá con 42\,\%. En el otro extremo, Risaralda registra 30\,\% e investigadores con residencia en el exterior 29\,\%.
 \end{hallazgo}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint2_genero_ocde/fig02_heatmap_pct_femenino.png}
-\caption{Porcentaje de mujeres por gran área OCDE y convocatoria.}
+\includegraphics[width=0.92\linewidth]{../../artifacts/sprint7_genero/fig_genero_territorial.png}
+\caption{Porcentaje de mujeres por departamento de residencia (top quince por volumen total).}
 \end{figure}
 
-La cifra agregada de 40\,\% genera una sensación de cercanía a la paridad que no se sostiene por área. Las disciplinas STEM mantienen una sub-representación femenina que no se ha movido durante la década observada.
+La brecha de género en territorio es persistente. El promedio nacional del 40\,\% oculta variaciones notables, pero ninguna región del país muestra paridad efectiva. Esto importa cuando se diseñan programas focalizados regionales: el componente de género no puede asumirse resuelto por el simple aumento de cobertura territorial.
 
-\subsection{Brecha en productividad}\label{ssec:h9}
+% =====================================================================
+\section{Género como lente transversal}\label{sec:genero}
+% =====================================================================
+
+A diferencia de los cuatro ejes (producción, territorios, campos OCDE y análisis longitudinal), el género no se trata como un capítulo aislado sino como una dimensión que atraviesa los demás. Esta sección consolida los hallazgos de género integrados en cada eje.
+
+\subsection{Género × campos OCDE (2021)}\label{ssec:h8}
+
+\begin{hallazgo}
+\textbf{Hallazgo 8.} En la convocatoria 2021, sólo Ciencias Médicas y de la Salud (50{,}9\,\%) supera la paridad de género entre los investigadores reconocidos. Ingeniería y Tecnología registra el mínimo (26{,}5\,\%); Ciencias Sociales se aproxima a la paridad (45{,}1\,\%) pero no la alcanza.
+\end{hallazgo}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{../../artifacts/sprint7_genero/fig_genero_ocde_2021.png}
+\caption{Porcentaje de mujeres por gran área OCDE en la convocatoria 2021. Línea de paridad al 50\,\%.}
+\end{figure}
+
+La cifra agregada del 40\,\% nacional refleja una mezcla muy desigual: paridad en Médicas, sub-representación fuerte en STEM, intermedio en Sociales/Humanidades. El comportamiento es consistente con la serie longitudinal de las seis convocatorias --- la brecha STEM se mantiene plana durante una década.
+
+\subsection{Género × producción}\label{ssec:h9}
 
 \begin{hallazgo}
 \textbf{Hallazgo 9.} Una vez dentro del sistema, las mujeres registran menos productos en promedio que los hombres en cinco de las seis grandes áreas. La única excepción es Humanidades. Mayores brechas: Ciencias Médicas (--2{,}95 productos) e Ingeniería (--2{,}59).
@@ -541,6 +559,10 @@ La cifra agregada de 40\,\% genera una sensación de cercanía a la paridad que 
 \end{figure}
 
 Pocas mujeres entran al sistema, y a las que entran se les contabiliza menos producción. La razón no se reduce a un factor único: pueden estar pesando la distribución de carga académica, la segmentación por tipo de producto, o el efecto de cohorte (las mujeres son en promedio más jóvenes en el padrón). El dato es que la métrica oficial de productividad no se desempaña por género.
+
+\subsection{Género × territorio (síntesis)}
+
+El hallazgo correspondiente está detallado en la sección \ref{ssec:h7b-genero-territorio} del Eje 2. En síntesis: \emph{ningún departamento alcanza la paridad}, con Boyacá (42\,\%), Bolívar (42\,\%) y Cundinamarca (41\,\%) como techo. Risaralda y Caldas se ubican en torno al 30\,\%. La brecha territorial es persistente.
 
 % =====================================================================
 \section{Diversidad: étnia, discapacidad, conflicto}\label{sec:diversidad}
@@ -577,7 +599,7 @@ La comparación correcta sería contra la población \emph{con educación superi
 El cambio de cero a 569 registros entre la convocatoria 2017 y la 2019 \emph{no} refleja un cambio en la realidad académica. Refleja un cambio en cómo se captura la información en el formulario de inscripción. Cualquier análisis de redes de colaboración construido sobre este dataset hereda la limitación.
 
 % =====================================================================
-\section{Productividad y reconocimiento}\label{sec:productividad}
+\section{Eje 1 — Producción}\label{sec:productividad}
 % =====================================================================
 
 \subsection{Producción y categoría}\label{ssec:h12-cat}

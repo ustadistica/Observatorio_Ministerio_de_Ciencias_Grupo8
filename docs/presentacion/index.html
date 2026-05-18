@@ -514,20 +514,20 @@ table.minimal tr:hover td { background: var(--soft-blue); }
 
       <div class="col2" style="margin-top: 38px;">
         <div>
-          <h3 style="margin-bottom: 14px;">Los cinco ejes del análisis</h3>
+          <h3 style="margin-bottom: 14px;">Los cuatro ejes del análisis</h3>
           <ul class="tight bullets-large">
-            <li><strong>Personas.</strong> Quiénes son y cómo se distribuyen.</li>
-            <li><strong>Producción.</strong> Qué firman y qué se les contabiliza.</li>
-            <li><strong>Territorios.</strong> Dónde viven y dónde trabajan.</li>
-            <li><strong>Campos OCDE.</strong> Volumen y productividad por área.</li>
-            <li><strong>Longitudinal.</strong> Cómo cambian de categoría en el tiempo.</li>
+            <li><strong>Producción.</strong> Qué firman, qué se les contabiliza y cómo se distribuye la brecha de género en outputs.</li>
+            <li><strong>Territorios.</strong> Dónde viven, dónde trabajan y cómo varía la participación femenina por departamento.</li>
+            <li><strong>Campos OCDE.</strong> Volumen, productividad por área y composición por género dentro de cada disciplina.</li>
+            <li><strong>Longitudinal.</strong> Cómo cambian de categoría en el tiempo (Junior ↔ Asociado ↔ Senior).</li>
           </ul>
         </div>
         <div class="note-box">
           <strong>Lo que esta lectura permite</strong>
           Por primera vez se contrasta el reconocimiento con la producción medida:
           quién la firma, en qué área, con qué intensidad, desde qué territorio
-          y cómo evoluciona su categoría a lo largo de una década.
+          y cómo evoluciona su categoría a lo largo de una década. El género
+          atraviesa los tres primeros ejes como dimensión transversal.
           Las convocatorias cubiertas son 640 (2013), 693 (2014), 737 (2015),
           781 (2017), 833 (publicada en 2019) y 894 (2021).
         </div>
@@ -565,102 +565,46 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- DIVISOR 1 — PERSONAS                                                 -->
-    <!-- =================================================================== -->
-    <section class="section-divider">
-      <div class="eyebrow">Eje 1</div>
-      <h1>Personas</h1>
-      <p class="subtitle">Quiénes son · cómo se distribuyen · qué cobertura tiene la diversidad</p>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 4. CALIDAD DE DATOS — COMPACTO                                       -->
+    <!-- 4. CAUTELAS METODOLÓGICAS — CALIDAD + DIVERSIDAD INVISIBLE           -->
     <!-- =================================================================== -->
     <section>
-      <div class="eyebrow">Calidad del padrón</div>
+      <div class="eyebrow">Cautelas previas</div>
       <h2>Lo que hay que limpiar antes de leer las cifras</h2>
 
       <div class="col2">
         <div>
+          <h3 style="margin-bottom: 12px;">Calidad del padrón</h3>
           <div class="headline">
             <div class="big">22</div>
-            <div class="lead">apariciones con <strong>edad &gt; 100 años</strong> (máximo: 956). Tratamiento: <em>eliminación</em> tras documentar el atípico.</div>
+            <div class="lead">apariciones con <strong>edad &gt; 100 años</strong> (máximo: 956). Tratamiento aplicado: <em>eliminación</em>, con cada atípico auditable en <code>evidencias/calidad_atipicos_edad.csv</code>.</div>
           </div>
           <ul class="tight">
             <li><strong>Convocatoria 833</strong> fechada 2019-12-06 (día de publicación, no año de apertura).</li>
             <li><strong>~5%</strong> sin departamento; <strong>~3%</strong> sin género reportado.</li>
-            <li><strong>2.762</strong> cadenas de afiliación → consolidadas en una tabla maestra de <strong>211 IES canónicas (91% de cobertura)</strong>.</li>
+            <li><strong>2.762</strong> cadenas de afiliación → consolidadas en una tabla maestra de <strong>211 IES canónicas (91% de cobertura)</strong>, propuesta como entregable a MinCiencias.</li>
           </ul>
         </div>
-        <div class="note-box">
-          <strong>Decisiones documentadas</strong>
-          Cada atípico está auditable en <code>evidencias/calidad_atipicos_edad.csv</code>.
-          La tabla maestra de instituciones es uno de los entregables que
-          proponemos a MinCiencias: cubre 211 IES, mapea las 258 cadenas más
-          frecuentes y deja la cola larga (9% restante) marcada como "revisar".
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 5. GÉNERO POR GRAN ÁREA                                              -->
-    <!-- =================================================================== -->
-    <section class="figslide">
-      <div class="eyebrow">Brecha de género</div>
-      <h2>La paridad cambia mucho según el área</h2>
-
-      <div class="figwrap">
-        <img src="assets/fig02_heatmap_pct_femenino.png" alt="Heatmap pct femenino por gran area">
-      </div>
-
-      <div class="notes">
         <div>
-          <strong>Mínimo</strong>
-          24% de mujeres en Ingeniería y Tecnología, sostenido durante una década.
-        </div>
-        <div>
-          <strong>Máximo</strong>
-          48% en Ciencias Médicas. Sociales y Humanidades cerca de la paridad.
-        </div>
-        <div>
-          <strong>Lo que oculta el promedio</strong>
-          El 40% global da una falsa idea de paridad. Por área la realidad es muy distinta.
-        </div>
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- 6. DIVERSIDAD — COMPACTO                                             -->
-    <!-- =================================================================== -->
-    <section>
-      <div class="eyebrow">Diversidad</div>
-      <h2>Ocho años sin registrar, una foto en 2021</h2>
-
-      <div class="col2-tight">
-        <div>
-          <img src="assets/fig02_comparacion_dane.png" alt="Comparacion con DANE"
-               style="width: 100%; border-radius: 8px; border: 1px solid var(--line); background: white; padding: 8px;">
-        </div>
-        <div>
+          <h3 style="margin-bottom: 12px;">Diversidad: ocho años invisible</h3>
           <ul class="tight">
-            <li><strong>Cobertura</strong>: 0% en 2013–2019, <strong>96,8%</strong> en 2021.</li>
-            <li><strong>Subrepresentados</strong>: Indígenas 7,9× menos · Afros 3× · Víctimas conflicto 8,6× · Discapacidad 8×.</li>
-            <li><strong>Sobrerrepresentados</strong>: Raizales, palenqueros y rrom (3-6× sobre su peso poblacional).</li>
-            <li><strong>No se retropola</strong>. Ser víctima de conflicto en 2021 no implica haberlo sido en 2015 — análisis longitudinal de diversidad <em>imposible por construcción</em>.</li>
+            <li><strong>Cobertura</strong>: 0% en 2013–2019, <strong>96,8%</strong> recién en 2021.</li>
+            <li><strong>Subrepresentados (2021 vs DANE/RUV)</strong>: indígenas 7,9× · afros 3× · víctimas del conflicto 8,6× · personas con discapacidad 8×.</li>
+            <li><strong>Sobrerrepresentados</strong>: raizales, palenqueros y rrom (3-6× sobre su peso poblacional).</li>
+            <li><strong>No se retropola</strong>: la condición de víctima del conflicto no es estática. Cualquier lectura longitudinal de diversidad es imposible por construcción del formulario.</li>
           </ul>
-          <p class="quiet" style="margin-top: 14px;">
-            La comparación correcta sería contra población con educación superior,
-            no contra población total — la brecha real es menor pero sigue siendo significativa.
+          <p class="quiet" style="margin-top: 12px;">
+            La comparación justa sería contra población con educación superior, no contra
+            población total — la brecha real es menor pero sigue siendo significativa.
           </p>
         </div>
       </div>
     </section>
 
     <!-- =================================================================== -->
-    <!-- DIVISOR 2 — PRODUCCIÓN                                               -->
+    <!-- DIVISOR 1 — PRODUCCIÓN                                               -->
     <!-- =================================================================== -->
     <section class="section-divider">
-      <div class="eyebrow">Eje 2</div>
+      <div class="eyebrow">Eje 1</div>
       <h1>Producción</h1>
       <p class="subtitle">Cobertura · productividad por categoría · brecha de género en outputs</p>
     </section>
@@ -747,12 +691,12 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- DIVISOR 3 — TERRITORIOS                                              -->
+    <!-- DIVISOR 2 — TERRITORIOS                                              -->
     <!-- =================================================================== -->
     <section class="section-divider">
-      <div class="eyebrow">Eje 3 · Lo más importante</div>
+      <div class="eyebrow">Eje 2 · Lo más importante</div>
       <h1>Territorios</h1>
-      <p class="subtitle">Dónde viven · dónde trabajan · cómo fluye el talento</p>
+      <p class="subtitle">Dónde viven · dónde trabajan · participación femenina por departamento</p>
     </section>
 
     <!-- =================================================================== -->
@@ -885,12 +829,40 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- DIVISOR 4 — CAMPOS OCDE                                              -->
+    <!-- 15. GÉNERO × TERRITORIO                                              -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Género × territorio</div>
+      <h2>Ningún departamento llega a la paridad</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig_genero_territorial.png" alt="Pct mujeres por departamento">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Mínimo</strong>
+          Risaralda (30%) y Caldas (35%). Investigadores residentes en el exterior: 29%.
+        </div>
+        <div>
+          <strong>Máximo</strong>
+          Boyacá (42%), Bolívar (42%) y Cundinamarca (41%). Aún por debajo de paridad.
+        </div>
+        <div>
+          <strong>Lectura</strong>
+          La brecha de género en territorio es persistente. El promedio del país (40%)
+          oculta variaciones notables entre departamentos con mayor y menor participación.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- DIVISOR 3 — CAMPOS OCDE                                              -->
     <!-- =================================================================== -->
     <section class="section-divider">
-      <div class="eyebrow">Eje 4</div>
+      <div class="eyebrow">Eje 3</div>
       <h1>Campos OCDE</h1>
-      <p class="subtitle">Volumen · productividad por área · composición de tipologías</p>
+      <p class="subtitle">Volumen · productividad por área · composición por género dentro de cada disciplina</p>
     </section>
 
     <!-- =================================================================== -->
@@ -975,10 +947,38 @@ table.minimal tr:hover td { background: var(--soft-blue); }
     </section>
 
     <!-- =================================================================== -->
-    <!-- DIVISOR 5 — LONGITUDINAL                                             -->
+    <!-- 18. GÉNERO × GRAN ÁREA OCDE                                          -->
+    <!-- =================================================================== -->
+    <section class="figslide">
+      <div class="eyebrow">Género × disciplina</div>
+      <h2>Solo Ciencias Médicas supera la paridad</h2>
+
+      <div class="figwrap">
+        <img src="assets/fig_genero_ocde_2021.png" alt="Pct mujeres por gran area OCDE 2021">
+      </div>
+
+      <div class="notes">
+        <div>
+          <strong>Mínimo</strong>
+          Ingeniería y Tecnología: 26,5% de mujeres. La brecha más persistente del sistema.
+        </div>
+        <div>
+          <strong>Máximo</strong>
+          Ciencias Médicas y de la Salud: 50,9%. Única área que supera paridad.
+        </div>
+        <div>
+          <strong>Lectura</strong>
+          El promedio agregado del 40% nacional refleja una mezcla muy desigual: paridad
+          en Médicas, sub-representación fuerte en STEM, intermedio en Sociales/Humanidades.
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- DIVISOR 4 — LONGITUDINAL                                             -->
     <!-- =================================================================== -->
     <section class="section-divider">
-      <div class="eyebrow">Eje 5</div>
+      <div class="eyebrow">Eje 4</div>
       <h1>Análisis longitudinal</h1>
       <p class="subtitle">Cómo cambian las categorías de los investigadores a lo largo de seis convocatorias</p>
     </section>
