@@ -107,11 +107,12 @@ Observatorio_Ministerio_de_Ciencias_Grupo8/
 |   |-- sprint5_produccion.py    # 6 figuras + 7 CSVs de productividad cruzada
 |   |-- sprint5_duckdb.py        # fact_produccion + dim_grupo + vw_investigador_x_produccion
 |   |-- sprint6_validacion_calidad.py   # Tratamiento documentado de atipicos
-|   |-- sprint6_sankey_categoria.py     # 5 Sankeys de transicion de categoria
+|   |-- sprint6_sankey_categoria.py     # 5 Sankeys de transicion (legacy, sustituido por sprint8)
 |   |-- sprint6_ocde_composicion.py     # Composicion tipo producto por area OCDE
 |   |-- sprint6_tabla_maestra_ies.py    # Tabla maestra IES (211 IES, 91% cobertura)
 |   |-- sprint6_geografia_institucional.py  # Cruce residencia x departamento institucion
-|   |-- sprint6_sankey_territorial.py   # Sankey residencia -> institucion
+|   |-- sprint6_sankey_territorial.py   # Sankey residencia -> institucion (legacy, slide eliminado)
+|   |-- sprint8_sankey_longitudinal.py  # Sankey unico linea de tiempo 2013-2021 (matplotlib)
 |   +-- generar_manual.py        # Genera docs/manual.ipynb desde codigo
 |-- notebooks/
 |   +-- 01_eda.ipynb             # Unico notebook activo (EDA exploratorio)
@@ -159,11 +160,12 @@ poetry run python scripts/sprint4_diversidad.py            # Diversidad vs DANE/
 poetry run python scripts/sprint5_produccion.py            # Cruce produccion x investigadores
 poetry run python scripts/sprint5_duckdb.py                # fact_produccion en DuckDB
 poetry run python scripts/sprint6_validacion_calidad.py    # Atipicos de edad documentados
-poetry run python scripts/sprint6_sankey_categoria.py      # 5 Sankeys transicion categoria
+poetry run python scripts/sprint6_sankey_categoria.py      # 5 Sankeys (legacy)
+poetry run python scripts/sprint8_sankey_longitudinal.py   # Sankey unico linea de tiempo 2013-2021
 poetry run python scripts/sprint6_ocde_composicion.py      # Composicion por area OCDE
 poetry run python scripts/sprint6_tabla_maestra_ies.py     # Tabla maestra de IES
 poetry run python scripts/sprint6_geografia_institucional.py  # Residencia x dpto institucion
-poetry run python scripts/sprint6_sankey_territorial.py    # Sankey territorial
+poetry run python scripts/sprint6_sankey_territorial.py    # Sankey territorial (legacy)
 
 # Generar el notebook manual (manualcito ejecutable)
 poetry run python scripts/generar_manual.py
@@ -252,11 +254,12 @@ Ajustes pedidos por el director Izainea tras la revisión de la presentación. S
 | Producto | Salida |
 |---|---|
 | Validación de calidad documentada | `src/analisis/calidad.py` + `scripts/sprint6_validacion_calidad.py` |
-| Sankeys de transición de categoría (5 pares) | `artifacts/sprint6_sankey/sankey_*.html` y `.png` |
+| Sankey longitudinal único (línea de tiempo 2013-2021) | `artifacts/sprint8_sankey/sankey_linea_tiempo.png` (consolidado en una sola imagen) |
+| Sankeys de transición de categoría por par (legacy) | `artifacts/sprint6_sankey/sankey_*.html` y `.png` |
 | Composición OCDE por tipo de producto | `artifacts/sprint6_ocde/` + 3 CSVs |
 | Tabla maestra de IES (211 IES, 91% cobertura) | `evidencias/tabla_maestra_ies.csv` + `mapping_inst_filia_to_ies.csv` |
 | Análisis geográfico institucional | `artifacts/sprint6_geografia/` + `evidencias/geografia_*.csv` |
-| Sankey territorial (residencia → institución) | `artifacts/sprint6_sankey/sankey_territorial.html` |
+| ~~Sankey territorial (residencia → institución)~~ | Eliminado del slide — el heatmap geográfico 12×12 ya cubre la misma lectura |
 | Notebook manual ejecutable | `docs/manual.ipynb` (49 celdas) |
 | Informe LaTeX consolidado | `docs/informe/informe_final.tex` (~30 pag) |
 | Presentación HTML 20 min | `docs/presentacion/index.html` (18 slides Reveal.js) |
