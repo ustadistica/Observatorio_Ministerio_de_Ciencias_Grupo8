@@ -185,9 +185,11 @@ def fig_heatmap_top(flujo: pd.DataFrame, top_n: int = 12) -> None:
     # Reindexar para garantizar simetría exacta
     pivot = pivot.reindex(index=orden, columns=orden, fill_value=0)
 
-    fig, ax = plt.subplots(figsize=(11, 9))
+    # Figsize cuadrado +15% — la matriz aprovecha mas el slide.
+    # Sin colorbar: el valor numerico en cada celda ya cumple esa funcion.
+    fig, ax = plt.subplots(figsize=(9.2, 9.66))
     sns.heatmap(pivot, annot=True, fmt="d", cmap="YlGnBu",
-                cbar_kws={"label": "Investigadores"},
+                cbar=False,
                 linewidths=0.4, linecolor="white", ax=ax,
                 square=True)
     ax.set_xlabel("Departamento de la institución")
@@ -196,8 +198,10 @@ def fig_heatmap_top(flujo: pd.DataFrame, top_n: int = 12) -> None:
     plt.setp(ax.get_xticklabels(), rotation=40, ha="right")
     plt.setp(ax.get_yticklabels(), rotation=0)
     plt.tight_layout()
+    # DPI reducido (110) + bbox tight para que el PNG resultante sea pequeno
+    # y se renderice nitido en pantallas Retina sin saturar el slide.
     fig.savefig(ARTIFACTS / "fig_heatmap_residencia_institucion.png",
-                dpi=150, bbox_inches="tight")
+                dpi=110, bbox_inches="tight")
     plt.close()
 
 
