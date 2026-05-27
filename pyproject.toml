@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "minciencias-investigadores"
 version = "0.1.0"
-description = "Observatorio de investigadores reconocidos por MinCiencias. Análisis longitudinal de convocatorias 2017, 2019, 2021 (y 2023 si disponible)."
+description = "Observatorio de investigadores reconocidos por MinCiencias. Análisis longitudinal de seis convocatorias 2013-2021 cruzado con el dataset de producción de grupos."
 authors = ["Ustadistica <ustadistica@usantotomas.edu.co>"]
 readme = "README.md"
 packages = [{include = "src"}]
@@ -15,16 +15,16 @@ seaborn = "^0.13"
 plotly = "^5.18"
 streamlit = "^1.31"
 jupyter = "^1.0"
-scikit-learn = "^1.4"
-    sodapy = "^2.2"
-    duckdb = "^1.0"
-    networkx = "^3.2"
-    pyvis = "^0.3"
+nbformat = "^5.9"
+pyyaml = "^6.0"
+sodapy = "^2.2"
+duckdb = "^1.0"
+networkx = "^3.2"
+pyvis = "^0.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"
 ruff = "^0.3"
-pandera = "^0.18"
 
 [build-system]
 requires = ["poetry-core"]
