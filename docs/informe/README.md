@@ -58,7 +58,7 @@ Los datos del autor están al inicio del `.tex` como comandos editables:
 
 ```latex
 \newcommand{\autorInforme}{Víctor Díaz Bautista}
-\newcommand{\directorInforme}{Iván Zainea}
+\newcommand{\directorInforme}{Isaac Zainea}
 \newcommand{\universidad}{Universidad Santo Tomás}
 \newcommand{\unidad}{Ustadistica · Consultoría e Investigación}
 \newcommand{\periodo}{2026-I}
