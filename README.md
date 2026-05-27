@@ -107,21 +107,22 @@ Observatorio_Ministerio_de_Ciencias_Grupo8/
 |   |-- sprint5_produccion.py    # 6 figuras + 7 CSVs de productividad cruzada
 |   |-- sprint5_duckdb.py        # fact_produccion + dim_grupo + vw_investigador_x_produccion
 |   |-- sprint6_validacion_calidad.py   # Tratamiento documentado de atipicos
-|   |-- sprint6_sankey_categoria.py     # 5 Sankeys de transicion (legacy, sustituido por sprint8)
 |   |-- sprint6_ocde_composicion.py     # Composicion tipo producto por area OCDE
 |   |-- sprint6_tabla_maestra_ies.py    # Tabla maestra IES (211 IES, 91% cobertura)
 |   |-- sprint6_geografia_institucional.py  # Cruce residencia x departamento institucion
-|   |-- sprint6_sankey_territorial.py   # Sankey residencia -> institucion (legacy, slide eliminado)
+|   |-- sprint7_genero_transversal.py   # Genero territorial + genero por gran area OCDE 2021
 |   |-- sprint8_sankey_longitudinal.py  # Sankey unico linea de tiempo 2013-2021 (matplotlib)
-|   +-- generar_manual.py        # Genera docs/manual.ipynb desde codigo
+|   |-- generar_manual.py        # Genera docs/manual.ipynb desde codigo
+|   +-- exportar_parquet.py      # Convierte CSVs raw a Parquet (entregable Silver)
 |-- notebooks/
 |   +-- 01_eda.ipynb             # Unico notebook activo (EDA exploratorio)
 |-- streamlit_app.py             # Dashboard — 7 tabs tipo capitulo del informe
 |-- .streamlit/config.toml       # Tema y configuracion para Streamlit Cloud
 |-- requirements.txt             # Deps minimas runtime para deploy
 |-- docs/
-|   |-- presentacion/index.html  # 18 slides Reveal.js para Izainea (20 min)
-|   |-- manual.ipynb             # Notebook ejecutable con los 15 hallazgos
+|   |-- presentacion/index.html  # 25 slides Reveal.js para Izainea (20 min)
+|   |-- infografia/index.html    # Infografia 1-pager (cifras + cautelas + recomendaciones)
+|   |-- manual.ipynb             # Notebook ejecutable con los 17 hallazgos
 |   +-- informe/informe_final.tex # Informe consolidado en LaTeX (~30 pag)
 |-- datos/
 |   |-- raw/                     # CSVs descargados de Socrata (gitignored)
@@ -160,12 +161,10 @@ poetry run python scripts/sprint4_diversidad.py            # Diversidad vs DANE/
 poetry run python scripts/sprint5_produccion.py            # Cruce produccion x investigadores
 poetry run python scripts/sprint5_duckdb.py                # fact_produccion en DuckDB
 poetry run python scripts/sprint6_validacion_calidad.py    # Atipicos de edad documentados
-poetry run python scripts/sprint6_sankey_categoria.py      # 5 Sankeys (legacy)
 poetry run python scripts/sprint8_sankey_longitudinal.py   # Sankey unico linea de tiempo 2013-2021
 poetry run python scripts/sprint6_ocde_composicion.py      # Composicion por area OCDE
 poetry run python scripts/sprint6_tabla_maestra_ies.py     # Tabla maestra de IES
 poetry run python scripts/sprint6_geografia_institucional.py  # Residencia x dpto institucion
-poetry run python scripts/sprint6_sankey_territorial.py    # Sankey territorial (legacy)
 
 # Generar el notebook manual (manualcito ejecutable)
 poetry run python scripts/generar_manual.py
@@ -255,14 +254,12 @@ Ajustes pedidos por el director Izainea tras la revisión de la presentación. S
 |---|---|
 | Validación de calidad documentada | `src/analisis/calidad.py` + `scripts/sprint6_validacion_calidad.py` |
 | Sankey longitudinal único (línea de tiempo 2013-2021) | `artifacts/sprint8_sankey/sankey_linea_tiempo.png` (consolidado en una sola imagen) |
-| Sankeys de transición de categoría por par (legacy) | `artifacts/sprint6_sankey/sankey_*.html` y `.png` |
 | Composición OCDE por tipo de producto | `artifacts/sprint6_ocde/` + 3 CSVs |
 | Tabla maestra de IES (211 IES, 91% cobertura) | `evidencias/tabla_maestra_ies.csv` + `mapping_inst_filia_to_ies.csv` |
 | Análisis geográfico institucional | `artifacts/sprint6_geografia/` + `evidencias/geografia_*.csv` |
-| ~~Sankey territorial (residencia → institución)~~ | Eliminado del slide — el heatmap geográfico 12×12 ya cubre la misma lectura |
-| Notebook manual ejecutable | `docs/manual.ipynb` (49 celdas) |
+| Notebook manual ejecutable | `docs/manual.ipynb` (46 celdas) |
 | Informe LaTeX consolidado | `docs/informe/informe_final.tex` (~30 pag) |
-| Presentación HTML 20 min | `docs/presentacion/index.html` (18 slides Reveal.js) |
+| Presentación HTML 20 min | `docs/presentacion/index.html` (25 slides Reveal.js) |
 
 **Aclaraciones que aporta el Sprint 6:**
 - Los Eméritos **quedan vitalicios**. Su "desaparición" en convocatorias siguientes es diseño del sistema, no expulsión.
@@ -285,13 +282,54 @@ Dashboard con narrativa crítica para alimentar el informe final. **7 tabs tipo 
 Cada sección sigue el patrón **Pregunta → Hallazgo → Caveat**.
 
 
+## Entregables del proyecto
+
+Cuatro entregables consolidados para la radicación del 26 de mayo de 2026.
+
+### 1. Informe final
+
+[`docs/informe/informe_final.tex`](docs/informe/informe_final.tex) — documento estadístico completo con portada institucional, resumen ejecutivo, contextualización del problema, objetivos, descripción de fuentes de datos abiertos (tabla unificada con portal, conjunto, identificador Socrata, periodo y fecha de consulta), tratamiento de los datos (limpieza, integración, supuestos), capítulo dedicado a métodos estadísticos con justificación técnica, resultados por ejes con figuras y tablas numeradas, discusión, conclusiones, recomendaciones, limitaciones, referencias y anexos técnicos. Instrucciones de compilación en [`docs/informe/README.md`](docs/informe/README.md).
+
+### 2. Artefactos (versión previa de los productos derivados)
+
+| Artefacto | Ruta | Propósito |
+|---|---|---|
+| Dashboard interactivo | [`streamlit_app.py`](streamlit_app.py) | 7 pestañas tipo capítulo del informe |
+| Aplicación | misma Streamlit | Filtros, mapas, descarga de muestras |
+| Infografía 1-pager | [`docs/infografia/index.html`](docs/infografia/index.html) | Resumen visual scrollable para envío rápido |
+| Presentación | [`docs/presentacion/index.html`](docs/presentacion/index.html) | 25 slides Reveal.js 1920×1080 con 4 ejes |
+| Notebook manual | [`docs/manual.ipynb`](docs/manual.ipynb) | Reproducible ejecutable celda por celda |
+
+### 3. Repositorio
+
+[github.com/ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo8](https://github.com/ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo8) — estructura ordenada en [`src/`](src/) (lógica reutilizable), [`scripts/`](scripts/) (orquestadores por sprint), [`docs/`](docs/) (documentación e informes), [`datos/`](datos/) (raw + processed + catálogo), [`evidencias/`](evidencias/) (CSVs exportados), [`artifacts/`](artifacts/) (figuras PNG). Control de versiones con Git Flow (`main_VictorD` → PR → `main`). Scripts reproducibles de consulta de datos abiertos en [`src/ingesta/`](src/ingesta/) con `sodapy`.
+
+### 4. Datos
+
+Paquete consolidado en [`datos/processed/`](datos/processed/):
+
+| Archivo | Contenido | Tamaño |
+|---|---|---:|
+| [`investigadores_consolidado.parquet`](datos/processed/investigadores_consolidado.parquet) | Padrón Silver, 77.237 filas × 30 cols | 1,2 MB |
+| [`produccion_grupos.parquet`](datos/processed/produccion_grupos.parquet) | Producción Silver, 3.166.629 filas × 14 cols | 128 MB |
+| [`observatorio.duckdb`](datos/processed/observatorio.duckdb) | Modelo dimensional Gold (estrella) | 229 MB |
+| [`README.md`](datos/processed/README.md) | Inventario, caveats y ejemplos de uso (pandas + DuckDB) | — |
+
+Diccionario completo: [`datos/catalogo.yaml`](datos/catalogo.yaml) (40+ variables documentadas).
+Tabla maestra de IES (entregable propio): [`evidencias/tabla_maestra_ies.csv`](evidencias/tabla_maestra_ies.csv) (211 IES canónicas, 91 % cobertura).
+Referencia explícita de origen: Datos Abiertos Colombia (Socrata), identificadores [`bqtm-4y2h`](https://www.datos.gov.co/resource/bqtm-4y2h) y [`33dq-ab5a`](https://www.datos.gov.co/resource/33dq-ab5a).
+
+---
+
 ## Equipo
 
-| Rol | GitHub |
-|-----|--------|
-| Pipeline + deploy | [@Victor-Diaz-Usta](https://github.com/Victor-Diaz-Usta) |
+| Rol | Integrante | Código |
+|-----|------------|--------|
+| Análisis, pipeline y entregables | Víctor Díaz Bautista — [@Victor-Diaz-Usta](https://github.com/Victor-Diaz-Usta) | 2274325 |
 
-**Director / Revisor PRs:** [@Izainea](https://github.com/Izainea)
+**Equipo:** Minciencias 2
+**Director / Revisor PRs:** Isaac Zainea — [@Izainea](https://github.com/Izainea)
+**Fecha de entrega:** 26 de mayo de 2026
 
 ## Metodologia
 
