@@ -102,12 +102,15 @@
 }
 
 % ---- Metadatos editables -------------------------------------------
+\newcommand{\equipoInforme}{Minciencias 2}
 \newcommand{\autorInforme}{Víctor Díaz Bautista}
-\newcommand{\directorInforme}{Iván Zainea}
+\newcommand{\codigoInforme}{2274325}
+\newcommand{\directorInforme}{Isaac Zainea}
 \newcommand{\universidad}{Universidad Santo Tomás}
 \newcommand{\unidad}{Ustadistica \,$\cdot$\, Consultoría e Investigación}
 \newcommand{\periodo}{2026-I}
-\newcommand{\repoUrl}{https://github.com/Victor-Diaz-Usta/Min\_ciencias}
+\newcommand{\fechaEntrega}{26 de mayo de 2026}
+\newcommand{\repoUrl}{https://github.com/ustadistica/Observatorio\_Ministerio\_de\_Ciencias\_Grupo8}
 
 \title{}
 \author{}
@@ -132,11 +135,14 @@
 {\color{accent}\rule{0.4\linewidth}{0.6pt}}
 
 \vspace{0.8cm}
-\begin{tabularx}{0.7\linewidth}{>{\raggedright\arraybackslash}X >{\raggedleft\arraybackslash}X}
-\sffamily\color{rule}\footnotesize Autor & \autorInforme \\[3pt]
+\begin{tabularx}{0.78\linewidth}{>{\raggedright\arraybackslash}X >{\raggedleft\arraybackslash}X}
+\sffamily\color{rule}\footnotesize Equipo & \textbf{\equipoInforme} \\[3pt]
+\sffamily\color{rule}\footnotesize Integrante & \autorInforme \\[3pt]
+\sffamily\color{rule}\footnotesize Código & \codigoInforme \\[3pt]
 \sffamily\color{rule}\footnotesize Director & \directorInforme \\[3pt]
-\sffamily\color{rule}\footnotesize Repositorio & \href{\repoUrl}{Victor-Diaz-Usta/Min\_ciencias} \\[3pt]
-\sffamily\color{rule}\footnotesize Datasets & \texttt{bqtm-4y2h} \,$\cdot$\, \texttt{33dq-ab5a}
+\sffamily\color{rule}\footnotesize Repositorio & \href{\repoUrl}{ustadistica/Observatorio\_Ministerio\_de\_Ciencias\_Grupo8} \\[3pt]
+\sffamily\color{rule}\footnotesize Datasets & \texttt{bqtm-4y2h} \,$\cdot$\, \texttt{33dq-ab5a} (datos.gov.co) \\[3pt]
+\sffamily\color{rule}\footnotesize Fecha de entrega & \fechaEntrega
 \end{tabularx}
 
 \vfill
@@ -151,7 +157,9 @@ Entre 2013 y 2021 MinCiencias convocó seis veces para reconocer y clasificar a 
 
 El análisis cruza dos fuentes oficiales que normalmente se consultan por separado: el dataset consolidado de investigadores reconocidos (\num{77237} registros, \num{30086} personas únicas) y el dataset de productos académicos contabilizados a los grupos de investigación (\num{3166629} filas, \num{77401} autores únicos). Una vez integrados por identidad de persona dentro de la ventana de cada convocatoria, aparecen patrones que ninguno de los dos datasets revela por separado.
 
-El padrón concentra el 51\,\% entre Bogotá y Antioquia. La participación femenina sigue por debajo del 25\,\% en Ingeniería y se mantiene plana durante una década. Las variables de etnia, discapacidad y víctimas del conflicto sólo empezaron a registrarse en 2021, lo que hace inviable cualquier análisis longitudinal sobre diversidad. Y al cruzar reconocimiento con producción, aproximadamente un tercio de los autores que firman los productos contabilizados por MinCiencias no aparece en el padrón de reconocidos.
+La lectura se organiza en \textbf{cuatro ejes}: Producción, Territorios, Campos OCDE y trayectoria longitudinal. El género no aparece como eje propio sino como \textbf{lente transversal} que se aplica en los tres primeros. La calidad de los datos y la cobertura de las variables de diversidad se documentan al inicio como cautelas metodológicas, no como hallazgos analíticos.
+
+El padrón concentra el 48\,\% entre Bogotá y Antioquia. La participación femenina sigue por debajo del 26{,}5\,\% en Ingeniería y \emph{ningún departamento alcanza la paridad}, con un máximo de 42\,\% en Boyacá. Las variables de etnia, discapacidad y víctimas del conflicto sólo empezaron a registrarse en 2021, lo que hace inviable cualquier análisis longitudinal sobre diversidad. Y al cruzar reconocimiento con producción, aproximadamente un tercio de los autores que firman los productos contabilizados por MinCiencias no aparece en el padrón de reconocidos.
 
 Al cruzar también la residencia del investigador con el departamento de su institución surge un patrón adicional: Bogotá no sólo retiene al 92\,\% de sus propios investigadores sino que absorbe gente de prácticamente todos los demás departamentos. Cundinamarca y Risaralda muestran baja retención local; Chocó y Amazonas, alta. El observatorio entrega además una primera versión de la tabla maestra de instituciones (211 IES canónicas, 91\,\% de cobertura del padrón) como referencia para que MinCiencias adopte como estándar.
 
@@ -200,21 +208,58 @@ Este documento reúne doce hallazgos. Algunos son técnicos y se resuelven con u
 
 \subsection{Estructura del documento}
 
-La sección \ref{sec:metodo} describe los datos, el procedimiento de cruce y la tabla maestra de instituciones que entregamos. De la \ref{sec:calidad} a la \ref{sec:productividad} se desarrollan los hallazgos por capítulo temático, cada uno con evidencia visual y caveats. La sección \ref{sec:recomendaciones} propone cuatro líneas operativas de política. La \ref{sec:limitaciones} declara las limitaciones del trabajo. Los anexos incluyen el catálogo de variables, el modelo de datos en DuckDB y las fuentes.
+La sección \ref{sec:metodo} describe los datos, el procedimiento de cruce y la tabla maestra de instituciones que entregamos. La sección \ref{sec:calidad} consolida las cautelas metodológicas (calidad del padrón, diversidad invisible). Los cuatro ejes se desarrollan en orden: \ref{sec:productividad} Producción, \ref{sec:territorial} Territorios, \ref{sec:ocde} Campos OCDE y \ref{sec:longitudinal} Análisis longitudinal. El género opera como lente transversal dentro de los Ejes 1, 2 y 3. La sección \ref{sec:recomendaciones} propone cuatro líneas operativas de política. La \ref{sec:limitaciones} declara las limitaciones del trabajo. Los anexos incluyen el catálogo de variables, el modelo de datos en DuckDB y las fuentes.
 
 % =====================================================================
 \section{Metodología}\label{sec:metodo}
 % =====================================================================
 
-\subsection{Fuentes de datos}
+\subsection{Fuentes de datos abiertos}\label{ssec:fuentes}
 
-El análisis utiliza dos datasets oficiales publicados por MinCiencias en \texttt{datos.gov.co} a través de la plataforma Socrata.
+El análisis utiliza dos datasets oficiales publicados por MinCiencias en el portal \href{https://www.datos.gov.co}{datos.gov.co} a través de la plataforma Socrata. La tabla \ref{tab:fuentes} consolida la trazabilidad de cada fuente con su identificador, periodo cubierto y fecha de consulta.
+
+\begin{table}[h]
+\centering
+\caption{Trazabilidad de las fuentes de datos abiertos utilizadas.}
+\label{tab:fuentes}
+\footnotesize
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.20\linewidth} X X}
+\toprule
+\textbf{Atributo} & \textbf{Dataset 1} & \textbf{Dataset 2} \\
+\midrule
+Portal & datos.gov.co (Socrata) & datos.gov.co (Socrata) \\
+Conjunto & Investigadores reconocidos por convocatoria de MinCiencias & Producción Grupos de Investigación \\
+Entidad publicadora & Ministerio de Ciencia, Tecnología e Innovación & Ministerio de Ciencia, Tecnología e Innovación \\
+Identificador Socrata & \texttt{bqtm-4y2h} & \texttt{33dq-ab5a} \\
+URL del recurso (CSV) & \href{https://www.datos.gov.co/resource/bqtm-4y2h.csv}{datos.gov.co/resource/bqtm-4y2h.csv} & \href{https://www.datos.gov.co/resource/33dq-ab5a.csv}{datos.gov.co/resource/33dq-ab5a.csv} \\
+Periodo cubierto & 2013--2021 (6 convocatorias: 640, 693, 737, 781, 833, 894) & 2013--2021 (mismas 6 ventanas de observación) \\
+Tamaño & \num{77237} filas $\times$ 30 columnas $\sim$ 30 MB & \num{3166629} filas $\times$ 14 columnas $\sim$ 1{,}2 GB \\
+Llave de identidad & \texttt{id\_persona\_pr} & \texttt{id\_persona\_pd} \\
+Cliente / método de descarga & \texttt{sodapy} (Python) en bloque único & \texttt{sodapy} (Python) paginado en chunks de 50.000 \\
+Script de ingesta & \texttt{src/ingesta/minciencias.py} & \texttt{src/ingesta/produccion.py} \\
+Fecha de consulta & 2026-04-28 & 2026-04-30 \\
+Licencia de uso & Datos abiertos Colombia (uso público con cita) & Datos abiertos Colombia (uso público con cita) \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \paragraph{Investigadores reconocidos por convocatoria.}
-Identificador Socrata \texttt{bqtm-4y2h}. Dataset consolidado: una sola fuente integra las seis convocatorias 2013--2021. Contiene \num{77237} registros y 30 variables. Cada fila representa a un investigador en una convocatoria; un mismo investigador puede aparecer hasta seis veces si fue reconocido en todas. La llave única para seguimiento longitudinal es \texttt{id\_persona\_pr}.
+Dataset consolidado que integra las seis convocatorias 2013--2021 en una única fuente. Cada fila representa a un investigador en una convocatoria; un mismo investigador puede aparecer hasta seis veces si fue reconocido en todas. La llave única para seguimiento longitudinal es \texttt{id\_persona\_pr}.
 
 \paragraph{Producción de grupos de investigación.}
-Identificador Socrata \texttt{33dq-ab5a}. Documenta los productos académicos revisados y evaluados por MinCiencias dentro de la ventana de observación de cada convocatoria. Tiene \num{3166629} filas y 14 variables. Cada fila corresponde a un par producto--autor. Por su tamaño se descarga paginado; ocupa cerca de 1{,}2~GB. La llave de persona es \texttt{id\_persona\_pd}.
+Documenta los productos académicos revisados y evaluados por MinCiencias dentro de la ventana de observación de cada convocatoria. Cada fila corresponde a un par producto--autor (un mismo producto puede tener varios autores). Por su tamaño se descarga paginado en bloques de 50.000 filas. La llave de persona es \texttt{id\_persona\_pd}, que cruza directamente con \texttt{id\_persona\_pr}.
+
+\paragraph{Fuentes de referencia poblacional.}
+Para los análisis comparativos con la composición poblacional colombiana se utilizan dos fuentes oficiales adicionales como benchmark, no como dato consumido:
+
+\begin{itemize}
+\item \textbf{DANE --- Censo Nacional de Población y Vivienda 2018 (CNPV 2018).} Composición étnica nacional, último censo oficial al momento del análisis. \\
+\href{https://www.dane.gov.co/index.php/estadisticas-por-tema/demografia-y-poblacion/censo-nacional-de-poblacion-y-vivenda-2018}{dane.gov.co/CNPV-2018}.
+\item \textbf{Unidad para las Víctimas --- Registro Único de Víctimas (RUV 2021).} Población víctima del conflicto armado, corte 2021. \\
+\href{https://www.unidadvictimas.gov.co/es/registro-unico-de-victimas-ruv/37394}{unidadvictimas.gov.co/RUV}.
+\end{itemize}
+
+Las cifras de DANE y RUV se utilizan como proporciones nacionales de referencia (no se descargan como dataset transaccional); por eso aparecen como constantes en el código fuente (\texttt{src/analisis/diversidad.py}).
 
 \medskip
 \begin{table}[h]
@@ -331,335 +376,379 @@ La tabla resuelve casos típicos como las cuatro sedes principales de la Univers
 \newpage
 
 % =====================================================================
-\section{Calidad de los datos}\label{sec:calidad}
+\section{Métodos estadísticos}\label{sec:metodos}
+% =====================================================================
+
+El observatorio es un trabajo \emph{descriptivo}: reporta lo que se observa en los datos abiertos publicados por MinCiencias, sin introducir modelos predictivos ni inferencia causal. Esa decisión es deliberada y la pidió explícitamente el director del proyecto. Los métodos seleccionados responden a esa lógica: en cada eje del análisis se elige la técnica más simple que permita responder la pregunta y deja documentado el supuesto que carga consigo.
+
+\subsection{Estadística descriptiva como primera línea}
+
+La gran mayoría de los hallazgos se construye con estadística descriptiva univariada (frecuencias, proporciones, medianas) y bivariada (tablas de contingencia, proporciones condicionales). La razón es simple: los datasets son grandes (77 mil filas en investigadores, 3{,}2 millones en producción), pero las preguntas de política pública que orientan el análisis no requieren modelado. Cuando una decisión administrativa depende de saber qué porcentaje de mujeres hay en Ingeniería o cuántos investigadores residen en cada departamento, el conteo directo da la respuesta exacta.
+
+Esta primera línea metodológica se aplica de forma transversal:
+\begin{itemize}
+\item \textbf{Distribuciones de frecuencia} por categoría (Junior/Asociado/Senior/Emérito), por departamento de residencia, por gran área OCDE.
+\item \textbf{Cuotas relativas} de género, edad, etnia y condición de discapacidad por convocatoria.
+\item \textbf{Promedios y medianas} de productividad por categoría, área y género, con la decisión explícita de reportar las dos métricas porque la distribución de productos es muy sesgada a la derecha (un grupo pequeño de Senior con mucha producción mueve la media pero no la mediana).
+\end{itemize}
+
+\subsection{Tratamiento documentado de valores atípicos}
+
+La elección metodológica clave en limpieza es cómo se trata el atípico de edad (22 apariciones con \texttt{edad > 100} años, máximo 956). Se evaluaron dos rutas:
+
+\begin{enumerate}
+\item \textbf{Eliminación.} Descartar los 22 casos cuando el análisis depende de edad.
+\item \textbf{Imputación por mediana del grupo} \texttt{(área OCDE × categoría × género)}, técnica equivalente al \emph{Multiple Imputation by Chained Equations} (MICE) restringido a un solo paso por mediana.
+\end{enumerate}
+
+Se optó por \textbf{eliminación} con base en dos argumentos cuantitativos: (i) 22 sobre 77.237 representa 0{,}03\,\% del padrón, sesgo despreciable; (ii) los dos métodos producen estadísticos prácticamente idénticos (la media baja 0{,}11 años, la desviación pasa de 13{,}23 a 10{,}04, la mediana no se mueve). La eliminación preserva la trazabilidad caso por caso, lo que es decisivo para una auditoría pública: cualquier revisor puede inspeccionar el archivo \texttt{evidencias/calidad\_atipicos\_edad.csv} y validar la decisión.
+
+\subsection{Concentración territorial: índice de Herfindahl--Hirschman (HHI)}
+
+Para medir la concentración geográfica del padrón se utiliza el HHI, calculado como la suma de las participaciones al cuadrado de cada departamento sobre el total nacional. La justificación de la elección es doble. Primero, el HHI es un indicador estándar en la literatura económica para diagnosticar concentración de mercado y se traslada de forma natural a la concentración geográfica de un recurso (en este caso, investigadores reconocidos). Segundo, complementa a las medidas de cuota simple (porcentaje de Bogotá y Antioquia) porque pondera por el cuadrado: una distribución con dos actores dominantes y muchos pequeños produce un HHI mucho mayor que una distribución plana con la misma cuota mayoritaria.
+
+No se reportan intervalos de confianza porque las cifras corresponden al universo completo de investigadores reconocidos en cada convocatoria (no se trabaja con muestras). El HHI es por construcción descriptivo, no inferencial.
+
+\subsection{Análisis longitudinal: matrices de transición y diagramas de Sankey}
+
+Para responder la pregunta de qué pasa con un investigador entre dos convocatorias se construye una matriz de transición $\mathbf{T}_{ij}$ donde la celda $(i,j)$ cuenta cuántos investigadores que estaban en la categoría $i$ en la convocatoria $t$ aparecen en la categoría $j$ en la convocatoria $t+1$. Se incluye una columna adicional ``Desaparece'' para los que no continúan, indispensable para no perder de vista a los Eméritos (que quedan vitalicios y no re-postulan).
+
+La elección de matrices de transición sobre, por ejemplo, modelos de supervivencia o cadenas de Markov explícitas, responde a un criterio interpretativo: los receptores del análisis (MinCiencias, comunidad académica, opinión pública) leen una matriz cuadrada con números absolutos sin barrera de entrada. Una cadena de Markov con probabilidades estacionarias añadiría una capa de abstracción innecesaria para reportar comportamientos que ya son visibles en los conteos.
+
+El paso visual de las matrices de transición a los diagramas de Sankey es directo y se hace por dos razones: (a) los Sankeys permiten ver simultáneamente todos los flujos en un solo gráfico, en vez de obligar a leer cinco matrices consecutivas; (b) el director del proyecto pidió explícitamente la visualización tipo línea de tiempo para reforzar el patrón de descensos desde Asociado hacia Junior. La biblioteca \texttt{plotly} se descartó para el Sankey longitudinal porque su algoritmo reordena nodos pese a posiciones fijas; se implementó manualmente con curvas Bézier sobre \texttt{matplotlib} para garantizar el orden vertical canónico.
+
+\subsection{Comparación con benchmarks poblacionales}
+
+Para los análisis de subrepresentación de minorías (afros, indígenas, raizales, palenqueros, rrom, personas con discapacidad, víctimas del conflicto) se calcula un \emph{razón de representación}:
+\[
+\rho_g = \frac{p_g^{\,\text{padrón}}}{p_g^{\,\text{población}}}
+\]
+
+donde $p_g^{\text{padrón}}$ es la proporción del grupo $g$ entre los investigadores reconocidos en 2021 y $p_g^{\text{población}}$ la proporción del mismo grupo según DANE-CNPV 2018 (o RUV 2021 para víctimas del conflicto). Una razón menor a 1 indica subrepresentación; mayor a 1, sobrerrepresentación.
+
+La elección de DANE/RUV como referente no es trivial y se discute explícitamente en el cuerpo del informe: una comparación más justa sería contra la población \emph{con educación superior} (donde la composición étnica ya está sesgada respecto al total nacional). El observatorio deja el caveat documentado y propone esa comparación como trabajo futuro porque requiere fuentes adicionales (DANE GEIH o ECV).
+
+\subsection{Normalización institucional: tabla maestra ad hoc}
+
+El campo \texttt{inst\_filia} contiene \num{2762} cadenas únicas que en realidad corresponden a aproximadamente 800 instituciones reales. La estrategia adoptada para resolver esto fue construir una \emph{tabla maestra ad hoc} con curación humana sobre el top de strings por frecuencia, mapeando cada variante a un nombre canónico, sigla y departamento sede. Se cubrieron 258 strings que representan 211 IES canónicas con 91\,\% de cobertura del padrón.
+
+Se descartaron dos alternativas. La primera, \emph{fuzzy matching automático} con métricas tipo Levenshtein, se descartó porque produce falsos positivos (``Universidad de la Salle'' vs ``Universidad del Valle'' tienen baja distancia editorial pero son entidades distintas). La segunda, descargar el listado oficial SNIES de MEN como tabla maestra, se descartó por instrucción del director (``construya la lista a mano con lo que ya existe en \texttt{inst\_filia}'') para que el entregable sea independiente de un dataset externo. La tabla maestra queda como propuesta concreta para MinCiencias.
+
+\subsection{Cruce entre los dos datasets}
+
+El cruce de investigadores reconocidos con producción de grupos se hace por \texttt{id\_persona\_pr} $=$ \texttt{id\_persona\_pd}, restringido a la misma \texttt{id\_convocatoria}. La restricción por convocatoria es importante: produce una lectura ``estricta'' de cobertura (52--63\,\% de productos firmados por reconocidos en su ventana correspondiente) en vez de la lectura ``laxa'' sin restricción (72--77\,\%, que incluye productos firmados por investigadores reconocidos en \emph{cualquier} convocatoria). Ambas cifras se reportan en el informe; la elección de cuál usar depende de la pregunta concreta.
+
+\subsection{Software y reproducibilidad}
+
+Todo el procesamiento se hace en Python 3.11 con \texttt{pandas} 2.x para manipulación tabular, \texttt{seaborn}/\texttt{matplotlib} para visualización, \texttt{plotly} para gráficos interactivos del dashboard, \texttt{networkx} y \texttt{pyvis} para el análisis de redes de co-filiación, y \texttt{duckdb} para el modelo dimensional persistente. Las dependencias están declaradas en \texttt{pyproject.toml} (Poetry). Cada figura del informe se regenera desde cero con los scripts del directorio \texttt{scripts/}, lo que garantiza reproducibilidad bit-a-bit a partir de los CSVs descargados de Socrata.
+
+\newpage
+
+% =====================================================================
+\section{Cautelas metodológicas}\label{sec:calidad}
 % =====================================================================
 
 \epigraph{``Si el dato base trae errores de captura, cualquier reporte oficial los hereda.''}{}
 
-\subsection{Anomalías de registro}\label{ssec:h1}
+\subsection{Calidad del padrón}\label{ssec:h1}
 
 \begin{hallazgo}
-\textbf{Hallazgo 1.} 22 registros con edad mayor a 100 años (máximo 956). Cerca del 5\,\% del padrón sin departamento y el 3\,\% sin género reportado. La convocatoria 833 está fechada con el día de publicación de resultados (2019-12-06), no con su año nominal 2018.
+\textbf{Hallazgo 1.} 22 apariciones con edad mayor a 100 años (máximo: 956). Cerca del 5\,\% del padrón sin departamento y el 3\,\% sin género reportado. La convocatoria 833 aparece fechada con el día de publicación de resultados (2019-12-06), no con su año nominal 2018.
 \end{hallazgo}
 
 La explicación de la fecha es benigna: 2019-12-06 es el día en que se publicaron los resultados de la convocatoria. La explicación no quita el problema. Cualquier análisis que extraiga el año automáticamente del campo \texttt{ANO\_CONVO} clasifica esa convocatoria como 2019 y no como 2018, distorsionando series temporales.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.92\linewidth]{../../artifacts/sprint6_calidad/fig_edad_antes_despues.png}
-\caption{Distribución de edad antes y después del tratamiento de atípicos. El umbral aplicado es 100 años; los 22 casos descartados quedan documentados en \texttt{evidencias/calidad\_atipicos\_edad.csv}.}
-\end{figure}
+Los 22 atípicos de edad quedan auditables en \texttt{evidencias/calidad\_atipicos\_edad.csv}; el tratamiento aplicado fue eliminación (umbral 100 años) y el código está en \texttt{src/analisis/calidad.py}.
 
 \subsection{Instituciones sin normalizar}\label{ssec:h2}
 
 \begin{hallazgo}
-\textbf{Hallazgo 2.} La columna \texttt{inst\_filia} registra \num{2762} entidades únicas; cerca de \num{800} son IES reales. La tabla maestra entregada con este informe (sección \ref{ssec:tabla-maestra}) consolida 211 IES canónicas y cubre el 91\,\% del padrón.
+\textbf{Hallazgo 2.} La columna \texttt{inst\_filia} registra \num{2762} cadenas únicas; cerca de \num{800} son IES reales. La tabla maestra entregada con este informe (sección \ref{ssec:tabla-maestra}) consolida 211 IES canónicas y cubre el 91\,\% del padrón.
 \end{hallazgo}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint3_redes/fig03_top_instituciones.png}
-\caption{Top instituciones por número de reconocimientos, después de aplicar la normalización propuesta.}
-\end{figure}
 
 El caso prototípico es la Universidad Nacional. Sus cuatro sedes principales --- Bogotá, Medellín, Manizales y Palmira --- aparecen como entidades separadas en el dataset crudo. Cualquier ranking sin tabla maestra infla el número de actores y oculta la concentración real. La tabla maestra que entregamos resuelve estos casos típicos.
 
-\subsection{Diversidad invisible ocho años}\label{ssec:h3-cobertura}
+\subsection{Diversidad: ocho años invisible}\label{ssec:h3-cobertura}
 
 \begin{hallazgo}
-\textbf{Hallazgo 3.} Las variables \texttt{ID\_VICTIMA\_CONFLICTO}, \texttt{TXT\_GRUPO\_ETNICO} y \texttt{TXT\_POBLACION\_DISCA} tienen 0\,\% de cobertura en las cinco convocatorias entre 2013 y 2019. Sólo a partir de 2021 se empieza a registrar, con cobertura cercana al 97\,\%.
+\textbf{Hallazgo 3.} Las variables \texttt{ID\_VICTIMA\_CONFLICTO}, \texttt{TXT\_GRUPO\_ETNICO} y \texttt{TXT\_POBLACION\_DISCA} tienen 0\,\% de cobertura entre 2013 y 2019. Sólo a partir de 2021 se empieza a registrar con cobertura cercana al 96{,}8\,\%.
+\end{hallazgo}
+
+En 2021, frente a referentes poblacionales (DANE-CNPV 2018 y RUV), aparecen sub-representados: indígenas 7{,}9$\times$, afrocolombianos 3$\times$, víctimas del conflicto 8{,}6$\times$ y personas con discapacidad 8$\times$. Inversamente, raizales, palenqueros y rrom aparecen sobre-representados entre 3$\times$ y 6$\times$.
+
+\textbf{Sobre retropolación.} Una posibilidad considerada fue asumir que un investigador que en 2021 declaró ser víctima del conflicto ya lo era en 2015. La idea se descartó porque la condición no es estática --- alguien puede no haberlo sido hace cinco años y serlo hoy --- y el dataset no permite saber la fecha del evento. Cualquier análisis longitudinal de diversidad es imposible por construcción del formulario.
+
+\begin{caveat}
+La comparación justa sería contra la población \emph{con educación superior}, no contra la población total. La participación de minorías entre quienes acceden a estudios universitarios ya está sesgada respecto a la composición nacional. La brecha real es probablemente menor a la mostrada, sin que eso anule el patrón.
+\end{caveat}
+
+% =====================================================================
+\section{Eje 1 — Producción}\label{sec:productividad}
+% =====================================================================
+
+\subsection{Cobertura del padrón}\label{ssec:h4-cobertura-pad}
+
+\begin{hallazgo}
+\textbf{Hallazgo 4.} El dataset de producción contiene \num{77401} autores únicos. De ellos, \num{28590} están en el padrón. Los \num{48811} restantes --- el 36{,}9\,\% del total --- firman productos contabilizados por MinCiencias sin estar en el padrón de investigadores reconocidos.
 \end{hallazgo}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint4_diversidad/fig01_cobertura_temporal.png}
-\caption{Cobertura temporal de las variables de diversidad. En 2013--2019 todos los registros aparecen como ``NO REGISTRA''.}
+\includegraphics[width=0.95\linewidth]{figuras/fig01_cobertura_reconocidos.png}
+\caption{Cobertura de reconocimiento entre los autores de los productos contabilizados, por convocatoria.}
 \end{figure}
 
-Cualquier análisis sobre tendencias en la representación de minorías es estructuralmente imposible. Sólo hay un punto temporal con datos. No es una limitación del análisis: es una restricción heredada del formulario de captura.
+La coautoría externa al sistema crece: del 23\,\% en 2013 al 28\,\% en 2021. ¿Quiénes son los \num{48811}? El dataset no tiene información biográfica sobre ellos, lo que en sí mismo es revelador: el sistema MinCiencias contabiliza su producción para evaluar grupos pero no los visibiliza individualmente. Las hipótesis incluyen estudiantes de posgrado, investigadores extranjeros sin perfil ScienTI y profesionales sin formalización académica.
 
-\textbf{Sobre retropolación.} Una posibilidad considerada fue asumir que un investigador que en 2021 declaró ser víctima del conflicto ya lo era en 2015, asignando el valor hacia atrás. La idea se descartó porque la condición de víctima del conflicto no es estática --- alguien puede no haberlo sido hace cinco años y serlo hoy --- y el dataset no permite saber la fecha del evento.
-
-% =====================================================================
-\section{Trayectoria longitudinal}\label{sec:longitudinal}
-% =====================================================================
-
-Reconstruir las seis convocatorias como serie permite preguntar qué le pasa a cada investigador entre una convocatoria y la siguiente.
-
-\subsection{Crecimiento del padrón}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\linewidth]{../../artifacts/sprint2_longitudinal/fig01_evolucion_total.png}
-\caption{Evolución del número total de investigadores reconocidos por convocatoria.}
-\end{figure}
-
-El padrón pasó de poco más de ocho mil reconocidos en 2013 a más de veintiún mil en 2021. El crecimiento es sostenido pero no uniforme: la convocatoria 2018 representa un salto fuerte respecto a 2017, y 2021 suma otros cinco mil reconocidos. Parte del crecimiento es captura nueva; parte, investigadores que regresan tras una ausencia.
-
-\subsection{Retención y rotación}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\linewidth]{../../artifacts/sprint2_longitudinal/fig07_retencion.png}
-\caption{Tasa de retención entre convocatorias consecutivas.}
-\end{figure}
-
-La retención oscila entre 70\,\% y 80\,\%. Parte se explica por requisitos de productividad mínima cuya ventana de evaluación cambia entre convocatorias; parte, por la naturaleza voluntaria del registro.
-
-\paragraph{Caso particular: los Eméritos.}
-En las seis convocatorias revisadas ningún investigador Emérito reaparece en la convocatoria siguiente. Cien por ciento de ``desaparición'' aparente. La lectura correcta es la opuesta a lo que sugiere el dato: \textbf{el reconocimiento Emérito queda vitalicio}. No reaparecen porque no necesitan re-postularse. La ausencia en convocatorias posteriores es diseño del sistema, no expulsión.
-
-\subsection{Matrices de transición y Sankeys}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint2_transiciones/fig01_heatmaps_ext.png}
-\caption{Matrices de transición de categorías. Filas: categoría en $t$; columnas: categoría en $t+1$; columna ``Desaparece'' para los que no continúan.}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint6_sankey/sankey_2019_2021.png}
-\caption{Sankey de transición de categorías para el último par consecutivo (2019 → 2021). La diagonal principal es permanencia; las bandas hacia arriba son ascensos, las hacia abajo descensos, y la columna ``Desaparece'' agrupa a los que no aparecen en 2021. Para los cuatro pares anteriores ver \texttt{artifacts/sprint6\_sankey/}.}
-\end{figure}
+\subsection{Productividad por categoría}\label{ssec:h5-cat}
 
 \begin{hallazgo}
-\textbf{Hallazgo 4.} Las matrices muestran un patrón consistente con la frase del director: ``\textit{la mayoría de Asociados pasaron a Junior porque dejaron de producir}''. Los descensos no son raros y se concentran desde la categoría Asociado. Los ascensos son menos frecuentes que las desapariciones. La ``desaparición'' desde Junior es el flujo más fuerte en cada par consecutivo.
-\end{hallazgo}
-
-% =====================================================================
-\section{Concentración territorial}\label{sec:territorial}
-% =====================================================================
-
-\subsection{Bogotá y Antioquia concentran el 51\,\% del país}\label{ssec:h5}
-
-\begin{hallazgo}
-\textbf{Hallazgo 5.} Bogotá D.C.\ representa el 32\,\% del padrón, Antioquia el 16\,\%. Entre las dos suman el 51\,\%. El restante 49\,\% se distribuye entre los otros 30 departamentos. Veintidós departamentos no llegan a 500 investigadores reconocidos.
+\textbf{Hallazgo 5.} La productividad media escala con la categoría reconocida. Junior 30 productos · Asociado 65 · \textbf{Senior 121}. Eméritos producen en promedio 34 productos en su última ventana visible.
 \end{hallazgo}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint2_territorial/fig01_top_departamentos.png}
+\includegraphics[width=0.95\linewidth]{figuras/fig02_productividad_por_categoria.png}
+\caption{Productividad media por categoría a lo largo de las convocatorias 2013--2021.}
+\end{figure}
+
+El orden Junior $<$ Asociado $<$ Senior es consistente con el diseño del sistema. Un Senior produce aproximadamente cuatro veces los productos de un Junior. La cifra baja de los Eméritos no se debe a menor capacidad: una vez reconocidos quedan \textbf{vitalicios} y no necesitan acumular más producción para sostener el reconocimiento.
+
+\subsection{Brecha de género en outputs}\label{ssec:h6-brecha-prod}
+
+\begin{hallazgo}
+\textbf{Hallazgo 6.} Las mujeres registran menos productos en promedio en cinco de las seis grandes áreas OCDE. Única excepción: Humanidades. Mayores brechas: Ciencias Médicas (--2{,}95 productos) e Ingeniería (--2{,}59); la razón M/H baja a 0{,}88.
+\end{hallazgo}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figuras/fig03_brecha_genero_productividad.png}
+\caption{Brecha de productividad por género en cada gran área OCDE.}
+\end{figure}
+
+La brecha de género en el sistema opera en dos niveles: pocas mujeres entran (problema de representación) y a las que entran se les contabiliza menos producción (problema de medición). El observatorio no puede discriminar las causas con la información disponible, pero el patrón es robusto y consistente con la literatura internacional sobre brechas STEM.
+
+% =====================================================================
+\section{Eje 2 — Territorios}\label{sec:territorial}
+% =====================================================================
+
+\subsection{Bogotá y Antioquia concentran el 48\,\% del país}\label{ssec:h7}
+
+\begin{hallazgo}
+\textbf{Hallazgo 7.} Bogotá D.C.\ representa el 32\,\% del padrón, Antioquia el 16\,\%. Entre las dos suman el 48\,\%. El restante 52\,\% se distribuye entre los otros 30 departamentos. Veintidós departamentos no llegan a 500 investigadores reconocidos; Vichada y Vaupés no alcanzan 50.
+\end{hallazgo}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figuras/fig01_top_departamentos.png}
 \caption{Distribución de investigadores reconocidos por departamento de residencia (acumulado de las seis convocatorias).}
 \end{figure}
 
-La evolución del HHI por convocatoria confirma que la concentración no se ha reducido sustancialmente en la década. Si las políticas de descentralización del conocimiento están operando, su efecto no es perceptible en este indicador.
+La comparación per cápita con la población DANE 2018 amplifica la brecha capital--periferia: la diferencia entre lo que Bogotá representa en el padrón y lo que representa en la población es la más amplia del país. La evolución del HHI por convocatoria confirma que la concentración no se ha reducido sustancialmente en la década.
 
-\subsection{Productividad por territorio}\label{ssec:h6}
+\subsection{Productividad por territorio}\label{ssec:h8}
 
 \begin{hallazgo}
-\textbf{Hallazgo 6.} El ratio entre porcentaje de productos y porcentaje de investigadores muestra que algunas regiones medianas son más productivas por capita que las grandes. Bolívar y Risaralda alcanzan ratios de 1{,}24. Los investigadores con residencia en el exterior caen a 0{,}34.
+\textbf{Hallazgo 8.} Algunas regiones medianas son más productivas por cápita que las grandes. Bolívar y Risaralda alcanzan ratios producto/investigador de 1{,}24. Boyacá y Cundinamarca caen a 0{,}88; los investigadores con residencia en el exterior, a 0{,}34.
 \end{hallazgo}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.92\linewidth]{../../artifacts/sprint5_produccion/fig04_concentracion_territorial.png}
+\includegraphics[width=0.92\linewidth]{figuras/fig04_concentracion_territorial.png}
 \caption{Top quince departamentos: porcentaje de productos vs.\ porcentaje de investigadores reconocidos.}
 \end{figure}
 
-Bogotá y Antioquia tienen ratios cercanos a 1: producen lo que su peso en el padrón sugiere. Bolívar y Risaralda producen más por investigador. La centralización del padrón no se traduce en centralización de la productividad: las regiones medianas tienen efectos por encima de su tamaño.
+Bogotá y Antioquia tienen ratios cercanos a 1: producen lo que su peso en el padrón sugiere. La centralización del padrón no se traduce en centralización de la productividad: las regiones medianas tienen efectos por encima de su tamaño.
 
-\subsection{¿Dónde reside el investigador y dónde trabaja?}\label{ssec:h7-geografia}
+\subsection{¿Dónde reside vs.\ dónde trabaja?}\label{ssec:h9-geografia}
 
-Con la tabla maestra de instituciones podemos preguntar algo que el dataset por sí solo no permite: dónde trabaja el investigador, no sólo dónde reside. El cruce \texttt{departamento de residencia} × \texttt{departamento de la sede institucional} produce los flujos que aparecen en la figura \ref{fig:heatmap-geog}.
+Con la tabla maestra de instituciones podemos preguntar dónde trabaja el investigador, no sólo dónde reside. El cruce \texttt{departamento de residencia} × \texttt{departamento de la sede institucional} produce los flujos de la figura \ref{fig:heatmap-geog}.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint6_geografia/fig_heatmap_residencia_institucion.png}
-\caption{Flujos residencia → institución (top 15 departamentos × top 12 destinos). Las celdas muestran el número de investigadores únicos en cada par.}
+\includegraphics[width=0.95\linewidth]{figuras/fig_heatmap_residencia_institucion.png}
+\caption{Flujos residencia → institución (12 departamentos × 12 destinos). Las celdas muestran el número de investigadores únicos en cada par.}
 \label{fig:heatmap-geog}
 \end{figure}
 
 \begin{hallazgo}
-\textbf{Hallazgo 7.} Bogotá no sólo concentra (32\,\% del padrón) sino que \textbf{atrae} investigadores que residen en otros departamentos. El flujo transversal más fuerte es Antioquia → Bogotá (242 investigadores), seguido de Valle del Cauca → Bogotá (236) y Exterior → Bogotá (180). El movimiento inverso es menor.
+\textbf{Hallazgo 9.} Bogotá no sólo concentra (32\,\% del padrón); también \textbf{absorbe}: retiene el 92\,\% de los suyos y atrae más de mil investigadores residentes en otros departamentos. El flujo transversal más fuerte es Antioquia → Bogotá (242), seguido de Valle del Cauca → Bogotá (236) y Exterior → Bogotá (180).
 \end{hallazgo}
 
-\begin{table}[h]
-\centering
-\caption{Retención local por departamento de residencia (\% de investigadores que trabajan en su mismo departamento).}
-\label{tab:retencion-local}
-\small
-\begin{tabular}{l r r l}
-\toprule
-\textbf{Departamento} & \textbf{N} & \textbf{\% local} & \textbf{Destino externo principal} \\
-\midrule
-Bogotá D.C.        & 8.934 & 92\,\% & Cundinamarca (168) \\
-Antioquia          & 4.490 & 89\,\% & Bogotá (242) \\
-Atlántico          & 1.804 & 86\,\% & Bogotá (165) \\
-Santander          & 1.482 & 86\,\% & Bogotá (98) \\
-Boyacá             &   772 & 85\,\% & Bogotá (78) \\
-Risaralda          &   541 & 71\,\% & Bogotá (101) \\
-Cundinamarca       &   548 & 67\,\% & Bogotá (152) \\
-Chocó              &    49 & 92\,\% & Valle del Cauca (2) \\
-Amazonas           &    34 & 76\,\% & Bogotá (5) \\
-Vichada            &     1 &  0\,\% & Bogotá (1) \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\linewidth]{../../artifacts/sprint6_sankey/sankey_territorial.png}
-\caption{Sankey territorial: flujos residencia → departamento institucional. Top doce departamentos por volumen, flujos $\geq$ 15 investigadores.}
-\end{figure}
-
-Dos lecturas se desprenden:
-
-\begin{enumerate}[label=(\alph*),leftmargin=*]
-\item \textbf{Bogotá no sólo concentra: absorbe.} Investigadores de prácticamente todos los demás departamentos terminan afiliados a instituciones bogotanas. Cundinamarca, departamento limítrofe, registra el 67\,\% de retención local: un tercio de sus investigadores trabaja en Bogotá.
-\item \textbf{Las regiones periféricas muestran patrones distintos.} Chocó sostiene una retención local del 92\,\% pese a tener apenas 49 investigadores reconocidos; Amazonas, del 76\,\%; el único caso de Vichada se va para Bogotá. Es decir, donde hay instituciones funcionales con investigadores reconocidos, la retención local es alta independientemente del tamaño del padrón.
-\end{enumerate}
-
-% =====================================================================
-\section{Brecha de género}\label{sec:genero}
-% =====================================================================
-
-\subsection{Representación femenina por área}\label{ssec:h8}
+\subsection{Retención local por departamento}\label{ssec:h10-retencion}
 
 \begin{hallazgo}
-\textbf{Hallazgo 8.} La participación femenina en el padrón es de aproximadamente 40\,\% global. El promedio oculta brechas estructurales por gran área OCDE: 24\,\% en Ingeniería y Tecnología, 48\,\% en Ciencias Médicas, cerca de la paridad en Humanidades y Ciencias Sociales.
+\textbf{Hallazgo 10.} Cada departamento retiene una fracción distinta de los suyos. El patrón cruza dos perfiles: capitales con universidades grandes y departamentos remotos con una sola institución dominante.
 \end{hallazgo}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint2_genero_ocde/fig02_heatmap_pct_femenino.png}
-\caption{Porcentaje de mujeres por gran área OCDE y convocatoria.}
+\includegraphics[width=0.95\linewidth]{figuras/fig_pct_local_por_dpto.png}
+\caption{Porcentaje de retención local por departamento de residencia.}
 \end{figure}
 
-La cifra agregada de 40\,\% genera una sensación de cercanía a la paridad que no se sostiene por área. Las disciplinas STEM mantienen una sub-representación femenina que no se ha movido durante la década observada.
-
-\subsection{Brecha en productividad}\label{ssec:h9}
-
-\begin{hallazgo}
-\textbf{Hallazgo 9.} Una vez dentro del sistema, las mujeres registran menos productos en promedio que los hombres en cinco de las seis grandes áreas. La única excepción es Humanidades. Mayores brechas: Ciencias Médicas (--2{,}95 productos) e Ingeniería (--2{,}59).
-\end{hallazgo}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint5_produccion/fig03_brecha_genero_productividad.png}
-\caption{Brecha de productividad por género en cada gran área OCDE.}
-\end{figure}
-
-Pocas mujeres entran al sistema, y a las que entran se les contabiliza menos producción. La razón no se reduce a un factor único: pueden estar pesando la distribución de carga académica, la segmentación por tipo de producto, o el efecto de cohorte (las mujeres son en promedio más jóvenes en el padrón). El dato es que la métrica oficial de productividad no se desempaña por género.
-
-% =====================================================================
-\section{Diversidad: étnia, discapacidad, conflicto}\label{sec:diversidad}
-% =====================================================================
-
-Como se mencionó en \ref{ssec:h3-cobertura}, las variables de diversidad sólo empiezan a registrarse en 2021. Cualquier análisis está limitado a esa convocatoria.
-
-\subsection{Sub y sobre-representación frente a la población}\label{ssec:h10}
-
-\begin{hallazgo}
-\textbf{Hallazgo 10.} Comparados con DANE-CNPV 2018 y RUV 2021, los investigadores reconocidos en 2021 muestran subrepresentación significativa de afrocolombianos (3$\times$), indígenas (7,9$\times$), personas con discapacidad (8$\times$) y víctimas del conflicto (8,6$\times$). Por el contrario, raizales, palenqueros y rrom aparecen sobre-representados entre 3$\times$ y 6$\times$.
-\end{hallazgo}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint4_diversidad/fig02_comparacion_dane.png}
-\caption{Composición de los investigadores reconocidos en 2021 vs.\ proporciones poblacionales nacionales.}
-\end{figure}
-
-\begin{caveat}
-La comparación correcta sería contra la población \emph{con educación superior}, no contra la población total. La participación étnica entre quienes acceden a estudios universitarios ya está sesgada respecto a la composición nacional. La brecha real es probablemente menor a la mostrada en esta figura, sin que eso anule el patrón.
-\end{caveat}
-
-% =====================================================================
-\section{Redes y poder institucional}\label{sec:redes}
-% =====================================================================
-
-\subsection{Co-filiación: artefacto de captura}
-
-\begin{hallazgo}
-\textbf{Hallazgo 11.} La doble afiliación institucional sólo aparece registrada en la convocatoria 2019 (833). Cuando un investigador está afiliado a más de una institución, en las convocatorias 2013--2017 y 2021 sólo se registra una de ellas. En 2019 aparecen 569 investigadores con doble afiliación.
-\end{hallazgo}
-
-El cambio de cero a 569 registros entre la convocatoria 2017 y la 2019 \emph{no} refleja un cambio en la realidad académica. Refleja un cambio en cómo se captura la información en el formulario de inscripción. Cualquier análisis de redes de colaboración construido sobre este dataset hereda la limitación.
-
-% =====================================================================
-\section{Productividad y reconocimiento}\label{sec:productividad}
-% =====================================================================
-
-\subsection{Producción y categoría}\label{ssec:h12-cat}
-
-\begin{hallazgo}
-\textbf{Hallazgo 12.} La productividad media escala con la categoría reconocida. Junior 30 productos, Asociado 65, \textbf{Senior 121}, Emérito 34.
-\end{hallazgo}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint5_produccion/fig02_productividad_por_categoria.png}
-\caption{Productividad media por categoría a lo largo de las convocatorias 2013--2021.}
-\end{figure}
-
-El orden Junior $<$ Asociado $<$ Senior es consistente con el diseño del sistema. Un Senior produce aproximadamente cuatro veces los productos de un Junior. El sistema premia productividad de manera ordenada.
-
-\paragraph{Eméritos.} Los Eméritos producen menos que los Asociados (34 vs.\ 65). La cifra no tiene una sola lectura: por un lado, son la categoría más exigente y el corte para entrar es alto; por otro, una vez reconocidos como Eméritos quedan vitalicios y no necesitan acumular más producción. Lo que el dato no captura es lo que producen después del reconocimiento --- que existe, pero no entra a la métrica oficial porque no se postulan otra vez.
-
-\subsection{Composición por gran área OCDE}\label{ssec:ocde-comp}
-
-\begin{hallazgo}
-\textbf{Hallazgo 13.} En volumen total, Ciencias Sociales es la rama que más produce (585 mil productos). Pero en productos por investigador domina \textbf{Ingeniería y Tecnología} (67 productos/investigador). Humanidades es la menos productiva por investigador (48).
-\end{hallazgo}
-
-\begin{table}[h]
-\centering
-\caption{Producción por gran área OCDE.}
-\small
-\begin{tabular}{l r r r}
-\toprule
-\textbf{Gran área OCDE} & \textbf{N productos} & \textbf{N investigadores} & \textbf{Productos/inv.} \\
-\midrule
-Ciencias Sociales              & 585.143 & 9.386 & 62 \\
-Ingeniería y Tecnología        & 388.389 & 5.788 & \textbf{67} \\
-Ciencias Naturales             & 386.674 & 6.641 & 58 \\
-Ciencias Médicas y de la Salud & 275.346 & 4.684 & 59 \\
-Humanidades                    & 120.059 & 2.511 & 48 \\
-Ciencias Agrícolas             &  75.685 & 1.440 & 53 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-La diferencia entre volumen total y productividad por investigador es importante. Ciencias Sociales es el área más numerosa y por eso produce más en agregado; Ingeniería es más densa por investigador. Esta distinción matiza cualquier afirmación sobre ``qué área produce más en Colombia''.
-
-\subsection{Autoría sin reconocimiento}\label{ssec:h14}
-
-\begin{hallazgo}
-\textbf{Hallazgo 14.} El dataset de producción contiene \num{77401} autores únicos. De ellos, \num{28590} están en el padrón de investigadores reconocidos. Los \num{48811} restantes --- el 36{,}9\,\% del total --- firman productos contabilizados por MinCiencias sin estar en el padrón.
-\end{hallazgo}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.95\linewidth]{../../artifacts/sprint5_produccion/fig01_cobertura_reconocidos.png}
-\caption{Cobertura de reconocimiento entre los autores de los productos contabilizados, por convocatoria.}
-\end{figure}
-
-La proporción de productos firmados por reconocidos pasa del 77\,\% en 2013 al 72\,\% en 2021 --- la coautoría externa al sistema crece. ¿Quiénes son los \num{48811}? El dataset no tiene información biográfica sobre ellos, lo que en sí mismo es revelador: el sistema MinCiencias contabiliza su producción para evaluar grupos pero no los visibiliza individualmente.
-
-Hipótesis sobre quiénes son:
+Tres bandas:
 
 \begin{itemize}
-\item Estudiantes de pregrado, maestría o doctorado que coautoran con sus directores.
-\item Investigadores extranjeros sin perfil ScienTI que coautoran con colegas colombianos.
-\item Profesionales del sector público o privado que participan en proyectos sin formalizar perfil académico.
-\item Investigadores colombianos que cumplen requisitos pero no se postulan, o que postularon y no fueron reconocidos.
+\item \textbf{Alta retención ($\geq$ 90\,\%).} Bogotá 92\,\%, Chocó 92\,\%, Sucre 91\,\%, La Guajira 90\,\%.
+\item \textbf{Retención media (84--89\,\%).} Antioquia 89\,\%, Santander 86\,\%, Atlántico 86\,\%, Valle 84\,\%. Polos mayoritarios con fuga moderada hacia Bogotá entre 11\,\% y 16\,\%.
+\item \textbf{Baja retención ($\leq$ 70\,\%).} Cesar 57\,\%, Meta 58\,\%, Cundinamarca 67\,\%, Tolima 68\,\%. La proximidad geográfica a Bogotá no protege: la fuga depende de la capacidad institucional local, no del tamaño del padrón.
 \end{itemize}
 
-Validar estas hipótesis exige un dataset adicional --- el padrón completo de ScienTI --- que MinCiencias mantiene pero no abre.
+\subsection{Destinos de los departamentos pequeños}\label{ssec:h11-destinos}
 
-\subsection{Reconocidos sin producción registrada}\label{ssec:h15}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figuras/fig_top_destinos_pequenos.png}
+\caption{Destino institucional principal para los investigadores de departamentos pequeños que no trabajan en su residencia.}
+\end{figure}
 
 \begin{hallazgo}
-\textbf{Hallazgo 15.} El porcentaje de investigadores reconocidos sin ningún producto registrado en su ventana de convocatoria pasa del 15{,}4\,\% en 2013 al 5{,}5\,\% en 2021.
+\textbf{Hallazgo 11.} Bogotá es el destino dominante para más de veinte departamentos con menos de 500 reconocidos. Existen subsistemas regionales: Chocó → Valle del Cauca, Magdalena y Nariño → Antioquia, Córdoba → Cundinamarca. En la base de la cola larga la salida es total: el único reconocido de Vichada trabaja en Bogotá; los cinco de Guainía van a Atlántico; Putumayo y Guaviare salen al Amazonas.
+\end{hallazgo}
+
+\subsection{Género × territorio}\label{ssec:h12-genero-terr}
+
+\begin{hallazgo}
+\textbf{Hallazgo 12.} Ningún departamento alcanza la paridad de género. Máximos: Boyacá 42\,\%, Bolívar 42\,\%, Cundinamarca 41\,\%. Mínimos: Risaralda 30\,\%, Caldas 35\,\% e investigadores con residencia en el exterior 29\,\%.
 \end{hallazgo}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.92\linewidth]{../../artifacts/sprint5_produccion/fig06_reconocidos_sin_produccion.png}
-\caption{Porcentaje de investigadores reconocidos que no aparecen como autores de ningún producto en su ventana de observación.}
+\includegraphics[width=0.92\linewidth]{figuras/fig_genero_territorial.png}
+\caption{Porcentaje de mujeres por departamento de residencia (top quince por volumen total).}
 \end{figure}
 
-La interpretación más razonable de la caída es que la captura del campo de productos mejoró con el tiempo. En 2013 el sistema dejaba pasar reconocimientos sin enlace explícito a productos; en 2021, ese enlace es más sistemático. El 5{,}5\,\% remanente sigue siendo una pregunta abierta y vale la pena documentar caso a caso.
+El promedio nacional del 40\,\% oculta variaciones notables entre departamentos. Ninguna región muestra paridad efectiva. La brecha de género en territorio no se resuelve simplemente aumentando cobertura geográfica.
+
+% =====================================================================
+\section{Eje 3 — Campos OCDE}\label{sec:ocde}
+% =====================================================================
+
+\subsection{Volumen por área}\label{ssec:h13-volumen}
+
+\begin{hallazgo}
+\textbf{Hallazgo 13.} En volumen total Ciencias Sociales lidera con 585 mil productos. Top 3: Sociales (585k) · Ingeniería (388k) · Naturales (387k). Médicas 275k, Humanidades 120k. Cola: Agrícolas 76k.
+\end{hallazgo}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figuras/fig_volumen_por_area.png}
+\caption{Volumen total de productos por gran área OCDE (acumulado 2013--2021).}
+\end{figure}
+
+\subsection{Productividad por área}\label{ssec:h14-productividad-ocde}
+
+\begin{hallazgo}
+\textbf{Hallazgo 14.} En productos por investigador, \textbf{Ingeniería y Tecnología} domina con 67 productos. Sigue Sociales (62), Médicas (59), Naturales (58), Agrícolas (53) y Humanidades (48). La pregunta ``¿qué área produce más en Colombia?'' depende de la métrica.
+\end{hallazgo}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figuras/fig_productividad_por_area.png}
+\caption{Productos por investigador por gran área OCDE.}
+\end{figure}
+
+Ciencias Sociales es el área más numerosa y por eso produce más en agregado; Ingeniería es más densa por investigador. Las políticas focalizadas necesitan distinguir entre tamaño de base e intensidad por investigador.
+
+\subsection{Composición de tipologías por área}\label{ssec:h15-composicion}
+
+\begin{hallazgo}
+\textbf{Hallazgo 15.} El mix de tipologías define el perfil del área. MinCiencias agrupa los productos en cuatro grandes familias: nuevo conocimiento (publicaciones científicas), apropiación social del conocimiento (divulgación), formación de recursos humanos (tesis dirigidas) y desarrollo tecnológico e innovación (patentes, software, prototipos).
+\end{hallazgo}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figuras/fig_composicion_tipo_por_area.png}
+\caption{Composición porcentual por tipo de producto en cada gran área OCDE.}
+\end{figure}
+
+Nuevo conocimiento reúne las publicaciones (Top en Q1, Tipo A indexadas Q1/Q2, Tipo B capítulos de libro y revistas de menor impacto). Apropiación social agrupa conferencias, cartillas, talleres, programas de radio, eventos públicos y materiales de divulgación. Formación de recursos humanos contabiliza tesis (Tipo A doctorados, Tipo B maestrías y pregrados). Desarrollo tecnológico --- patentes, software, prototipos, consultorías --- es la familia menos numerosa pero la más relevante en términos de transferencia al sector productivo.
+
+\subsection{Género × disciplina}\label{ssec:h16-genero-ocde}
+
+\begin{hallazgo}
+\textbf{Hallazgo 16.} En la convocatoria 2021, sólo Ciencias Médicas y de la Salud (50{,}9\,\%) supera la paridad de género. Ingeniería y Tecnología registra el mínimo (26{,}5\,\%). La cifra agregada del 40\,\% nacional refleja una mezcla muy desigual.
+\end{hallazgo}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figuras/fig_genero_ocde_2021.png}
+\caption{Porcentaje de mujeres por gran área OCDE en la convocatoria 2021. Línea de paridad al 50\,\%.}
+\end{figure}
+
+Paridad en Médicas, sub-representación fuerte en STEM, intermedio en Sociales/Humanidades. El comportamiento es consistente con la serie longitudinal de las seis convocatorias: la brecha STEM se mantiene plana durante una década.
+
+% =====================================================================
+\section{Eje 4 — Análisis longitudinal}\label{sec:longitudinal}
+% =====================================================================
+
+\subsection{Sankey longitudinal 2013--2021}\label{ssec:h17-sankey}
+
+\begin{hallazgo}
+\textbf{Hallazgo 17.} Permanencia mayoritaria: la diagonal del Sankey es el flujo más grueso. Los descensos no son raros y se concentran de Asociado a Junior cuando cae la productividad. Los Eméritos no emiten flujo saliente: el reconocimiento queda vitalicio.
+\end{hallazgo}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.98\linewidth]{figuras/sankey_linea_tiempo.png}
+\caption{Sankey longitudinal de categorías 2013 → 2021. Una columna por convocatoria; los flujos muestran ascensos, descensos, permanencia y bajas entre cada par consecutivo.}
+\end{figure}
+
+\subsection{Dos efectos que el flujo deja claros}\label{ssec:h18-lecturas-sankey}
+
+\paragraph{Asociado → Junior.}
+En cada par de convocatorias una fracción significativa de Asociados baja a Junior porque su producción cae bajo el umbral. El sistema permite reajuste hacia abajo, no solo promoción. El director del proyecto lo confirma: ``\textit{descienden porque dejaron de producir}''.
+
+\paragraph{Eméritos vitalicios.}
+El 100\,\% de los Eméritos de una convocatoria no aparece en la siguiente. La lectura ingenua marca caída completa; la lectura informada lo identifica como diseño del sistema. El reconocimiento Emérito queda vitalicio: no requiere re-postulación. Por eso ``salen'' del flujo en todos los Sankeys aunque sigan siendo Eméritos.
+
+\paragraph{Implicación común.}
+La categoría reconocida es un indicador \emph{dinámico}: puede subir, bajar o quedar vitalicia. Un investigador pudo haber sido Senior y aparecer hoy como Junior; un Emérito de 2019 sigue siendo Emérito en 2021 aunque no figure en el padrón. Cualquier reporte oficial que cite categorías debe especificar la convocatoria de referencia.
+
+% =====================================================================
+\section{Discusión}\label{sec:discusion}
+% =====================================================================
+
+Los hallazgos descritos por separado en cada eje convergen en cinco lecturas integradas que vale la pena examinar antes de pasar a recomendaciones.
+
+\subsection{La concentración no es solo de talento, es de captura}
+
+Bogotá y Antioquia concentran el 48\,\% del padrón de investigadores reconocidos. Esta cifra circula con frecuencia como diagnóstico de centralización en Colombia. Lo que el cruce con el dataset de producción añade es un matiz importante: la concentración no es uniforme cuando se mide en productos por investigador. Bolívar y Risaralda producen 1{,}24 veces lo que su tamaño sugeriría; el Exterior cae a 0{,}34. Esto indica que los programas focalizados en regiones medianas \emph{sí} están generando efectos por encima del tamaño relativo del padrón. La política pública convencional asume que un departamento con pocos reconocidos es un departamento con baja capacidad investigativa; el dato sugiere que algunos territorios pequeños son simplemente sub-representados por captura, no por ausencia de actividad académica.
+
+El cruce residencia × institución refuerza esta lectura. Cundinamarca tiene 67\,\% de retención local, Risaralda 71\,\%: una fracción significativa de sus investigadores reside en el departamento pero trabaja en Bogotá u otras capitales. El sistema MinCiencias no captura este flujo: registra al investigador donde reside, no donde produce conocimiento. Para una política de descentralización efectiva, esta distinción es decisiva. Inversiones en infraestructura científica regional pueden estar produciendo investigadores que terminan agregando capacidad a las ciudades capitales, no a sus regiones de origen.
+
+\subsection{La brecha de género es estructural y no se cierra sola}
+
+Diez años de convocatorias muestran que la participación femenina en Ingeniería se mantiene plana en 24--27\,\%. Ningún departamento alcanza la paridad: el máximo es Boyacá con 42\,\%. Y al cruzar con productividad, las mujeres registran menos productos en promedio que los hombres en cinco de las seis grandes áreas OCDE.
+
+La lectura combinada importa: el sistema de reconocimiento no es neutro al género. No se trata solamente de que entran pocas mujeres (problema de representación), sino que a las que entran se les contabiliza sistemáticamente menos producción (problema de medición). Esto puede deberse a varios factores no controlados en el dataset: distribución de carga académica, segmentación por tipo de producto, efecto de cohorte (las investigadoras son en promedio más jóvenes), barreras de acceso a financiación competitiva. El observatorio no puede discriminar entre estos factores con la información disponible, pero el patrón es robusto y consistente con la literatura internacional sobre brechas STEM.
+
+Una métrica oficial de productividad que no se ajuste por género reproduce la brecha cuando se usa para asignar incentivos o evaluar instituciones.
+
+\subsection{La diversidad invisible no es ausencia de diversidad}
+
+Las variables de etnia, discapacidad y víctimas del conflicto tienen 0\,\% de cobertura en cinco convocatorias consecutivas. Esto no es resultado del análisis: es estructura del formulario de inscripción. Cuando se captura, en 2021, aparecen sub-representaciones de 3 a 8 veces respecto a la población DANE/RUV, pero también sobre-representaciones interesantes (raizales, palenqueros, rrom 3--6 veces por encima de su peso poblacional).
+
+Esta combinación sugiere que los programas focalizados pequeños \emph{están funcionando} en las minorías donde se aplican. La sub-representación masiva de afros e indígenas, que son los grupos numéricamente más grandes, refleja barreras estructurales de acceso a la educación superior anteriores al sistema de reconocimiento. La política pública dirigida a corregir esa sub-representación necesita actuar antes del reconocimiento, no en el reconocimiento mismo. Y necesita reconocer que la diversidad fue invisible durante ocho años de convocatorias, por decisión administrativa, no por imposibilidad técnica.
+
+\subsection{El sistema premia productividad pero ignora coautoría no reconocida}
+
+El cruce reconocimiento × producción muestra dos hallazgos complementarios. Por un lado, la productividad escala ordenadamente con la categoría: Senior produce cuatro veces más que Junior. El sistema, en ese sentido, funciona: la jerarquía de categorías refleja diferencias reales en producción contabilizada.
+
+Por otro lado, el 36{,}9\,\% de los autores únicos que aparecen en el dataset de producción no están en el padrón de investigadores reconocidos. Casi 49.000 personas firman productos académicos contabilizados oficialmente por MinCiencias sin ser visibles individualmente para el sistema. Una parte de ellos son estudiantes de posgrado en formación, una parte son investigadores extranjeros sin perfil ScienTI, otra parte son profesionales del sector público o privado que participan en proyectos sin formalizar perfil académico. El dataset no permite discriminarlos.
+
+La consecuencia es relevante para política pública: las métricas oficiales de productividad reportan lo que firman los reconocidos, no toda la producción que el sistema contabiliza. Si se asignan recursos solo a quienes están en el padrón, se invisibiliza una parte significativa de la producción del país.
+
+\subsection{Los caveats metodológicos no son cosmética}
+
+Veintidós atípicos de edad, una convocatoria mal fechada, doble afiliación capturada en un solo año, 2.762 cadenas únicas de institución para ~800 entidades reales: estos detalles no son anécdotas. Cada uno representa un punto donde un análisis automatizado sobre los datos abiertos hereda errores sistemáticos. Y, sobre todo, hereda una ilusión de precisión que no existe en la fuente.
+
+El observatorio decidió hacer explícitos todos estos caveats y construir, donde fue posible, los artefactos correctivos (tabla maestra de IES, validación de atípicos, normalización de departamentos). El supuesto operativo es que un análisis de política pública sobre el Sistema Nacional de CTeI no puede basarse en una lectura ingenua de los CSVs de Socrata. Necesita un trabajo previo de auditoría y normalización que hoy no existe como infraestructura compartida y que el observatorio propone como entregable.
+
+\subsection{¿Para qué sirve este observatorio?}
+
+El propósito del trabajo no es producir un ranking más sobre las universidades colombianas. Es construir un punto de partida verificable. Cualquiera que tome los mismos datos abiertos y los analice con criterio similar debería encontrar las mismas cifras, los mismos caveats y las mismas zonas grises. La auditabilidad no resuelve los problemas estructurales del sistema de reconocimiento, pero los hace discutibles. Y discutibles es el primer requisito para que puedan corregirse.
 
 % =====================================================================
 \section{Recomendaciones de política pública}\label{sec:recomendaciones}
@@ -680,7 +769,7 @@ Los hallazgos se agrupan en cuatro líneas operativas para MinCiencias.
 \begin{enumerate}[label=B.\arabic*., leftmargin=*]
 \item \textbf{Captura obligatoria de variables de diversidad desde el formulario inicial.} Etnia, discapacidad y condición de víctima del conflicto deben ser campos obligatorios en todas las convocatorias, no sólo desde 2021. La captura puede ser de auto-reporte y respetar el derecho a no responder, pero la variable debe existir desde el origen.
 \item \textbf{Comparación contra población educada como métrica oficial.} Los reportes sobre representación de minorías deberían usar como referente la composición de la población con educación superior, no la población total.
-\item \textbf{Programas focalizados en regiones con baja retención local.} La evidencia del \ref{ssec:h7-geografia} muestra que Cundinamarca y Risaralda pierden cerca de un tercio de sus investigadores hacia otros departamentos. Los programas regionales pueden focalizarse allí.
+\item \textbf{Programas focalizados en regiones con baja retención local.} La evidencia del \ref{ssec:h9-geografia} muestra que Cundinamarca y Risaralda pierden cerca de un tercio de sus investigadores hacia otros departamentos. Los programas regionales pueden focalizarse allí.
 \end{enumerate}
 
 \subsection{Apertura y trazabilidad}
@@ -733,15 +822,80 @@ El sistema de reconocimiento de investigadores en Colombia, leído con los propi
 
 La calidad de los datos es mejorable con esfuerzo bajo: validaciones de rango, una tabla maestra de instituciones y captura obligatoria del departamento institucional resolverían los problemas más visibles. La tabla maestra que entregamos junto al informe (211 IES, 91\,\% de cobertura) puede servir de punto de partida.
 
-La concentración territorial es estructural. Bogotá y Antioquia capturan la mitad del padrón. La novedad de este análisis es que la concentración no es uniforme cuando se mide en productos por capita: regiones medianas como Bolívar y Risaralda producen por encima de su tamaño. Y al cruzar residencia con institución aparece que Bogotá no sólo concentra, sino que absorbe: cerca de mil investigadores residen en otros departamentos pero trabajan en Bogotá.
+La concentración territorial es estructural. Bogotá y Antioquia capturan el 48\,\% del padrón (32\,\% y 16\,\% respectivamente). La novedad de este análisis es que la concentración no es uniforme cuando se mide en productos por capita: regiones medianas como Bolívar y Risaralda producen por encima de su tamaño. Y al cruzar residencia con institución aparece que Bogotá no sólo concentra, sino que absorbe: cerca de mil investigadores residen en otros departamentos pero trabajan en Bogotá.
 
-La brecha de género es estructural por área OCDE y se replica en productividad. La cifra agregada de 40\,\% de mujeres oculta que en Ingeniería sigue siendo del 24\,\%, y que las mujeres reciben menos atribución de productos en cinco de seis grandes áreas. Diez años de convocatorias no muestran cierre.
+La brecha de género es estructural por área OCDE y se replica en productividad. La cifra agregada de 40\,\% de mujeres oculta que en Ingeniería sigue siendo del 26{,}5\,\%, y que las mujeres reciben menos atribución de productos en cinco de seis grandes áreas. Diez años de convocatorias no muestran cierre.
 
 La diversidad étnica, etaria y de víctimas del conflicto es invisible en cinco de seis convocatorias. Sólo en 2021 empieza a registrarse, y los grupos numéricamente importantes aparecen significativamente sub-representados.
 
 El cruce entre reconocimiento y producción agrega información que las fuentes no daban por separado. La productividad escala con la categoría. Los Eméritos producen poco en su última ventana visible porque después de ser reconocidos quedan vitalicios y no se postulan más. Y un tercio de los autores que sostienen la producción contabilizada por MinCiencias no está en el padrón.
 
 El código, los datasets de evidencia, la tabla maestra de instituciones y el tablero interactivo están publicados en el repositorio referenciado al inicio. Cualquiera puede reproducir las cifras o extender el análisis con fuentes adicionales.
+
+% =====================================================================
+\section{Referencias}\label{sec:referencias}
+% =====================================================================
+
+\subsection*{Fuentes de datos abiertos}
+
+\begin{enumerate}[label={[}\arabic*{]},leftmargin=2.2em,itemsep=4pt]
+\item Ministerio de Ciencia, Tecnología e Innovación (MinCiencias). \emph{Investigadores reconocidos por convocatoria}. Datos Abiertos Colombia, identificador Socrata \texttt{bqtm-4y2h}. Consultado el 2026-04-28. Disponible en: \\
+\url{https://www.datos.gov.co/Ciencia-Tecnolog-a-e-Innovaci-n/Investigadores-reconocidos-por-convocatoria/bqtm-4y2h}
+
+\item Ministerio de Ciencia, Tecnología e Innovación (MinCiencias). \emph{Producción Grupos Investigación}. Datos Abiertos Colombia, identificador Socrata \texttt{33dq-ab5a}. Consultado el 2026-04-30. Disponible en: \\
+\url{https://www.datos.gov.co/Ciencia-Tecnolog-a-e-Innovaci-n/Producci-n-Grupos-Investigaci-n/33dq-ab5a}
+
+\item Departamento Administrativo Nacional de Estadística (DANE). \emph{Censo Nacional de Población y Vivienda 2018 (CNPV 2018)}. Bogotá: DANE, 2018-2019. Disponible en: \\
+\url{https://www.dane.gov.co/index.php/estadisticas-por-tema/demografia-y-poblacion/censo-nacional-de-poblacion-y-vivenda-2018}
+
+\item Unidad para la Atención y Reparación Integral a las Víctimas (UARIV). \emph{Registro Único de Víctimas (RUV)}. Corte 2021. Disponible en: \\
+\url{https://www.unidadvictimas.gov.co/es/registro-unico-de-victimas-ruv/37394}
+
+\item Ministerio de Educación Nacional (MEN). \emph{Sistema Nacional de Información de la Educación Superior (SNIES)}. Disponible en: \url{https://snies.mineducacion.gov.co/}
+
+\item MinCiencias --- Plataforma ScienTI Colombia. \emph{Registro de hojas de vida CvLAC y grupos GrupLAC}. Disponible en: \url{https://www.minciencias.gov.co/scienti}
+\end{enumerate}
+
+\subsection*{Documentos normativos y metodológicos consultados}
+
+\begin{enumerate}[label={[}\arabic*{]},start=7,leftmargin=2.2em,itemsep=4pt]
+\item MinCiencias. \emph{Convocatoria 894 de 2021 --- Reconocimiento y medición de grupos de investigación e investigadores}. Términos de referencia oficiales. Disponible en el repositorio e-Anaquel MinCiencias: \url{https://repositorio.minciencias.gov.co/}
+
+\item Organización para la Cooperación y el Desarrollo Económicos (OCDE). \emph{Manual de Frascati: directrices para la recopilación e interpretación de datos sobre investigación y desarrollo}. Versión 2015. (Sustenta la clasificación por gran área de conocimiento usada en el padrón.)
+
+\item Comisión Económica para América Latina y el Caribe (CEPAL). \emph{Plan de acción sobre la sociedad de la información y del conocimiento en América Latina y el Caribe (eLAC)}. Para el contexto regional de sistemas nacionales de CTeI.
+
+\item Departamento Administrativo Nacional de Estadística (DANE). \emph{Metodología del Censo Nacional de Población y Vivienda 2018}. Boletín técnico, 2019. (Sustenta la composición étnica de referencia usada en la comparación de subrepresentación.)
+\end{enumerate}
+
+\subsection*{Software y bibliotecas técnicas}
+
+\begin{enumerate}[label={[}\arabic*{]},start=11,leftmargin=2.2em,itemsep=4pt]
+\item McKinney, W. \emph{pandas}: powerful Python data analysis toolkit. \\
+\url{https://pandas.pydata.org}. Usado para manipulación tabular.
+
+\item Hunter, J.\,D. \emph{matplotlib}: a 2D graphics environment. Computing in Science \& Engineering, 9(3), 90--95 (2007). Usado para todas las figuras estáticas.
+
+\item Plotly Technologies Inc. \emph{Collaborative data science}. Montréal: Plotly Technologies Inc., 2015. Usado para gráficos interactivos del dashboard y diagramas Sankey.
+
+\item Mark Raasveldt \& Hannes Mühleisen. \emph{DuckDB: an Embeddable Analytical Database}. Proceedings of SIGMOD 2019. Usado para el modelo dimensional consolidado.
+
+\item Hagberg, A.\,A., Schult, D.\,A., \& Swart, P.\,J. \emph{Exploring network structure, dynamics, and function using NetworkX}. Proceedings of the 7th Python in Science Conference (SciPy2008). Usado para el análisis de redes de co-filiación.
+
+\item Streamlit Inc. \emph{Streamlit: the fastest way to build data apps}. \url{https://streamlit.io}. Usado para el dashboard interactivo.
+
+\item Tristan Bortolaso et al. \emph{sodapy: a Python client for the SODA API}. \url{https://github.com/xmunoz/sodapy}. Usado para descargar los datasets de Socrata.
+
+\item Real Python Foundation. \emph{Reveal.js: the HTML presentation framework}. \url{https://revealjs.com}. Usado para la presentación HTML del observatorio.
+\end{enumerate}
+
+\subsection*{Cómo citar este informe}
+
+\begin{quote}
+\footnotesize
+Díaz Bautista, V. (2026). \emph{El sistema de reconocimiento de investigadores en Colombia: auditoría sobre seis convocatorias de MinCiencias (2013--2021)}. Observatorio MinCiencias, equipo Minciencias 2. Ustadistica --- Universidad Santo Tomás, 2026-I. Repositorio: \\
+\url{\repoUrl}
+\end{quote}
 
 % =====================================================================
 \appendix
@@ -803,7 +957,7 @@ El modelo estrella consolidado tiene como tablas centrales:
 \subsection{Reproducibilidad}
 
 \begin{lstlisting}[language=bash,caption={Reproducción completa.}]
-git clone https://github.com/Victor-Diaz-Usta/Min_ciencias.git
+git clone https://github.com/ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo8.git
 cd Min_ciencias
 poetry install
 
@@ -812,20 +966,14 @@ python -m src.ingesta.minciencias
 python -m src.ingesta.produccion
 
 # Hallazgos del observatorio
-python scripts/sprint6_validacion_calidad.py    # Atipicos de edad
-python scripts/sprint2_panel_longitudinal.py    # Trayectoria longitudinal
-python scripts/sprint2_matrices_transicion.py
-python scripts/sprint6_sankey_categoria.py      # Sankeys de categoria
-python scripts/sprint2_territorial.py
-python scripts/sprint6_tabla_maestra_ies.py     # Tabla maestra IES
-python scripts/sprint6_geografia_institucional.py
-python scripts/sprint6_sankey_territorial.py
-python scripts/sprint2_genero_ocde.py
-python scripts/sprint3_redes.py
-python scripts/sprint3_grafo_interactivo.py
-python scripts/sprint4_diversidad.py
-python scripts/sprint5_produccion.py
-python scripts/sprint6_ocde_composicion.py
+python scripts/sprint6_validacion_calidad.py    # Atipicos de edad (Cautela)
+python scripts/sprint6_tabla_maestra_ies.py     # Tabla maestra IES (Cautela)
+python scripts/sprint5_produccion.py            # Eje 1 Produccion (cobertura, productividad, brecha)
+python scripts/sprint2_territorial.py           # Eje 2 Top departamentos
+python scripts/sprint6_geografia_institucional.py  # Eje 2 Heatmap + retencion + destinos
+python scripts/sprint7_genero_transversal.py    # Eje 2 genero territorial + Eje 3 genero OCDE
+python scripts/sprint6_ocde_composicion.py      # Eje 3 Volumen, productividad y composicion
+python scripts/sprint8_sankey_longitudinal.py   # Eje 4 Sankey longitudinal 2013-2021
 
 # Modelo dimensional
 python scripts/sprint2_duckdb.py

@@ -157,31 +157,51 @@ def resumen_por_residencia(flujo: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows).sort_values("total_investigadores", ascending=False)
 
 
-def fig_heatmap_top(flujo: pd.DataFrame, top_res: int = 15, top_inst: int = 12) -> None:
-    """Heatmap de flujos: top departamentos de residencia × top de institución."""
+def fig_heatmap_top(flujo: pd.DataFrame, top_n: int = 12) -> None:
+    """
+    Heatmap simétrico de flujos: usa el mismo conjunto de departamentos en
+    filas (residencia) y columnas (institución), construido con la unión de
+    los top_n por cada eje. La matriz queda cuadrada, lo que permite leer la
+    diagonal (retención local) y los flujos transversales de forma directa.
+    """
     top_residencias = (flujo.groupby("DPTO_RESIDENCIA")["n_investigadores"]
-                            .sum().nlargest(top_res).index)
+                            .sum().nlargest(top_n).index.tolist())
     top_dpto_inst = (flujo.groupby("DPTO_INSTITUCION")["n_investigadores"]
-                          .sum().nlargest(top_inst).index)
+                          .sum().nlargest(top_n).index.tolist())
 
-    sub = flujo[flujo["DPTO_RESIDENCIA"].isin(top_residencias) &
-                flujo["DPTO_INSTITUCION"].isin(top_dpto_inst)]
+    # Unión ordenada por volumen total (residencia + institución)
+    union = list(dict.fromkeys(top_residencias + top_dpto_inst))
+    volumen = {d: int(flujo.loc[flujo["DPTO_RESIDENCIA"] == d, "n_investigadores"].sum()
+                       + flujo.loc[flujo["DPTO_INSTITUCION"] == d, "n_investigadores"].sum())
+               for d in union}
+    orden = sorted(union, key=lambda d: -volumen[d])[:top_n]
+
+    sub = flujo[flujo["DPTO_RESIDENCIA"].isin(orden) &
+                flujo["DPTO_INSTITUCION"].isin(orden)]
     pivot = sub.pivot_table(index="DPTO_RESIDENCIA",
                               columns="DPTO_INSTITUCION",
                               values="n_investigadores",
                               fill_value=0).astype(int)
-    pivot = pivot.loc[top_residencias, top_dpto_inst]
+    # Reindexar para garantizar simetría exacta
+    pivot = pivot.reindex(index=orden, columns=orden, fill_value=0)
 
-    fig, ax = plt.subplots(figsize=(13, 8))
+    # Figsize cuadrado +15% — la matriz aprovecha mas el slide.
+    # Sin colorbar: el valor numerico en cada celda ya cumple esa funcion.
+    fig, ax = plt.subplots(figsize=(9.2, 9.66))
     sns.heatmap(pivot, annot=True, fmt="d", cmap="YlGnBu",
-                cbar_kws={"label": "Investigadores"},
-                linewidths=0.4, linecolor="white", ax=ax)
+                cbar=False,
+                linewidths=0.4, linecolor="white", ax=ax,
+                square=True)
     ax.set_xlabel("Departamento de la institución")
     ax.set_ylabel("Departamento de residencia")
-    ax.set_title("Flujos investigador → institución (top 15 × top 12)")
+    ax.set_title(f"Flujos investigador → institución (matriz simétrica {pivot.shape[0]}×{pivot.shape[1]})")
+    plt.setp(ax.get_xticklabels(), rotation=40, ha="right")
+    plt.setp(ax.get_yticklabels(), rotation=0)
     plt.tight_layout()
+    # DPI reducido (110) + bbox tight para que el PNG resultante sea pequeno
+    # y se renderice nitido en pantallas Retina sin saturar el slide.
     fig.savefig(ARTIFACTS / "fig_heatmap_residencia_institucion.png",
-                dpi=150, bbox_inches="tight")
+                dpi=110, bbox_inches="tight")
     plt.close()
 
 

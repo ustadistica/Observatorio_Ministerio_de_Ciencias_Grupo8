@@ -1,10 +1,10 @@
 """
 Genera docs/manual.ipynb — manual reproducible del Observatorio.
 
-El notebook está pensado para que cualquier persona pueda abrirlo, ejecutar las
-celdas y obtener exactamente las figuras y tablas que aparecen en la
-presentación. Cada sección corresponde a un hallazgo del observatorio y
-muestra el código mínimo para producirlo.
+El notebook está organizado por los cuatro ejes del análisis (Producción,
+Territorios, Campos OCDE, Longitudinal), con la sección de cautelas previas
+(calidad y diversidad invisible) al inicio. El género no aparece como eje
+propio sino como dimensión transversal integrada en cada eje.
 
 Uso:
     python scripts/generar_manual.py
@@ -37,14 +37,23 @@ md("""# Manual reproducible — Observatorio MinCiencias
 
 > Universidad Santo Tomás · Ustadistica · 2026-I
 
-Este manual reproduce, en código y con texto explicativo, los doce hallazgos
-del observatorio sobre el sistema de reconocimiento de investigadores de
+Este manual reproduce, en código y con texto explicativo, los hallazgos del
+observatorio sobre el sistema de reconocimiento de investigadores de
 MinCiencias. No reemplaza el informe final; lo precede.
 
-**Cómo usarlo.** Ejecute las celdas en orden. Cada sección produce una o
-varias figuras en `artifacts/` y una o varias tablas en `evidencias/`. Las
-funciones reutilizables viven en `src/analisis/`; los scripts orquestadores,
-en `scripts/`.
+**Lectura por cuatro ejes.** A partir de las cautelas metodológicas iniciales,
+el manual se organiza en cuatro bloques temáticos:
+
+1. **Producción** — autoría no reconocida, productividad por categoría, brecha de género en outputs.
+2. **Territorios** — concentración, ratio per cápita, flujos investigador → institución, brecha de género territorial.
+3. **Campos OCDE** — volumen, productividad por área, composición de tipologías, brecha de género por disciplina.
+4. **Análisis longitudinal** — matrices de transición, Sankeys, Eméritos vitalicios.
+
+El **género no es un eje aparte** sino una dimensión que atraviesa los tres primeros.
+
+**Cómo usarlo.** Ejecute las celdas en orden. Cada sección produce figuras en
+`artifacts/` y tablas en `evidencias/`. Las funciones reutilizables viven en
+`src/analisis/`; los scripts orquestadores en `scripts/`.
 
 **Insumos.** Antes de ejecutar este manual hay que haber descargado los
 datasets de Socrata:
@@ -53,23 +62,6 @@ datasets de Socrata:
 python -m src.ingesta.minciencias    # 77.237 filas
 python -m src.ingesta.produccion     # 3.166.629 filas (~1.2 GB)
 ```
-
-**Estructura.**
-
-1. Setup y carga de datos
-2. Validación de calidad — atípicos de edad
-3. Trayectoria longitudinal y matrices de transición
-4. Diagramas de Sankey de transición de categoría
-5. Concentración territorial (residencia)
-6. Tabla maestra de instituciones
-7. Análisis geográfico institucional
-8. Sankey territorial residencia → institución
-9. Brecha de género por gran área OCDE
-10. Diversidad: etnia, discapacidad, víctimas del conflicto
-11. Producción y categoría
-12. Brecha de género en productividad
-13. Composición de la producción por área OCDE
-14. Cierre — recomendaciones de política pública
 """)
 
 # =====================================================================
@@ -104,7 +96,7 @@ pd.set_option("display.width", 160)
 print(f"ROOT = {ROOT}")
 """)
 
-code("""# Carga de los dos datasets
+code("""# Carga de los dos datasets desde Socrata (CSVs en datos/raw/)
 from ingesta import cargar_consolidado, cargar_produccion
 from Transformacion import transformar
 from analisis.produccion import normalizar_produccion
@@ -116,36 +108,22 @@ prod = normalizar_produccion(cargar_produccion())
 print(f"Produccion de grupos:     {prod.shape}")
 """)
 
-md("""**Notas sobre la carga.**
-
-- `cargar_consolidado` lee primero `datos/raw/investigadores_consolidado.csv`.
-  Si no existe, recurre al Excel de respaldo en `datos/tarea_join/`.
-- `cargar_produccion` requiere el CSV crudo (1,2 GB). Si no está, ejecute
-  `python -m src.ingesta.produccion` primero.
-- `transformar` parsea `ANO_CONVO_INT`, estandariza género y limpia texto.
-- `normalizar_produccion` añade `ANO_CONVO_INT` al dataset de producción y
-  homogeniza tipos para que la llave de cruce funcione directo.
-""")
-
 
 # =====================================================================
-# 2. Validación de calidad — atípicos de edad
+# 2. Cautelas previas — calidad + diversidad invisible
 # =====================================================================
-md("""## 2. Validación de calidad — atípicos de edad
+md("""## 2. Cautelas previas
 
-Hallazgo: el padrón contiene **22 registros con edad superior a 100 años**.
-El máximo observado es **956 años** — claramente un error de digitación.
+### 2.1 Atípicos de edad
 
-Método aplicado: **eliminación de casos** cuando el análisis depende de edad.
-Justificación: 22 sobre 77.237 (0,03 %); el sesgo introducido es despreciable
-y la trazabilidad se mantiene mejor que con imputación.
-
-Se ofrece como alternativa la imputación por mediana del grupo
-(área OCDE × categoría × género), pero no se aplica por defecto.
+El padrón contiene **22 apariciones con edad superior a 100 años** (máximo: 956).
+Decisión metodológica: eliminación, con cada caso auditable en
+`evidencias/calidad_atipicos_edad.csv`. Justificación: 22 sobre 77.237 (0,03 %);
+el sesgo introducido es despreciable.
 """)
 
 code("""from analisis.calidad import (
-    detectar_atipicos_edad, resumen_tratamiento, filtrar, imputar_mediana
+    detectar_atipicos_edad, resumen_tratamiento, filtrar
 )
 
 atipicos = detectar_atipicos_edad(inv)
@@ -153,262 +131,24 @@ print(f"Atipicos detectados: {len(atipicos)}")
 atipicos.head(10)
 """)
 
-code("""# Comparacion de metodos
-resumen = resumen_tratamiento(inv)
-for k, v in resumen.items():
-    print(f"  {k}: {v}")
-""")
-
-code("""# Decision: eliminamos los 22 casos para todos los analisis posteriores
-inv_clean = filtrar(inv)
+code("""inv_clean = filtrar(inv)
 print(f"Antes:    {len(inv):,} registros")
-print(f"Despues:  {len(inv_clean):,} registros")
-print(f"Maximo edad despues del filtro: {inv_clean['EDAD_ANOS_PR'].max()}")
+print(f"Despues:  {len(inv_clean):,} registros (drop = {len(inv) - len(inv_clean)})")
 """)
 
+md("""### 2.2 Diversidad invisible
 
-# =====================================================================
-# 3. Trayectoria longitudinal
-# =====================================================================
-md("""## 3. Trayectoria longitudinal y matrices de transición
+Las variables `ID_VICTIMA_CONFLICTO`, `TXT_GRUPO_ETNICO` y `TXT_POBLACION_DISCA`
+sólo se capturan desde 2021. Las cinco convocatorias anteriores (2013-2019)
+tienen 0 % de cobertura. **No se retropola**: la condición de víctima del
+conflicto no es estática.
 
-Reconstruye qué le pasa a cada investigador entre convocatorias consecutivas:
-si se mantiene en su categoría, sube, baja o desaparece del padrón.
-
-**Caveat importante.** Los investigadores **Eméritos no reaparecen en la
-convocatoria siguiente porque el reconocimiento queda vitalicio.** Su
-ausencia en `t+1` no es expulsión del sistema, es diseño. Las matrices
-muestran 100 % en la columna "Desaparece" para Emérito; léase como
-"reconocimiento vitalicio, no requiere re-postulación".
+La comparación 2021 vs DANE-CNPV 2018 / RUV 2021 muestra subrepresentación de
+indígenas (7,9× menos que su peso poblacional), afros (3×), víctimas del
+conflicto (8,6×) y personas con discapacidad (8×).
 """)
 
-code("""from analisis.longitudinal import (
-    construir_panel, comparar_periodo, matriz_transicion, matrices_todos_periodos
-)
-
-panel = construir_panel(inv_clean)
-anios = sorted(panel["ANO_CONVO_INT"].dropna().unique())
-print(f"Convocatorias en el panel: {anios}")
-
-# Matrices de transicion para todos los pares consecutivos
-matrices = matrices_todos_periodos(panel, incluir_desaparece=True)
-for periodo, m in matrices.items():
-    print(f"\\n{periodo}")
-    print(m["conteos"])
-""")
-
-
-# =====================================================================
-# 4. Sankey de transición de categoría
-# =====================================================================
-md("""## 4. Diagramas de Sankey de transición de categoría
-
-Cinco diagramas, uno por par de convocatorias consecutivas. Cada Sankey
-muestra los flujos de cada categoría en `t` hacia cada categoría en `t+1`
-(incluyendo `Desaparece`).
-""")
-
-code("""# El script orquestador genera los cinco Sankeys y un CSV consolidado
-import subprocess
-subprocess.run(["python3", "scripts/sprint6_sankey_categoria.py"], cwd=ROOT, check=True)
-""")
-
-code("""from IPython.display import IFrame
-IFrame("../artifacts/sprint6_sankey/sankey_2019_2021.html", width=900, height=550)
-""")
-
-md("""**Lectura del Sankey 2019 → 2021.** La diagonal principal es la
-permanencia en la misma categoría. Las bandas hacia abajo a la derecha son
-descensos (`Asociado → Junior`, por ejemplo); las bandas hacia arriba son
-ascensos (`Junior → Asociado`); y la columna `Desaparece` agrupa a los que
-no aparecen en la siguiente convocatoria.
-
-Se observa la frase del director: *"la mayoría de Asociados pasaron a Junior
-porque dejaron de producir"*. El flujo `Asociado 2019 → Junior 2021` es
-significativo en el último corte.
-""")
-
-
-# =====================================================================
-# 5. Concentración territorial (residencia)
-# =====================================================================
-md("""## 5. Concentración territorial — residencia del investigador
-
-Hallazgo central: **Bogotá D.C. (32 %) + Antioquia (16 %) concentran el
-51 % del padrón.** La cola larga incluye 30 departamentos.
-""")
-
-code("""# Top departamentos
-top_dpto = (inv_clean["NME_DEPARTAMENTO_RES_PR"].value_counts()
-            .head(15).reset_index())
-top_dpto.columns = ["departamento", "n_investigadores"]
-top_dpto["pct"] = (top_dpto["n_investigadores"] / len(inv_clean) * 100).round(1)
-top_dpto
-""")
-
-code("""from analisis.territorial import hhi_por_convocatoria
-
-hhi = hhi_por_convocatoria(inv_clean, columna="NME_DEPARTAMENTO_RES_PR")
-hhi.plot(x="ANO_CONVO_INT", y="hhi", marker="o", figsize=(10,4),
-         legend=False)
-plt.title("HHI de concentracion territorial por convocatoria")
-plt.ylabel("HHI (0 = dispersion, 1 = monopolio)")
-plt.xlabel("Convocatoria")
-plt.show()
-""")
-
-
-# =====================================================================
-# 6. Tabla maestra de instituciones
-# =====================================================================
-md("""## 6. Tabla maestra de instituciones
-
-El campo `inst_filia` del padrón registra **2.762 entidades únicas**. Una
-auditoría rápida muestra que en realidad son cerca de 800 instituciones
-con captura sin estandarización (ej. "UNAL Bogotá", "UNAL Medellín",
-"UNAL Manizales" aparecen como tres entidades).
-
-El borrador entregado cubre **211 IES canónicas** y mapea el **91 % del
-padrón**. Las 2.500 entradas pendientes son la cola larga (empresas,
-hospitales pequeños, ONGs locales con menos de 20 apariciones cada una).
-
-Esta tabla es uno de los entregables del observatorio: se propone como
-**referencia inicial** para que MinCiencias adopte como estándar de
-normalización.
-""")
-
-code("""# Cargar la tabla maestra y el mapeo
-maestra = pd.read_csv(ROOT / "evidencias/tabla_maestra_ies.csv")
-mapping = pd.read_csv(ROOT / "evidencias/mapping_inst_filia_to_ies.csv")
-
-print(f"IES canonicas: {len(maestra)}")
-print(f"Strings mapeados: {(mapping['estado'] == 'asignado').sum()}")
-cob = (mapping.loc[mapping['estado'] == 'asignado', 'n_apariciones'].sum()
-       / mapping['n_apariciones'].sum() * 100)
-print(f"Cobertura: {cob:.1f}% del padron")
-
-maestra.head(15)
-""")
-
-md("""**Reconstrucción de la tabla.**
-
-Si desea regenerar la tabla maestra desde cero, el script
-`scripts/sprint6_tabla_maestra_ies.py` contiene el diccionario completo
-con los 258 strings mapeados (ver el bloque `MAPEO`). Para agregar nuevas
-entradas, edite ese diccionario y vuelva a correr el script.
-""")
-
-
-# =====================================================================
-# 7. Análisis geográfico institucional
-# =====================================================================
-md("""## 7. Análisis geográfico institucional
-
-Con la tabla maestra podemos preguntar: **¿el investigador trabaja en el
-mismo departamento donde reside?** Si no, ¿hacia dónde se afilia?
-
-Este es el análisis que más resaltó el director:
-
-> *Para mí lo más importante es el geográfico. No solo se concentra en el
-> departamento de residencia, sino en el departamento de la institución.
-> Los de Vichada probablemente trabajan en instituciones del Meta o Bogotá.*
-""")
-
-code("""import subprocess
-subprocess.run(["python3", "scripts/sprint6_geografia_institucional.py"],
-               cwd=ROOT, check=True)
-""")
-
-code("""# Resumen por departamento de residencia
-resumen = pd.read_csv(ROOT / "evidencias/geografia_resumen_por_dpto_residencia.csv")
-resumen.head(15)
-""")
-
-code("""# Top flujos transversales: residencia != institucion
-flujos = pd.read_csv(ROOT / "evidencias/geografia_top_flujos.csv")
-flujos.head(15)
-""")
-
-md("""**Hallazgos clave.**
-
-- Bogotá retiene al 92 % de sus propios investigadores **y** absorbe gente
-  de prácticamente todos los demás departamentos. El flujo más fuerte es
-  Antioquia → Bogotá (242 investigadores).
-- Cundinamarca tiene baja retención local (67 %): muchos de sus
-  investigadores se afilian a Bogotá.
-- **Sorpresa: Chocó retiene al 92 % de los suyos**, pese a ser un departamento
-  con históricas barreras de acceso a educación superior.
-- El único investigador de Vichada está en Bogotá (confirma la intuición
-  del director).
-""")
-
-
-# =====================================================================
-# 8. Sankey territorial
-# =====================================================================
-md("""## 8. Sankey territorial — residencia → institución
-
-Visualización agregada de los flujos residencia → institución. La diagonal
-(residencia = institución) es la retención local; las bandas transversales
-muestran las migraciones académicas.
-""")
-
-code("""import subprocess
-subprocess.run(["python3", "scripts/sprint6_sankey_territorial.py"], cwd=ROOT, check=True)
-""")
-
-code("""from IPython.display import IFrame
-IFrame("../artifacts/sprint6_sankey/sankey_territorial.html",
-       width=950, height=620)
-""")
-
-
-# =====================================================================
-# 9. Brecha de género por gran área OCDE
-# =====================================================================
-md("""## 9. Brecha de género por gran área OCDE
-
-La paridad agregada (~40 % de mujeres) esconde brechas estructurales muy
-distintas por gran área de conocimiento. Diez años de convocatorias no
-muestran cierre.
-""")
-
-code("""from analisis.genero import tabla_pivot_pct_femenino
-
-pivot = tabla_pivot_pct_femenino(inv_clean, col_area="NME_GRAN_AREA_PR")
-pivot = pivot.drop(columns=["promedio"], errors="ignore")
-pivot
-""")
-
-code("""fig, ax = plt.subplots(figsize=(12, 5))
-sns.heatmap(pivot * 100, annot=True, fmt=".0f",
-            cmap="RdYlGn", center=50, vmin=15, vmax=70,
-            cbar_kws={"label": "% femenino"}, ax=ax)
-ax.set_title("% mujeres por gran area OCDE y convocatoria")
-ax.set_xlabel("Convocatoria")
-ax.set_ylabel("")
-plt.tight_layout()
-plt.show()
-""")
-
-
-# =====================================================================
-# 10. Diversidad
-# =====================================================================
-md("""## 10. Diversidad — etnia, discapacidad, víctimas del conflicto
-
-**Hallazgo estructural.** Las tres variables de diversidad sólo empiezan a
-registrarse en la convocatoria 2021 (894). En las cinco convocatorias previas
-la cobertura es del 0 %. El análisis longitudinal sobre diversidad es
-imposible por construcción del formulario.
-
-Para 2021 sí se puede comparar la composición de los investigadores
-reconocidos contra la composición poblacional (DANE-CNPV 2018 / RUV 2021).
-""")
-
-code("""from analisis.diversidad import (
-    cobertura_por_convocatoria, distribucion_categoria, comparar_dane
-)
+code("""from analisis.diversidad import cobertura_por_convocatoria, comparar_dane
 
 cob = cobertura_por_convocatoria(inv_clean)
 cob[["ANO_CONVO_INT", "n_total",
@@ -417,32 +157,49 @@ cob[["ANO_CONVO_INT", "n_total",
      "TXT_POBLACION_DISCA_pct_cobertura"]]
 """)
 
-code("""# Subrepresentacion vs poblacion total
-inv_2021 = inv_clean[inv_clean["ANO_CONVO_INT"] == 2021]
+code("""inv_2021 = inv_clean[inv_clean["ANO_CONVO_INT"] == 2021]
 comp = comparar_dane(inv_2021)
 comp
 """)
 
-md("""**Caveat metodológico.** La comparación correcta sería contra la
-**población con educación superior**, no contra la población total. La brecha
-real es probablemente menor a la que muestra esta tabla, pero el patrón se
-mantiene: los grupos étnicos numéricamente importantes (afros, indígenas) y
-las personas víctimas del conflicto están sub-representadas.
+md("""### 2.3 Tabla maestra de instituciones
+
+El campo `inst_filia` registra **2.762 cadenas únicas** que corresponden a
+~800 IES reales. El observatorio construyó una primera tabla maestra
+(211 IES canónicas) que cubre el 91 % del padrón.
+""")
+
+code("""maestra = pd.read_csv(ROOT / "evidencias/tabla_maestra_ies.csv")
+mapping = pd.read_csv(ROOT / "evidencias/mapping_inst_filia_to_ies.csv")
+
+cob = (mapping.loc[mapping["estado"] == "asignado", "n_apariciones"].sum()
+       / mapping["n_apariciones"].sum() * 100)
+print(f"IES canonicas: {len(maestra)}")
+print(f"Cobertura del padron: {cob:.1f}%")
+maestra.head(15)
 """)
 
 
 # =====================================================================
-# 11. Productividad y categoría
+# 3. Eje 1 — Producción
 # =====================================================================
-md("""## 11. Productividad y categoría
+md("""## 3. Eje 1 — Producción
 
-Cruce de los dos datasets por `id_persona_pd ↔ id_persona_pr`. La pregunta:
-¿los Senior producen más que los Junior?
+Cobertura del padrón, productividad por categoría y brecha de género en outputs.
+""")
+
+md("""### 3.1 Autoría no reconocida
+
+De los 77.401 autores únicos en `33dq-ab5a`, sólo 28.590 están en el padrón de
+reconocidos. **Los 48.811 restantes (36,9 %) firman productos sin perfil
+ScienTI reconocido.** La proporción crece con el tiempo: del 23 % en 2013 al
+28 % en 2021.
 """)
 
 code("""from analisis.produccion import (
     cobertura_reconocidos, cobertura_autores_unicos,
-    productividad_por_categoria, reconocidos_sin_produccion
+    productividad_por_categoria, brecha_productividad_genero,
+    reconocidos_sin_produccion
 )
 
 cov = cobertura_autores_unicos(prod, inv_clean)
@@ -450,82 +207,137 @@ for k, v in cov.items():
     print(f"  {k}: {v:,}" if isinstance(v, int) else f"  {k}: {v}")
 """)
 
+md("""### 3.2 Productividad por categoría
+
+Junior 30 productos → Asociado 65 → **Senior 121** → Emérito 34. El sistema
+premia productividad de manera ordenada. Los Eméritos producen menos que los
+Asociados, no porque el sistema los exija menos sino porque el reconocimiento
+queda **vitalicio**: una vez reconocidos no se postulan otra vez, así que la
+métrica oficial pierde de vista su producción posterior.
+""")
+
 code("""prod_cat = productividad_por_categoria(prod, inv_clean)
 prod_cat.head(20)
 """)
 
-md("""**Hallazgo.** La productividad escala con la categoría reconocida:
+md("""### 3.3 Brecha de género en productividad
 
-| Categoría | Productos promedio (carrera) |
-|---|---:|
-| Junior | 30 |
-| Asociado | 65 |
-| **Senior** | **121** |
-| Emérito | 34 |
-
-Los Eméritos producen menos que los Asociados. Esto **no** es una falla del
-sistema: el reconocimiento Emérito queda vitalicio, no exige re-postulación,
-y por lo tanto los productos contabilizados en su ventana son los previos a
-quedar vitalicio.
+En cinco de las seis grandes áreas las mujeres registran menos productos en
+promedio. Única excepción: Humanidades. Mayores brechas: Ciencias Médicas
+(--2,95 productos) e Ingeniería (--2,59).
 """)
 
-
-# =====================================================================
-# 12. Brecha de género en productividad
-# =====================================================================
-md("""## 12. Brecha de género en productividad
-
-¿La brecha de representación se replica cuando miramos lo que se les
-contabiliza producir?
-""")
-
-code("""from analisis.produccion import brecha_productividad_genero
-
-brecha = brecha_productividad_genero(prod, inv_clean)
+code("""brecha = brecha_productividad_genero(prod, inv_clean)
 brecha = brecha[~brecha["NME_GRAN_AREA_PR"].isin(["NO REGISTRA", "NO REPORTADO"])]
 brecha
 """)
 
-md("""**Doble penalización confirmada.** Las mujeres registran menos
-productos en promedio en cinco de seis grandes áreas. La única excepción es
-**Humanidades**, donde la razón mujeres/hombres es ligeramente mayor a uno.
-Las mayores brechas: Ciencias Médicas (−2,95) e Ingeniería (−2,59).
+md("""### 3.4 Reconocidos sin producción
 
-Pocas mujeres entran al sistema **y** a las que entran se les contabiliza
-menos producción.
+El porcentaje de reconocidos sin ningún producto registrado en su ventana de
+convocatoria pasa del 15,4 % (2013) al 5,5 % (2021). Interpretación más razonable:
+la captura del campo mejoró, no necesariamente que produzcan más.
+""")
+
+code("""sin_prod = reconocidos_sin_produccion(prod, inv_clean)
+sin_prod
 """)
 
 
 # =====================================================================
-# 13. Composición OCDE
+# 4. Eje 2 — Territorios
 # =====================================================================
-md("""## 13. Composición de la producción por gran área OCDE
+md("""## 4. Eje 2 — Territorios
 
-¿Qué rama del conocimiento produce más en Colombia? La respuesta cambia
-según se mida en volumen total o por investigador.
+Concentración, ratio per cápita, flujos investigador → institución y
+participación femenina por departamento. Para el director este es el eje
+más relevante.
+""")
+
+md("""### 4.1 Concentración residencial
+
+Bogotá D.C. (32 %) + Antioquia (16 %) = 51 % del padrón. El restante se
+distribuye entre los otros 30 departamentos. 22 departamentos no llegan a
+500 investigadores reconocidos.
+""")
+
+code("""top_dpto = (inv_clean["NME_DEPARTAMENTO_RES_PR"].value_counts()
+            .head(15).reset_index())
+top_dpto.columns = ["departamento", "n_investigadores"]
+top_dpto["pct"] = (top_dpto["n_investigadores"] / len(inv_clean) * 100).round(1)
+top_dpto
+""")
+
+md("""### 4.2 Flujos residencia → departamento de la institución
+
+Con la tabla maestra de IES se puede cruzar el departamento donde vive el
+investigador con el departamento donde está su institución. Resultados clave:
+
+- Bogotá retiene 92 % de sus investigadores y absorbe ~1.000 de otros departamentos.
+- Antioquia → Bogotá: 242 investigadores. Valle del Cauca → Bogotá: 236.
+- Cundinamarca tiene 67 % de retención local (el resto se va a Bogotá).
+- Chocó retiene 92 % pese a tener apenas 49 reconocidos.
+- El único investigador de Vichada trabaja en Bogotá.
+""")
+
+code("""import subprocess
+subprocess.run(["python3", "scripts/sprint6_geografia_institucional.py"],
+               cwd=ROOT, check=True)
+""")
+
+code("""resumen = pd.read_csv(ROOT / "evidencias/geografia_resumen_por_dpto_residencia.csv")
+resumen.head(15)
+""")
+
+md("""### 4.3 Brecha de género por territorio
+
+**Ningún departamento alcanza la paridad de género.** Máximo: Boyacá (42 %),
+Bolívar (42 %) y Cundinamarca (41 %). Mínimo: Risaralda (30 %), Caldas (35 %).
+""")
+
+code("""import subprocess
+subprocess.run(["python3", "scripts/sprint7_genero_transversal.py"],
+               cwd=ROOT, check=True)
+""")
+
+code("""genero_dpto = pd.read_csv(ROOT / "evidencias/genero_por_departamento.csv")
+genero_dpto[["NME_DEPARTAMENTO_RES_PR", "FEMENINO", "MASCULINO",
+             "n_total", "pct_femenino"]]
+""")
+
+
+# =====================================================================
+# 5. Eje 3 — Campos OCDE
+# =====================================================================
+md("""## 5. Eje 3 — Campos OCDE
+
+Volumen, productividad por investigador y composición por género dentro de
+cada disciplina.
+""")
+
+md("""### 5.1 Volumen y productividad por área
+
+Ciencias Sociales gana en volumen total (585 mil productos). Pero
+**Ingeniería gana en productividad por investigador** (67 productos por
+investigador, contra 48 de Humanidades).
 """)
 
 code("""import subprocess
 subprocess.run(["python3", "scripts/sprint6_ocde_composicion.py"], cwd=ROOT, check=True)
 """)
 
-code("""volumen = pd.read_csv(ROOT / "evidencias/ocde_volumen_por_area.csv")
-prod_area = pd.read_csv(ROOT / "evidencias/ocde_productividad_por_area.csv")
+code("""prod_area = pd.read_csv(ROOT / "evidencias/ocde_productividad_por_area.csv")
 prod_area
 """)
 
-md("""**Lectura cruzada.**
+md("""### 5.2 Composición de tipologías por área
 
-- En volumen total domina **Ciencias Sociales** (585 mil productos).
-- En productividad por investigador domina **Ingeniería y Tecnología**
-  (67 productos/investigador, contra 47 de Humanidades).
-- Humanidades es la menos productiva por investigador pese a ser de las
-  áreas con paridad de género. Es decir: la brecha de productividad por
-  género no se explica con que las mujeres estén en áreas menos productivas.
+Tres categorías concentran ~73 % de la producción: Formación de RR.HH. (33 %),
+Apropiación social (30 %), Nuevo conocimiento Tipo A (10 %). El mix varía
+por disciplina.
 """)
 
 code("""composicion = pd.read_csv(ROOT / "evidencias/ocde_composicion_por_area.csv")
-# Tabla pivote: tipo de medicion por area
 pivot = composicion.pivot_table(
     index="NME_GRAN_AREA_PR",
     columns="NME_TIPO_MEDICION_PD",
@@ -533,49 +345,102 @@ pivot = composicion.pivot_table(
 pivot
 """)
 
+md("""### 5.3 Brecha de género por disciplina
+
+En la convocatoria 2021 sólo Ciencias Médicas (50,9 %) supera la paridad.
+Ingeniería registra el mínimo (26,5 %).
+""")
+
+code("""genero_area = pd.read_csv(ROOT / "evidencias/genero_por_gran_area_2021.csv")
+genero_area
+""")
+
 
 # =====================================================================
-# 14. Cierre
+# 6. Eje 4 — Análisis longitudinal
 # =====================================================================
-md("""## 14. Cierre — recomendaciones de política pública
+md("""## 6. Eje 4 — Análisis longitudinal
 
-Los doce hallazgos del observatorio se pueden agrupar en cuatro líneas
-operativas que MinCiencias podría implementar antes de la siguiente
-convocatoria.
+Cómo cambian las categorías de los investigadores entre convocatorias. Patrón
+clave: la mayoría se mantiene, pero los descensos desde Asociado a Junior son
+significativos y los Eméritos no reaparecen (porque quedan vitalicios).
+""")
+
+md("""### 6.1 Matrices de transición
+""")
+
+code("""from analisis.longitudinal import (
+    construir_panel, matrices_todos_periodos
+)
+
+panel = construir_panel(inv_clean)
+anios = sorted(panel["ANO_CONVO_INT"].dropna().unique())
+print(f"Convocatorias en el panel: {anios}")
+
+matrices = matrices_todos_periodos(panel, incluir_desaparece=True)
+for periodo, (conteos, probs) in matrices.items():
+    print(f"\\n{periodo}")
+    print(conteos)
+""")
+
+md("""### 6.2 Sankey longitudinal de categorías
+
+Vista única de la línea de tiempo 2013-2021 con seis columnas (una por
+convocatoria) y los flujos entre cada par consecutivo. Los Eméritos reciben
+flujo entrante pero no emiten saliente (el reconocimiento es vitalicio).
+""")
+
+code("""import subprocess
+subprocess.run(["python3", "scripts/sprint8_sankey_longitudinal.py"], cwd=ROOT, check=True)
+""")
+
+code("""from IPython.display import Image
+Image(filename=str(ROOT / "artifacts/sprint8_sankey/sankey_linea_tiempo.png"))
+""")
+
+md("""### 6.3 Eméritos vitalicios
+
+**Caveat importante.** En las matrices, los Eméritos aparecen al 100 % en la
+columna "Desaparece" en cada par consecutivo. La lectura correcta no es que
+sean expulsados del sistema: **el reconocimiento Emérito queda vitalicio y no
+requiere re-postulación.** No reaparecen porque no lo necesitan.
+""")
+
+
+# =====================================================================
+# 7. Cierre
+# =====================================================================
+md("""## 7. Cierre — recomendaciones de política pública
+
+Los hallazgos se agrupan en cuatro líneas operativas para MinCiencias.
 
 ### A. Calidad y gobernanza del dato
-- Validación previa a la publicación: edad ≤ 100, fecha de convocatoria
-  distinta de la de publicación.
+- Validación previa a la publicación: edad ≤ 100, fecha de convocatoria distinta de la de publicación.
 - Adopción de la tabla maestra de instituciones que aquí se propone.
 - Campo obligatorio de departamento de la institución.
 
 ### B. Equidad y diversidad
-- Captura obligatoria de etnia, discapacidad y conflicto desde el
-  formulario inicial — no sólo desde 2021.
-- Comparar representación contra población con educación superior, no
-  contra población total.
-- Programas focalizados en regiones con baja retención local
-  (Cundinamarca, Risaralda, departamentos amazónicos).
+- Captura obligatoria de etnia, discapacidad y conflicto desde el formulario inicial — no sólo desde 2021.
+- Comparar representación contra población con educación superior, no contra población total.
+- Programas focalizados en regiones con baja retención local (Cundinamarca, Risaralda, departamentos amazónicos).
+- Indicadores de paridad de género por departamento como métrica oficial — ningún departamento alcanza paridad hoy.
 
 ### C. Apertura y trazabilidad
 - Captura sistemática de doble afiliación en todas las convocatorias.
-- Apertura del padrón completo de ScienTI (perfiles activos, no sólo
-  reconocidos).
-- Apertura del dataset de proyectos evaluados — cerrar el ciclo
-  idea–reconocimiento–producto.
+- Apertura del padrón completo de ScienTI.
+- Apertura del dataset de proyectos evaluados.
 
 ### D. Métricas alineadas con la realidad
 - Productividad ajustada por categoría, área OCDE y género.
-- Reporte de flujos investigador–institución (residencia vs. institución).
+- Reporte de flujos investigador–institución (residencia vs.\\ institución).
 - Calendario predecible de convocatorias.
 
 ---
 
-**Cierre.** Este observatorio queda como herramienta abierta. El código, los
-datasets de evidencia y el tablero interactivo están publicados en el
-repositorio `Victor-Diaz-Usta/Min_ciencias`. Cualquier persona puede
-reproducir las cifras, pedir aclaraciones, o extender el análisis con fuentes
-adicionales.
+**Cierre.** Este observatorio queda como herramienta abierta. Código, datos
+de evidencia, tabla maestra de instituciones, manual reproducible, dashboard
+interactivo y presentación HTML están publicados en
+`github.com/ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo8`.
 """)
 
 
@@ -591,10 +456,7 @@ def main() -> None:
             "language": "python",
             "name": "python3",
         },
-        "language_info": {
-            "name": "python",
-            "version": "3.11",
-        },
+        "language_info": {"name": "python", "version": "3.11"},
         "title": "Manual reproducible — Observatorio MinCiencias",
     }
     salida = DOCS / "manual.ipynb"
