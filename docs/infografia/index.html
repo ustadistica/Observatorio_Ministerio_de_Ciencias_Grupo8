@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<title>Observatorio MinCiencias · Infografía</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+
+<style>
+:root {
+  --ink:       #0b1320;
+  --ink-soft:  #1f2a3a;
+  --paper:     #f6f7fb;
+  --surface:   #ffffff;
+  --text:      #1a1d23;
+  --muted:     #6b7280;
+  --line:      #e5e7eb;
+  --primary:   #1e40af;
+  --primary-2: #2563eb;
+  --accent:    #d97706;
+  --danger:    #b91c1c;
+  --positive:  #047857;
+  --purple:    #7c3aed;
+  --teal:      #0d9488;
+  --soft-blue: #eff6ff;
+  --soft-gold: #fef3c7;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--surface);
+  box-shadow: 0 4px 24px rgba(11,19,32,0.08);
+}
+
+/* ------------------------------------------------------------------- */
+/* HEADER                                                              */
+/* ------------------------------------------------------------------- */
+.hero {
+  background:
+    radial-gradient(circle at 90% 18%, rgba(217,119,6,0.14), transparent 50%),
+    radial-gradient(circle at 8% 88%, rgba(37,99,235,0.18), transparent 55%),
+    linear-gradient(180deg, #0b1320 0%, #1a2336 100%);
+  color: #fff;
+  padding: 56px 56px 44px 56px;
+}
+.hero .eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  color: #fcd34d;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: 46px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0 0 14px 0;
+  max-width: 950px;
+}
+.hero .lead {
+  font-size: 17px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.78);
+  max-width: 850px;
+  line-height: 1.5;
+}
+.hero-meta {
+  margin-top: 28px;
+  display: flex;
+  gap: 32px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+.hero-meta strong { color: #fff; }
+
+/* ------------------------------------------------------------------- */
+/* KPIs                                                                */
+/* ------------------------------------------------------------------- */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--line);
+}
+.kpi {
+  padding: 28px 24px;
+  border-right: 1px solid var(--line);
+  background: var(--surface);
+}
+.kpi:last-child { border-right: none; }
+.kpi .num {
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.025em;
+}
+.kpi .num.accent { color: var(--accent); }
+.kpi .num.primary { color: var(--primary); }
+.kpi .num.purple { color: var(--purple); }
+.kpi .lbl {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+/* ------------------------------------------------------------------- */
+/* SECTIONS                                                            */
+/* ------------------------------------------------------------------- */
+.section {
+  padding: 36px 56px;
+  border-bottom: 1px solid var(--line);
+}
+.section:last-of-type { border-bottom: none; }
+.section .label {
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  background: var(--soft-blue);
+  padding: 4px 12px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 14px;
+}
+.section h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.015em;
+}
+.section .subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0 0 22px 0;
+}
+
+/* Cards row (3 columns) */
+.cards3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 16px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px 18px 16px 18px;
+  border-top: 3px solid var(--primary);
+}
+.card.gold     { border-top-color: var(--accent); }
+.card.danger   { border-top-color: var(--danger); }
+.card.positive { border-top-color: var(--positive); }
+.card.purple   { border-top-color: var(--purple); }
+.card .num-big {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.card .num-big.gold     { color: var(--accent); }
+.card .num-big.danger   { color: var(--danger); }
+.card .num-big.positive { color: var(--positive); }
+.card .num-big.purple   { color: var(--purple); }
+.card .head {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.card .body {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.45;
+}
+.card em { color: var(--accent); font-style: normal; font-weight: 700; }
+
+/* Two columns */
+.cols2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.bullets {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text);
+}
+.bullets li { margin: 6px 0; }
+.bullets strong { color: var(--ink); }
+
+/* Recommendations grid 4 */
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.rec {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px 14px 12px 14px;
+  border-top: 3px solid var(--accent);
+}
+.rec .tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.rec h4 {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 6px 0 8px 0;
+}
+.rec ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text);
+}
+.rec li { margin: 4px 0; }
+
+/* Footer */
+.footer {
+  padding: 28px 56px;
+  background: #0b1320;
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.footer strong { color: #fff; }
+.footer .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+.footer .col { flex: 1; }
+.footer .label {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: #fcd34d;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Print */
+@media print {
+  body { background: white; }
+  .page { box-shadow: none; max-width: none; }
+  .section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- =============================================================== -->
+  <!-- HERO                                                            -->
+  <!-- =============================================================== -->
+  <header class="hero">
+    <div class="eyebrow">Observatorio MinCiencias · 2013-2021</div>
+    <h1>El sistema de reconocimiento de investigadores en Colombia</h1>
+    <p class="lead">
+      Auditoría sobre seis convocatorias de MinCiencias en una década. Lectura
+      crítica de dos fuentes oficiales abiertas: 30.086 investigadores
+      reconocidos cruzados con 3,16 millones de productos académicos.
+    </p>
+    <div class="hero-meta">
+      <div><strong>Equipo</strong> Minciencias 2</div>
+      <div><strong>Integrante</strong> Víctor Díaz Bautista</div>
+      <div><strong>Director</strong> Isaac Zainea</div>
+      <div><strong>USTA</strong> 2026-I</div>
+    </div>
+  </header>
+
+  <!-- =============================================================== -->
+  <!-- KPIs                                                            -->
+  <!-- =============================================================== -->
+  <section class="kpis">
+    <div class="kpi">
+      <div class="num">6</div>
+      <div class="lbl">Convocatorias<br>2013-2021</div>
+    </div>
+    <div class="kpi">
+      <div class="num primary">30.086</div>
+      <div class="lbl">Investigadores<br>únicos reconocidos</div>
+    </div>
+    <div class="kpi">
+      <div class="num accent">3,16 M</div>
+      <div class="lbl">Productos<br>contabilizados</div>
+    </div>
+    <div class="kpi">
+      <div class="num purple">211</div>
+      <div class="lbl">IES canónicas<br>tabla maestra entregada</div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- EJE 1 · PRODUCCION                                              -->
+  <!-- =============================================================== -->
+  <section class="section">
+    <span class="label">Eje 1 · Producción</span>
+    <h2>¿Quién firma realmente la producción que MinCiencias contabiliza?</h2>
+    <p class="subtitle">Cobertura del padrón, productividad por categoría y brecha de género en outputs.</p>
+
+    <div class="cards3">
+      <div class="card danger">
+        <div class="num-big danger">36,9 %</div>
+        <div class="head">Autoría no reconocida</div>
+        <div class="body">
+          De los <strong>77.401 autores únicos</strong> en producción, 48.811
+          no están en el padrón. Estudiantes, externos, profesionales sin
+          perfil ScienTI: invisibles para la métrica oficial.
+        </div>
+      </div>
+      <div class="card positive">
+        <div class="num-big positive">×4</div>
+        <div class="head">Productividad escala con categoría</div>
+        <div class="body">
+          <strong>Junior 30 · Asociado 65 · Sénior 121</strong> productos
+          promedio. La jerarquía de reconocimiento refleja diferencias
+          reales en producción contabilizada.
+        </div>
+      </div>
+      <div class="card gold">
+        <div class="num-big gold">5 de 6</div>
+        <div class="head">Brecha de género en outputs</div>
+        <div class="body">
+          Mujeres registran menos productos en cinco grandes áreas OCDE.
+          Mayor brecha: Ciencias Médicas (<em>-2,95</em>) e Ingeniería
+          (<em>-2,59</em>). Única excepción: Humanidades.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- EJE 2 · TERRITORIOS                                             -->
+  <!-- =============================================================== -->
+  <section class="section">
+    <span class="label">Eje 2 · Territorios</span>
+    <h2>Bogotá no solo concentra: <em style="color: var(--accent); font-style: normal;">absorbe</em></h2>
+    <p class="subtitle">Concentración geográfica, flujos residencia → institución y participación femenina por departamento.</p>
+
+    <div class="cards3">
+      <div class="card">
+        <div class="num-big primary">48 %</div>
+        <div class="head">Bogotá + Antioquia</div>
+        <div class="body">
+          Bogotá 32 % y Antioquia 16 %. El otro 52 % se distribuye entre
+          30 departamentos. 22 departamentos no llegan a 500 investigadores
+          reconocidos; Vichada y Vaupés no alcanzan 50.
+        </div>
+      </div>
+      <div class="card">
+        <div class="num-big">92 %</div>
+        <div class="head">Retención local de Bogotá</div>
+        <div class="body">
+          Pero además absorbe <strong>~1.000 investigadores</strong> de
+          otros departamentos. Antioquia → Bogotá: 242 ·
+          Valle del Cauca → Bogotá: 236. Cundinamarca: solo 67 % local.
+        </div>
+      </div>
+      <div class="card gold">
+        <div class="num-big gold">0 dpto</div>
+        <div class="head">Llega a paridad de género</div>
+        <div class="body">
+          Máximo: <strong>Boyacá 42 %</strong> · mínimo:
+          <strong>Risaralda 30 %</strong>. La brecha territorial de
+          género es persistente y atraviesa toda la geografía nacional.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- EJE 3 · CAMPOS OCDE                                             -->
+  <!-- =============================================================== -->
+  <section class="section">
+    <span class="label">Eje 3 · Campos OCDE</span>
+    <h2>¿Qué área produce más en Colombia? Depende de la métrica</h2>
+    <p class="subtitle">Volumen total, productividad por investigador y composición por género dentro de cada disciplina.</p>
+
+    <div class="cards3">
+      <div class="card primary">
+        <div class="num-big primary">585 K</div>
+        <div class="head">Volumen total</div>
+        <div class="body">
+          <strong>Ciencias Sociales</strong> lidera en productos totales
+          (585 mil). Le siguen Ingeniería (388 K), Naturales (387 K) y
+          Médicas (275 K).
+        </div>
+      </div>
+      <div class="card positive">
+        <div class="num-big positive">67</div>
+        <div class="head">Productos por investigador</div>
+        <div class="body">
+          <strong>Ingeniería</strong> es la más densa por investigador (67),
+          seguida de Sociales (62), Médicas (59) y Naturales (58).
+          Humanidades es la menos productiva (48).
+        </div>
+      </div>
+      <div class="card gold">
+        <div class="num-big gold">50,9 %</div>
+        <div class="head">Únicas con paridad: Médicas</div>
+        <div class="body">
+          Sola área OCDE que supera paridad en 2021. Ingeniería en el
+          extremo opuesto: <strong>26,5 % mujeres</strong>. Brecha STEM
+          plana en una década.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- EJE 4 · LONGITUDINAL                                            -->
+  <!-- =============================================================== -->
+  <section class="section">
+    <span class="label">Eje 4 · Análisis longitudinal</span>
+    <h2>La trayectoria no es una escalera unidireccional</h2>
+    <p class="subtitle">Cómo cambian las categorías de los investigadores a lo largo de seis convocatorias.</p>
+
+    <div class="cols2">
+      <div>
+        <ul class="bullets">
+          <li><strong>Permanencia mayoritaria.</strong> La diagonal del Sankey es siempre la banda más gruesa: la mayoría se mantiene en su categoría entre ventanas.</li>
+          <li><strong>Descenso Asociado → Junior.</strong> Aparece en todos los pares cuando cae la productividad. La categoría no es una escalera unidireccional.</li>
+          <li><strong>Eméritos vitalicios.</strong> 100 % de "desaparición" en la convocatoria siguiente <em>no es expulsión</em>: el reconocimiento queda vitalicio, no requiere re-postulación.</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="bullets">
+          <li><strong>22 atípicos de edad documentados.</strong> Edad &gt; 100 años (máximo 956). Tratamiento aplicado: eliminación con cada caso auditable en <code>evidencias/calidad_atipicos_edad.csv</code>.</li>
+          <li><strong>Convocatoria 833 mal fechada.</strong> Aparece como 2019-12-06 (día de publicación), no como 2018 (año nominal). Distorsiona cualquier serie temporal automatizada.</li>
+          <li><strong>Cobertura imperfecta del padrón.</strong> ~5 % sin departamento de residencia y ~3 % sin género reportado. Errores acumulables, no anecdóticos.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- DIVERSIDAD INVISIBLE                                            -->
+  <!-- =============================================================== -->
+  <section class="section">
+    <span class="label">Cautela estructural</span>
+    <h2>Ocho años de diversidad invisible</h2>
+    <p class="subtitle">Etnia, discapacidad y víctimas del conflicto: 0 % de cobertura entre 2013 y 2019. 96,8 % en 2021.</p>
+
+    <div class="cards3">
+      <div class="card danger">
+        <div class="num-big danger">7,9 ×</div>
+        <div class="head">Indígenas subrepresentados</div>
+        <div class="body">
+          Frente al peso poblacional DANE 2018. Afros: 3 × menos.
+          Personas con discapacidad: 8 × menos. Víctimas del conflicto:
+          8,6 × menos.
+        </div>
+      </div>
+      <div class="card positive">
+        <div class="num-big positive">3-6 ×</div>
+        <div class="head">Sobre-representación de minorías pequeñas</div>
+        <div class="body">
+          Raizales, palenqueros y rrom aparecen sobre su peso
+          poblacional. Sugiere que los programas focalizados pequeños
+          <em>están funcionando</em> donde se aplican.
+        </div>
+      </div>
+      <div class="card purple">
+        <div class="num-big purple">imposible</div>
+        <div class="head">Análisis longitudinal de diversidad</div>
+        <div class="body">
+          Sólo hay un punto temporal con datos. <strong>No se
+          retropola</strong>: ser víctima del conflicto en 2021 no
+          implica haberlo sido en 2015.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- RECOMENDACIONES                                                 -->
+  <!-- =============================================================== -->
+  <section class="section" style="background: var(--paper);">
+    <span class="label">Recomendaciones a MinCiencias</span>
+    <h2>Cuatro líneas operativas sin esperar a la próxima convocatoria</h2>
+    <div class="rec-grid" style="margin-top: 20px;">
+      <div class="rec">
+        <div class="tag">A · Calidad</div>
+        <h4>Gobernanza del dato</h4>
+        <ul>
+          <li>Validación previa a la publicación (edad ≤ 100, fecha real de convocatoria).</li>
+          <li>Adopción de la tabla maestra de IES (entregada con este informe).</li>
+          <li>Departamento de la institución como campo obligatorio.</li>
+        </ul>
+      </div>
+      <div class="rec">
+        <div class="tag">B · Equidad</div>
+        <h4>Diversidad desde el origen</h4>
+        <ul>
+          <li>Captura obligatoria de etnia, discapacidad y conflicto desde el formulario inicial.</li>
+          <li>Comparar contra población con educación superior, no contra población total.</li>
+          <li>Programas focalizados en regiones con baja retención local.</li>
+        </ul>
+      </div>
+      <div class="rec">
+        <div class="tag">C · Apertura</div>
+        <h4>Trazabilidad pública</h4>
+        <ul>
+          <li>Captura sistemática de doble afiliación en todas las convocatorias.</li>
+          <li>Apertura del padrón completo de ScienTI.</li>
+          <li>Apertura del dataset de proyectos evaluados.</li>
+        </ul>
+      </div>
+      <div class="rec">
+        <div class="tag">D · Métricas</div>
+        <h4>Alineadas con realidad</h4>
+        <ul>
+          <li>Productividad ajustada por categoría, área OCDE y género.</li>
+          <li>Reporte de flujos investigador--institución.</li>
+          <li>Calendario predecible de convocatorias.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- FOOTER                                                          -->
+  <!-- =============================================================== -->
+  <footer class="footer">
+    <div class="row">
+      <div class="col">
+        <span class="label">Fuentes</span>
+        Datos abiertos Colombia · <strong>datos.gov.co</strong><br>
+        Investigadores reconocidos: <code>bqtm-4y2h</code><br>
+        Producción de grupos: <code>33dq-ab5a</code><br>
+        Benchmarks: DANE CNPV 2018 · RUV 2021
+      </div>
+      <div class="col">
+        <span class="label">Reproducibilidad</span>
+        Código, datos, dashboard y manual técnico en:<br>
+        <strong>github.com/ustadistica/Observatorio_Ministerio_de_Ciencias_Grupo8</strong><br>
+        Pipeline Python + DuckDB + Streamlit · Datos descargados vía sodapy
+      </div>
+      <div class="col">
+        <span class="label">Equipo Minciencias 2</span>
+        <strong>Víctor Díaz Bautista</strong> · Código 2274325<br>
+        Director: Isaac Zainea<br>
+        Ustadistica · Universidad Santo Tomás · 2026-I<br>
+        Entrega: 26 de mayo de 2026
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
