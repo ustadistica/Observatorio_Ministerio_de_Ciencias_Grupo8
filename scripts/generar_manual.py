@@ -289,17 +289,6 @@ code("""resumen = pd.read_csv(ROOT / "evidencias/geografia_resumen_por_dpto_resi
 resumen.head(15)
 """)
 
-md("""**Sankey territorial residencia → institución** (interactivo).
-""")
-
-code("""import subprocess
-subprocess.run(["python3", "scripts/sprint6_sankey_territorial.py"], cwd=ROOT, check=True)
-""")
-
-code("""from IPython.display import IFrame
-IFrame("../artifacts/sprint6_sankey/sankey_territorial.html", width=950, height=620)
-""")
-
 md("""### 4.3 Brecha de género por territorio
 
 **Ningún departamento alcanza la paridad de género.** Máximo: Boyacá (42 %),
@@ -389,23 +378,24 @@ anios = sorted(panel["ANO_CONVO_INT"].dropna().unique())
 print(f"Convocatorias en el panel: {anios}")
 
 matrices = matrices_todos_periodos(panel, incluir_desaparece=True)
-for periodo, m in matrices.items():
+for periodo, (conteos, probs) in matrices.items():
     print(f"\\n{periodo}")
-    print(m["conteos"])
+    print(conteos)
 """)
 
-md("""### 6.2 Sankeys de transición de categoría
+md("""### 6.2 Sankey longitudinal de categorías
 
-Cinco diagramas, uno por par consecutivo. Permiten ver flujos de promoción,
-descenso y desaparición.
+Vista única de la línea de tiempo 2013-2021 con seis columnas (una por
+convocatoria) y los flujos entre cada par consecutivo. Los Eméritos reciben
+flujo entrante pero no emiten saliente (el reconocimiento es vitalicio).
 """)
 
 code("""import subprocess
-subprocess.run(["python3", "scripts/sprint6_sankey_categoria.py"], cwd=ROOT, check=True)
+subprocess.run(["python3", "scripts/sprint8_sankey_longitudinal.py"], cwd=ROOT, check=True)
 """)
 
-code("""from IPython.display import IFrame
-IFrame("../artifacts/sprint6_sankey/sankey_2019_2021.html", width=900, height=550)
+code("""from IPython.display import Image
+Image(filename=str(ROOT / "artifacts/sprint8_sankey/sankey_linea_tiempo.png"))
 """)
 
 md("""### 6.3 Eméritos vitalicios
